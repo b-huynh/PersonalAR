@@ -50,51 +50,51 @@ public class AnnotationModeManager : Singleton<AnnotationModeManager>, IMixedRea
 
         if (Input.GetKeyUp(KeyCode.P))
         {
-            CreateBoxFromPoints(pointCache);
+            // CreateBoxFromPoints(pointCache);
             // pointCache.Clear();
         }
     }
 
-    void FixedUpdate()
-    {
-        if (pointCache.Count >= 2)
-        {
-            var orientedBoundingBox = GetOrientedBox3(pointCache);
+    // void FixedUpdate()
+    // {
+    //     if (pointCache.Count >= 2)
+    //     {
+    //         var orientedBoundingBox = GetOrientedBox3(pointCache);
 
-            var center = (Vector3)orientedBoundingBox.Box.Center;
+    //         var center = (Vector3)orientedBoundingBox.Box.Center;
 
-            var axisX = (Vector3)orientedBoundingBox.Box.AxisX;
-            var axisY = (Vector3)orientedBoundingBox.Box.AxisY;
-            var axisZ = (Vector3)orientedBoundingBox.Box.AxisZ;
-            var extends = (Vector3)orientedBoundingBox.Box.Extent;
+    //         var axisX = (Vector3)orientedBoundingBox.Box.AxisX;
+    //         var axisY = (Vector3)orientedBoundingBox.Box.AxisY;
+    //         var axisZ = (Vector3)orientedBoundingBox.Box.AxisZ;
+    //         var extends = (Vector3)orientedBoundingBox.Box.Extent;
 
-            var A = center - extends.z * axisZ - extends.x * axisX - axisY * extends.y;
-            var B = center - extends.z * axisZ + extends.x * axisX - axisY * extends.y;
-            var C = center - extends.z * axisZ + extends.x * axisX + axisY * extends.y;
-            var D = center - extends.z * axisZ - extends.x * axisX + axisY * extends.y;
+    //         var A = center - extends.z * axisZ - extends.x * axisX - axisY * extends.y;
+    //         var B = center - extends.z * axisZ + extends.x * axisX - axisY * extends.y;
+    //         var C = center - extends.z * axisZ + extends.x * axisX + axisY * extends.y;
+    //         var D = center - extends.z * axisZ - extends.x * axisX + axisY * extends.y;
 
-            var E = center + extends.z * axisZ - extends.x * axisX - axisY * extends.y;
-            var F = center + extends.z * axisZ + extends.x * axisX - axisY * extends.y;
-            var G = center + extends.z * axisZ + extends.x * axisX + axisY * extends.y;
-            var H = center + extends.z * axisZ - extends.x * axisX + axisY * extends.y;
+    //         var E = center + extends.z * axisZ - extends.x * axisX - axisY * extends.y;
+    //         var F = center + extends.z * axisZ + extends.x * axisX - axisY * extends.y;
+    //         var G = center + extends.z * axisZ + extends.x * axisX + axisY * extends.y;
+    //         var H = center + extends.z * axisZ - extends.x * axisX + axisY * extends.y;
 
-            // And finally visualize it
-            Debug.DrawLine(A, B);
-            Debug.DrawLine(B, C);
-            Debug.DrawLine(C, D);
-            Debug.DrawLine(D, A);
+    //         // And finally visualize it
+    //         Debug.DrawLine(A, B);
+    //         Debug.DrawLine(B, C);
+    //         Debug.DrawLine(C, D);
+    //         Debug.DrawLine(D, A);
 
-            Debug.DrawLine(E, F);
-            Debug.DrawLine(F, G);
-            Debug.DrawLine(G, H);
-            Debug.DrawLine(H, E);
+    //         Debug.DrawLine(E, F);
+    //         Debug.DrawLine(F, G);
+    //         Debug.DrawLine(G, H);
+    //         Debug.DrawLine(H, E);
 
-            Debug.DrawLine(A, E);
-            Debug.DrawLine(B, F);
-            Debug.DrawLine(D, H);
-            Debug.DrawLine(C, G);
-        }
-    }
+    //         Debug.DrawLine(A, E);
+    //         Debug.DrawLine(B, F);
+    //         Debug.DrawLine(D, H);
+    //         Debug.DrawLine(C, G);
+    //     }
+    // }
 
     public void Prime()
     {   
@@ -156,61 +156,61 @@ public class AnnotationModeManager : Singleton<AnnotationModeManager>, IMixedRea
         }
     }
 
-    private void CreateTwoPointAnnotation(Vector3 point1, Vector3 point2)
-    {
-        // Vector3 center = (point1 + point2) / 2.0f; 
-        // Vector3 size = point1 - point2;
-        // Bounds bounds = new Bounds(center, size);
-        // GameObject bbox = GameObject.Instantiate(objectAnnotationPrefab, center, Quaternion.identity, transform);
-        // bbox.GetComponent<Collider>().center = center;
+    // private void CreateTwoPointAnnotation(Vector3 point1, Vector3 point2)
+    // {
+    //     // Vector3 center = (point1 + point2) / 2.0f; 
+    //     // Vector3 size = point1 - point2;
+    //     // Bounds bounds = new Bounds(center, size);
+    //     // GameObject bbox = GameObject.Instantiate(objectAnnotationPrefab, center, Quaternion.identity, transform);
+    //     // bbox.GetComponent<Collider>().center = center;
 
-        var points3d = new Vector3d[] {point1, point2};
-        var orientedBbox = new ContOrientedBox3(points3d);
+    //     var points3d = new Vector3d[] {point1, point2};
+    //     var orientedBbox = new ContOrientedBox3(points3d);
 
-        var center = (Vector3)orientedBbox.Box.Center;
-        var forward = (Vector3)orientedBbox.Box.AxisZ;
-        var upward = (Vector3)orientedBbox.Box.AxisY;
-        var rotation = Quaternion.LookRotation(forward, upward);
+    //     var center = (Vector3)orientedBbox.Box.Center;
+    //     var forward = (Vector3)orientedBbox.Box.AxisZ;
+    //     var upward = (Vector3)orientedBbox.Box.AxisY;
+    //     var rotation = Quaternion.LookRotation(forward, upward);
 
-        var extents = (Vector3)orientedBbox.Box.Extent;
+    //     var extents = (Vector3)orientedBbox.Box.Extent;
 
-        GameObject bbox = GameObject.Instantiate(prefab1x1, center, Quaternion.identity, transform);
-        bbox.transform.localScale = extents;
-    }
+    //     GameObject bbox = GameObject.Instantiate(prefab1x1, center, Quaternion.identity, transform);
+    //     bbox.transform.localScale = extents;
+    // }
 
-    private void CreateBoxFromPoints(List<Vector3> points)
-    {
-        var orientedBbox = GetOrientedBox3(points);
+    // private void CreateBoxFromPoints(List<Vector3> points)
+    // {
+    //     var orientedBbox = GetOrientedBox3(points);
 
-        var center = (Vector3)orientedBbox.Box.Center;
-        var forward = (Vector3)orientedBbox.Box.AxisZ;
-        var upward = (Vector3)orientedBbox.Box.AxisY;
-        var rotation = Quaternion.LookRotation(forward, upward);
+    //     var center = (Vector3)orientedBbox.Box.Center;
+    //     var forward = (Vector3)orientedBbox.Box.AxisZ;
+    //     var upward = (Vector3)orientedBbox.Box.AxisY;
+    //     var rotation = Quaternion.LookRotation(forward, upward);
 
-        var extents = (Vector3)orientedBbox.Box.Extent;
+    //     var extents = (Vector3)orientedBbox.Box.Extent;
 
-        Debug.LogFormat(
-        @"Center:   {0}
-          Forward:  {1}
-          Upward:   {2}
-          Rotation: {3}
-          Extents:  {4}",
-          center, forward, upward, rotation, extents);
+    //     Debug.LogFormat(
+    //     @"Center:   {0}
+    //       Forward:  {1}
+    //       Upward:   {2}
+    //       Rotation: {3}
+    //       Extents:  {4}",
+    //       center, forward, upward, rotation, extents);
 
-        GameObject bbox = GameObject.Instantiate(prefab1x1, center, Quaternion.identity, transform);
-        bbox.transform.localScale = extents * 2.0f;
-    }
+    //     GameObject bbox = GameObject.Instantiate(prefab1x1, center, Quaternion.identity, transform);
+    //     bbox.transform.localScale = extents * 2.0f;
+    // }
 
-    private ContOrientedBox3 GetOrientedBox3(List<Vector3> points)
-    {
-        var points3d = new Vector3d[points.Count];
-        for (int i = 0; i < points.Count; ++i)
-        {
-            points3d[i] = points[i];
-        }
+    // private ContOrientedBox3 GetOrientedBox3(List<Vector3> points)
+    // {
+    //     var points3d = new Vector3d[points.Count];
+    //     for (int i = 0; i < points.Count; ++i)
+    //     {
+    //         points3d[i] = points[i];
+    //     }
 
-        return new ContOrientedBox3(points3d, pointWeights);
-    }
+    //     return new ContOrientedBox3(points3d, pointWeights);
+    // }
 
     public void OnPointerDragged(MixedRealityPointerEventData eventData)
     {

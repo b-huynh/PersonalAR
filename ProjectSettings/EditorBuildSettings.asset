@@ -56,4 +56,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/MRTK/Examples/Demos/HandTracking/Scenes/NearMenuExamples.unity
     guid: bf3eb3415bffceb41810526380c2c71c
-  m_configObjects: {}
+  m_configObjects:
+    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: a959e02d3289bc0469307bda60a99289,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 660fb099214df9644bbae41c6a2b1ce5,
+      type: 2}
