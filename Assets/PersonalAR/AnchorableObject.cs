@@ -12,13 +12,13 @@ public class AnchorableObject : MonoBehaviour
     [SerializeField, Tooltip("World anchors must have a unique name. Enter a descriptive name if you like.")]
     public string _worldAnchorName;
     [SerializeField]
-    protected TMPro.TMP_Text _debugLabel;
+    public TMPro.TMP_Text _debugLabel;
  
     [Space(10)]
     public UnityEvent OnAnchorLoaded;
  
     private TrackableId _xrAnchorId;
-    private AnchorStoreManager _anchorStoreManager;
+    public AnchorStoreManager _anchorStoreManager;
  
     private void OnValidate()
     {
@@ -27,10 +27,14 @@ public class AnchorableObject : MonoBehaviour
             _worldAnchorName = Guid.NewGuid().ToString();
         }
     }
- 
+
+    private void Awake()
+    {
+        _anchorStoreManager = AnchorStoreManager.Instance;
+    }
+
     private void Start()
     {
-        _anchorStoreManager = FindObjectOfType<AnchorStoreManager>();
         if (_anchorStoreManager)
         {
             _anchorStoreManager.PropertyChanged += AnchorStore_PropertyChanged;
@@ -45,7 +49,7 @@ public class AnchorableObject : MonoBehaviour
             LogDebugMessage($"No {nameof(AnchorStoreManager)} present in scene.", true);
         }
     }
- 
+
     private void LateUpdate()
     {
         UpdateAnchorPose();
@@ -53,6 +57,14 @@ public class AnchorableObject : MonoBehaviour
  
     public bool SaveAnchor(bool overwrite = true)
     {
+        if (_anchorStoreManager == null)
+        {
+            Debug.Log("Anchor store manager null");
+        }
+        else
+        {
+            Debug.LogFormat("Anchor store manager is {0}", _anchorStoreManager.name);
+        }
         if (_anchorStoreManager?.AnchorPointsSubsystem == null || _anchorStoreManager?.AnchorStore == null)
         {
             LogDebugMessage($"Can't save anchor {_worldAnchorName}: reference point subsystem or anchor store have not been initialized.", true);
@@ -118,6 +130,20 @@ public class AnchorableObject : MonoBehaviour
         LogDebugMessage($"Did not find anchor {_worldAnchorName} in reference points subsystem after XRAnchorStore load.", true);
         return false;
     }
+
+    private bool MatchIdWithChanges(TrackableId trackableId, NativeArray<XRReferencePoint> trackedChanges)
+    {
+        foreach (XRReferencePoint anchor in trackedChanges)
+        {
+            Debug.Log($"Found anchor {anchor}, id {trackableId}, position {anchor.pose.position}");
+            if (anchor.trackableId == trackableId)
+            {
+                LogDebugMessage($"Found anchor {_worldAnchorName} in added reference points.");
+                return true;
+            }
+        }
+        return false;
+    }
  
     public void ClearAnchor()
     {
@@ -152,7 +178,7 @@ public class AnchorableObject : MonoBehaviour
     {
         if (_debugLabel)
         {
-            _debugLabel.text = $"{_worldAnchorName} tracking: {anchor.trackingState}\r\n{anchor.pose.position}\r\n{anchor.pose.rotation}";
+            _debugLabel.text = $"{_worldAnchorName} | status: {anchor.trackingState}\r\n{anchor.pose.position}\r\n{anchor.pose.rotation}";
         }
  
         transform.position = anchor.pose.position;

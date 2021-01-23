@@ -9,8 +9,6 @@ public class PopulateChoices : MonoBehaviour
 
     private Dictionary<string, GameObject> buttons;
 
-    private AnchorableObjectsManager anchorManager;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -31,17 +29,19 @@ public class PopulateChoices : MonoBehaviour
             var newButton = Object.Instantiate(optionTemplate, transform);
             newButton.name = choiceName + "ButtonChoice";
             newButton.GetComponentInChildren<UnityEngine.UI.Text>().text = choiceName;
-            newButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate {
-                ClickHandler(choiceName);
-            });
+
+            newButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(
+                delegate
+                {
+                    AnchorableObjectsManager.Instance.SetNextObject(choiceName);
+                }
+            );
+
             buttons.Add(choiceName, newButton);
         }
 
         // Hide initial button since we only use it as template for cloning
         optionTemplate.SetActive(false);
-
-        // Set reference to anchor manager so we can check when objects are placed
-        anchorManager = GameObject.FindObjectOfType<AnchorableObjectsManager>();
     }
 
     // Update is called once per frame
@@ -50,15 +50,14 @@ public class PopulateChoices : MonoBehaviour
         foreach(var kv in buttons)
         {
             // Set button to no longer be interactable if it's been stored in anchor manager  
-            if(anchorManager.anchoredObjects.ContainsKey(kv.Key))
+            if(AnchorableObjectsManager.Instance.AnchoredObjects.ContainsKey(kv.Key))
             {
                 kv.Value.GetComponent<UnityEngine.UI.Button>().interactable = false;
             }
+            else
+            {
+                kv.Value.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            }
         }
-    }
-
-        void ClickHandler(string name)
-    {
-        GameObject.FindObjectOfType<AnchorableObjectsManager>().SetNextObject(name);
     }
 }

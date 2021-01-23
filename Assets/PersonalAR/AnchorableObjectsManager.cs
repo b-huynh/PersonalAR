@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -9,153 +11,297 @@ using UnityEngine.XR.WSA.Persistence;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.Utilities;
 
-public class AnchorableObjectsManager : MonoBehaviour
+using Recaug;
+
+public class AnchorableObjectsManager : Singleton<AnchorableObjectsManager>
 {
-    public Dictionary<string, AnchorableObject> anchoredObjects;
+    private Dictionary<string, AnchorableObject> _anchoredObjects;
+    public Dictionary<string, AnchorableObject> AnchoredObjects
+    {
+        get { return _anchoredObjects; }
+        private set
+        {
+            _anchoredObjects = value;
+        }
+    }
 
-    private string objectToPlace = null;
+    public TMPro.TextMeshProUGUI AnchorDebugText;
 
-    public GameObject rightHandPlacer;
-    public GameObject leftHandPlacer;
+    public GameObject AnchorActorPrefab;
+    private string _objectToPlace = null;
+    private GameObject _rightHandPlacer;
+    private GameObject _leftHandPlacer;
 
     // Start is called before the first frame update
     void Start()
     {
-        anchoredObjects = new Dictionary<string, AnchorableObject>();
+        AnchoredObjects = new Dictionary<string, AnchorableObject>();
 
-        rightHandPlacer.SetActive(false);
-        leftHandPlacer.SetActive(false);
+        AnchorStoreManager.Instance.PropertyChanged += OnPropertyChanged;
+
+        _rightHandPlacer = GameObject.Instantiate(AnchorActorPrefab, this.transform);
+        // Destroy(_rightHandPlacer.GetComponent<AnchorableObject>());
+        _rightHandPlacer.SetActive(false);
+
+        _leftHandPlacer = GameObject.Instantiate(AnchorActorPrefab, this.transform);
+        // Destroy(_leftHandPlacer.GetComponent<AnchorableObject>());
+        _leftHandPlacer.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // rightHandPlacer.SetActive(objectToPlace != null);
-        // leftHandPlacer.SetActive(objectToPlace != null);
-        if (objectToPlace != null)
+        if (_objectToPlace != null)
         {
             Vector3 rightEndPoint;
             if (PointerUtils.TryGetHandRayEndPoint(Handedness.Right, out rightEndPoint))
             {
-                rightHandPlacer.SetActive(true);
-                rightHandPlacer.transform.position = rightEndPoint;
+                _rightHandPlacer.SetActive(true);
+                _rightHandPlacer.transform.position = rightEndPoint;
             }
             else
             {
-                rightHandPlacer.SetActive(false);
+                _rightHandPlacer.SetActive(false);
             }
 
             Vector3 leftEndPoint;
             if (PointerUtils.TryGetHandRayEndPoint(Handedness.Left, out leftEndPoint))
             {
-                leftHandPlacer.SetActive(true);
-                leftHandPlacer.transform.position = leftEndPoint;
+                _leftHandPlacer.SetActive(true);
+                _leftHandPlacer.transform.position = leftEndPoint;
             }
             else
             {
-                leftHandPlacer.SetActive(false);
+                _leftHandPlacer.SetActive(false);
             }
+        }
+        else
+        {
+            _rightHandPlacer.SetActive(false);
+            _leftHandPlacer.SetActive(false);
+        }
+
+        DrawDebugText(true);
+    }
+
+    public void DrawDebugText(bool verbose = false)
+    {
+        if (AnchorStoreManager.Instance.AnchorStore == null)
+        {
+            AnchorDebugText.text = "Anchor store not initialized.\n";
+            return;
+        }
+
+        int existingCount = AnchorStoreManager.Instance.AnchorStore.PersistedAnchorNames.Count();
+        AnchorDebugText.text = $"<size=20><b>{existingCount} Existing Objects</b></size>\n";
+        if (verbose)
+        {
+            foreach(string anchorName in AnchorStoreManager.Instance.AnchorStore.PersistedAnchorNames)
+            {
+                string debugLabel = AnchoredObjects[anchorName]._debugLabel.text.Replace("\r\n", ", ");
+                AnchorDebugText.text += $"{debugLabel} \n";
+            }
+        }
+        else
+        {
+            foreach(string anchorName in AnchorStoreManager.Instance.AnchorStore.PersistedAnchorNames)
+            {
+                AnchorDebugText.text += $"{anchorName}\n";
+            }
+        }
+    }
+
+    public void OnPropertyChanged(System.Object sender, PropertyChangedEventArgs eventArgs)
+    {
+        if (eventArgs.PropertyName == nameof(AnchorStoreManager.Instance.AnchorStore))
+        {
+            LoadExistingAnchors();
         }
     }
 
     public void SetNextObject(string name)
     {
-        objectToPlace = name;
-        
-        rightHandPlacer.GetComponentInChildren<TextMesh>().text = objectToPlace;
-        rightHandPlacer.SetActive(true);
-        leftHandPlacer.GetComponentInChildren<TextMesh>().text = objectToPlace;
-        leftHandPlacer.SetActive(true);
+        _objectToPlace = name;
+
+        // rightHandPlacer.GetComponentInChildren<TextMesh>().text = _objectToPlace;
+        _rightHandPlacer.GetComponent<AnchorActor>().anchorName = _objectToPlace;
+        _rightHandPlacer.SetActive(true);
+
+        // leftHandPlacer.GetComponentInChildren<TextMesh>().text = _objectToPlace;
+        _leftHandPlacer.GetComponent<AnchorActor>().anchorName = _objectToPlace;
+        _leftHandPlacer.SetActive(true);
     }
 
     public void PlaceObject(MixedRealityPointerEventData eventData)
     {
-        if (objectToPlace == null) return;
+        if (_objectToPlace == null) return;
 
         var rightPointers = PointerUtils.GetPointers<IMixedRealityPointer>(Handedness.Right, InputSourceType.Hand);
         var leftPointers = PointerUtils.GetPointers<IMixedRealityPointer>(Handedness.Left, InputSourceType.Hand);
 
         if (rightPointers.Contains(eventData.Pointer))
         {
-            CreateAnchoredObject(objectToPlace, rightHandPlacer.transform.position);
-            objectToPlace = null;
+            if (CreateAndSaveAnchor(_objectToPlace, _rightHandPlacer.transform.position))
+            {
+                _objectToPlace = null;
+            }
         }
         else if (leftPointers.Contains(eventData.Pointer))
         {
-            CreateAnchoredObject(objectToPlace, leftHandPlacer.transform.position);
-            objectToPlace = null;
+            if (CreateAndSaveAnchor(_objectToPlace, _leftHandPlacer.transform.position))
+            {
+                _objectToPlace = null;
+            }
         }
     }
 
+    // Clone the AnchorActor game object prefab
     public GameObject CreateObject(string name)
     {
-        // GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        // newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        // newObject.GetComponent<Renderer>().material.color = Color.red;
-
-        GameObject newObject = GameObject.Instantiate(rightHandPlacer);
+        GameObject newObject = GameObject.Instantiate(AnchorActorPrefab);
+        newObject.GetComponent<AnchorActor>().anchorName = name;
         newObject.SetActive(true);
-        
-        //TODO: Change this to a prefab or at least add text label to it.
-
         return newObject;
     }
 
-    public void CreateAnchoredObject(string name, Vector3 position)
+    // Create and save and
+    public bool CreateAndSaveAnchor(string name, Vector3 position)
     {   
         // Create object model (for debug/visualization purposes)
         GameObject newAnchoredObject = CreateObject(name);
         newAnchoredObject.transform.position = position;
 
-        // Attach anchor
-        var anchor = newAnchoredObject.AddComponent<AnchorableObject>();
+        // Attempt to save anchor at provided location
+        var anchor = newAnchoredObject.GetComponent<AnchorableObject>();
         anchor._worldAnchorName = name;
-
-        // Add to known anchors list
-        anchoredObjects.Add(name, anchor);
-    }
-
-    public void SaveAnchors(string saveFilePath)
-    {
-        if (File.Exists(saveFilePath))
+        if (anchor.SaveAnchor())
         {
-            FileStream fileStream = File.Open(saveFilePath, FileMode.Open);
-            fileStream.SetLength(0);
-            fileStream.Close(); // This flushes the content, too.
+            // Add to list tracking anchored game objects
+            AnchoredObjects.Add(name, anchor);
+            Debug.Log($"Saved anchor {name}");
+            return true;
         }
-        
-        using(StreamWriter file = new StreamWriter(saveFilePath))
+        else
         {
-            foreach(var kv in anchoredObjects)
-            {
-                if (kv.Value.SaveAnchor())
-                {
-                    file.WriteLine(kv.Key);
-                }
-            }
+            // Could not save, so destroy the newly created game object
+            Destroy(newAnchoredObject);
+            Debug.Log($"Failed to save anchor {name}");
+            return false;
         }
     }
 
-    public void LoadAnchors(string saveFilePath)
+    private void LoadExistingAnchors()
     {
-        if (!File.Exists(saveFilePath))
+        // Retrieve and show all current anchors for the space.
+        if (AnchorStoreManager.Instance.AnchorStore == null)
         {
-            Debug.LogFormat("Save file does not exist at {0}", saveFilePath);
+            Debug.LogFormat("Cannot load existing anchors, no anchor store found");
             return;
         }
 
-        anchoredObjects.Clear();
+        var existingAnchors = AnchorStoreManager.Instance.AnchorStore.PersistedAnchorNames;
+        Debug.LogFormat("Found {0} existing anchors", existingAnchors.Count);
 
-        string[] lines = File.ReadAllLines(saveFilePath);
-        foreach(string name in lines)
+        foreach (string anchorName in existingAnchors)
         {
-            GameObject retrievedObject = CreateObject(name);
-            var anchor = retrievedObject.AddComponent<AnchorableObject>();
-            anchor._worldAnchorName = name;
-            if (anchor.LoadAnchor())
+            GameObject anchorMesh = CreateObject(anchorName);
+            AnchorableObject anchor = anchorMesh.GetComponent<AnchorableObject>();
+            anchor._worldAnchorName = anchorName;
+            anchor.OnAnchorLoaded.AddListener(
+                delegate 
+                {
+                    Debug.LogFormat("Loaded anchor {0}", anchorName);
+                    AnchoredObjects.Add(anchorName, anchor);
+                }
+            );
+            if (!anchor.LoadAnchor())
             {
-                anchoredObjects.Add(name, anchor);
+                Debug.LogFormat("Unable to load anchor {0}", anchorName);
             }
         }
     }
+
+    public void DeleteAnchor(string name)
+    {
+        AnchorStoreManager.Instance.AnchorStore.UnpersistAnchor(name);
+        Destroy(AnchoredObjects[name].gameObject);
+        AnchoredObjects.Remove(name);
+    }
+
+    public void ClearAnchors()
+    {
+        AnchorStoreManager.Instance.AnchorStore.Clear();
+        foreach(var kv in AnchoredObjects)
+        {
+            Destroy(kv.Value.gameObject);
+        }
+        AnchoredObjects.Clear();
+    }
+
+    // public void SaveAnchors()
+    // {
+    //     string fileFormat = "anchors?.txt";
+    //     string[] files = Directory.GetFiles(Application.persistentDataPath, fileFormat);
+    //     int nextIndex = files.Length + 1;
+
+    //     string filename = "anchors" + nextIndex.ToString() + ".txt";
+    //     string nextFilePath = Path.GetFullPath(Path.Combine(Application.persistentDataPath, filename));
+    //     SaveAnchors(nextFilePath);
+    // }
+
+    // public void SaveAnchors(string saveFilePath)
+    // {
+    //     if (File.Exists(saveFilePath))
+    //     {
+    //         FileStream fileStream = File.Open(saveFilePath, FileMode.Open);
+    //         fileStream.SetLength(0);
+    //         fileStream.Close(); // This flushes the content, too.
+    //     }
+        
+    //     using(StreamWriter file = new StreamWriter(saveFilePath))
+    //     {
+    //         foreach(var kv in anchoredObjects)
+    //         {
+    //             if (kv.Value.SaveAnchor())
+    //             {
+    //                 // Save anchors unique ID (for retrieval from world anchor store) and save object name.
+    //                 file.WriteLine(kv.Value._worldAnchorName + "," + kv.Key);
+    //             }
+    //             else
+    //             {
+    //                 Debug.LogFormat("Could not save anchored object {0}", kv.Key);
+    //             }
+    //         }
+    //     }
+
+    //     Debug.LogFormat("Saved file as {0}", saveFilePath);
+    // }
+
+    // public void LoadAnchors(string saveFilePath)
+    // {
+    //     if (!File.Exists(saveFilePath))
+    //     {
+    //         Debug.LogFormat("Save file does not exist at {0}", saveFilePath);
+    //         return;
+    //     }
+
+    //     ClearUnsavedObjects();
+
+    //     string[] lines = File.ReadAllLines(saveFilePath);
+    //     foreach(string entry in lines)
+    //     {
+    //         // Split line into column values
+    //         string[] cols = entry.Split(',');
+    //         string anchorName = cols[0];
+    //         string objectName = cols[1];
+
+    //         GameObject retrievedObject = CreateObject(objectName);
+    //         var anchor = retrievedObject.AddComponent<AnchorableObject>();
+    //         anchor._worldAnchorName = anchorName;
+    //         if (anchor.LoadAnchor())
+    //         {
+    //             anchoredObjects.Add(objectName, anchor);
+    //         }
+    //     }
+    // }
 }
