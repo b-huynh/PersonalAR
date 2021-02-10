@@ -25,8 +25,6 @@ public class AnchorableObjectsManager : Singleton<AnchorableObjectsManager>
         }
     }
 
-    public TMPro.TextMeshProUGUI AnchorDebugText;
-
     public GameObject AnchorActorPrefab;
     private string _objectToPlace = null;
     private GameObject _rightHandPlacer;
@@ -79,35 +77,6 @@ public class AnchorableObjectsManager : Singleton<AnchorableObjectsManager>
         {
             _rightHandPlacer.SetActive(false);
             _leftHandPlacer.SetActive(false);
-        }
-
-        DrawDebugText(true);
-    }
-
-    public void DrawDebugText(bool verbose = false)
-    {
-        if (AnchorStoreManager.Instance.AnchorStore == null)
-        {
-            AnchorDebugText.text = "Anchor store not initialized.\n";
-            return;
-        }
-
-        int existingCount = AnchorStoreManager.Instance.AnchorStore.PersistedAnchorNames.Count();
-        AnchorDebugText.text = $"<size=20><b>{existingCount} Existing Objects</b></size>\n";
-        if (verbose)
-        {
-            foreach(string anchorName in AnchorStoreManager.Instance.AnchorStore.PersistedAnchorNames)
-            {
-                string debugLabel = AnchoredObjects[anchorName]._debugLabel.text.Replace("\r\n", ", ");
-                AnchorDebugText.text += $"{debugLabel} \n";
-            }
-        }
-        else
-        {
-            foreach(string anchorName in AnchorStoreManager.Instance.AnchorStore.PersistedAnchorNames)
-            {
-                AnchorDebugText.text += $"{anchorName}\n";
-            }
         }
     }
 
@@ -237,71 +206,4 @@ public class AnchorableObjectsManager : Singleton<AnchorableObjectsManager>
         }
         AnchoredObjects.Clear();
     }
-
-    // public void SaveAnchors()
-    // {
-    //     string fileFormat = "anchors?.txt";
-    //     string[] files = Directory.GetFiles(Application.persistentDataPath, fileFormat);
-    //     int nextIndex = files.Length + 1;
-
-    //     string filename = "anchors" + nextIndex.ToString() + ".txt";
-    //     string nextFilePath = Path.GetFullPath(Path.Combine(Application.persistentDataPath, filename));
-    //     SaveAnchors(nextFilePath);
-    // }
-
-    // public void SaveAnchors(string saveFilePath)
-    // {
-    //     if (File.Exists(saveFilePath))
-    //     {
-    //         FileStream fileStream = File.Open(saveFilePath, FileMode.Open);
-    //         fileStream.SetLength(0);
-    //         fileStream.Close(); // This flushes the content, too.
-    //     }
-        
-    //     using(StreamWriter file = new StreamWriter(saveFilePath))
-    //     {
-    //         foreach(var kv in anchoredObjects)
-    //         {
-    //             if (kv.Value.SaveAnchor())
-    //             {
-    //                 // Save anchors unique ID (for retrieval from world anchor store) and save object name.
-    //                 file.WriteLine(kv.Value._worldAnchorName + "," + kv.Key);
-    //             }
-    //             else
-    //             {
-    //                 Debug.LogFormat("Could not save anchored object {0}", kv.Key);
-    //             }
-    //         }
-    //     }
-
-    //     Debug.LogFormat("Saved file as {0}", saveFilePath);
-    // }
-
-    // public void LoadAnchors(string saveFilePath)
-    // {
-    //     if (!File.Exists(saveFilePath))
-    //     {
-    //         Debug.LogFormat("Save file does not exist at {0}", saveFilePath);
-    //         return;
-    //     }
-
-    //     ClearUnsavedObjects();
-
-    //     string[] lines = File.ReadAllLines(saveFilePath);
-    //     foreach(string entry in lines)
-    //     {
-    //         // Split line into column values
-    //         string[] cols = entry.Split(',');
-    //         string anchorName = cols[0];
-    //         string objectName = cols[1];
-
-    //         GameObject retrievedObject = CreateObject(objectName);
-    //         var anchor = retrievedObject.AddComponent<AnchorableObject>();
-    //         anchor._worldAnchorName = anchorName;
-    //         if (anchor.LoadAnchor())
-    //         {
-    //             anchoredObjects.Add(objectName, anchor);
-    //         }
-    //     }
-    // }
 }

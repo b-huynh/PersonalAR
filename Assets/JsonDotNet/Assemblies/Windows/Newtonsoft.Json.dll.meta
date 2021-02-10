@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0d2e4eb7345909349aac59f7914e3124
+guid: 9b6ba260dada0ea4a871a42011f8b87d
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -18,12 +18,6 @@ PluginImporter:
       settings:
         CPU: x86
   - first:
-      : LinuxUniversal
-    second:
-      enabled: 0
-      settings:
-        CPU: None
-  - first:
       : OSXIntel
     second:
       enabled: 0
@@ -36,24 +30,26 @@ PluginImporter:
       settings:
         CPU: AnyCPU
   - first:
-      Any: 
+      : SamsungTV
     second:
       enabled: 0
       settings:
-        Exclude Editor: 0
-        Exclude Linux: 1
-        Exclude Linux64: 1
-        Exclude LinuxUniversal: 1
-        Exclude OSXIntel: 1
-        Exclude OSXIntel64: 1
-        Exclude OSXUniversal: 1
-        Exclude Win: 1
-        Exclude Win64: 1
-        Exclude WindowsStoreApps: 1
+        STV_MODEL: STANDARD_13
+  - first:
+      Android: Android
+    second:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+  - first:
+      Any: 
+    second:
+      enabled: 0
+      settings: {}
   - first:
       Editor: Editor
     second:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
         DefaultValueInitialized: true
@@ -64,12 +60,6 @@ PluginImporter:
       enabled: 0
       settings:
         CPU: AnyCPU
-  - first:
-      Standalone: OSXUniversal
-    second:
-      enabled: 0
-      settings:
-        CPU: None
   - first:
       Standalone: Win
     second:
@@ -85,13 +75,20 @@ PluginImporter:
   - first:
       Windows Store Apps: WindowsStoreApps
     second:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: AnyCPU
         DontProcess: False
-        PlaceholderPath: 
+        PlaceholderPath: Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll
         SDK: AnySDK
-        ScriptingBackend: AnyScriptingBackend
+        ScriptingBackend: DotNet
+  - first:
+      iPhone: iOS
+    second:
+      enabled: 0
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 
