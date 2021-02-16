@@ -35,6 +35,7 @@ public class AnchorableObject : MonoBehaviour
 
     private void Start()
     {
+#if WINDOWS_UWP
         if (_anchorStoreManager)
         {
             _anchorStoreManager.PropertyChanged += AnchorStore_PropertyChanged;
@@ -48,6 +49,7 @@ public class AnchorableObject : MonoBehaviour
         {
             LogDebugMessage($"No {nameof(AnchorStoreManager)} present in scene.", true);
         }
+#endif
     }
 
     private void LateUpdate()

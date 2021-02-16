@@ -61,7 +61,7 @@ public static class Utils
 
     public static Vector3 RandomPosition()
     {
-        return new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(0.0f, 2.0f), -7.0f);
+        return new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(0.0f, 2.0f), 3.0f);
     }
 
     public static Vector3 RandomMenuPosition(Vector3 objectPosition)

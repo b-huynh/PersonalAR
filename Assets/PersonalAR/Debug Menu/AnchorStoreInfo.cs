@@ -17,7 +17,7 @@ public class AnchorStoreInfo : MonoBehaviour
     void Update()
     {
         string bodyText = "";
-        if (AnchorStoreManager.Instance.AnchorStore != null)
+        if (AnchorStoreManager.Instance && AnchorStoreManager.Instance.AnchorStore != null)
         {
             bodyText = AnchorStoreManager.Instance.AnchorStoreDebugText;
         }
