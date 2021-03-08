@@ -19,6 +19,22 @@ public class AppIcon : MonoBehaviour
 
     private App appRef;
 
+    private BasePervasiveApp _appRef;
+    public BasePervasiveApp AppRef
+    {
+        get => _appRef;
+        set
+        {
+            _appRef = value;
+        }
+    }
+
+    [Tooltip("Optional gameobject for visualizing application active state.")]
+    public GameObject activeIndicator;
+
+    [Tooltip("Optional gameobject for visualizing application focus on/off state.")]
+    public GameObject focusIndicator;
+
     private void SetDisplayProperties()
     {
         appRef = GameManager.Instance.GetApp(AppID);
@@ -29,11 +45,40 @@ public class AppIcon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetDisplayProperties();
+        // SetDisplayProperties();
     }
 
     // Update is called once per frame
     void Update()
     {
+        DrawAppIcon();
+    }
+
+    void DrawAppIcon()
+    {
+        if (_appRef)
+        {
+            GetComponent<MeshRenderer>().material = _appRef.appInfo.logo;
+            GetComponentInChildren<TMPro.TextMeshPro>().text = _appRef.appInfo.name;
+            if (activeIndicator)
+            {
+                activeIndicator.SetActive(_appRef.Rendering);
+            }
+        }
+    }
+
+    public void OnClick()
+    {
+        _appRef.ToggleRenderState();
+    }
+
+    public void OnFocusEnter()
+    {
+        // focusIndicator?.SetActive(true);
+    }
+
+    public void OnFocusExit()
+    {
+        // focusIndicator?.SetActive(false);
     }
 }

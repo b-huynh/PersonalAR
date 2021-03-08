@@ -22,3 +22,11 @@ MonoBehaviour:
     runtimePlatform: 15
     configurationProfile: {fileID: 11400000, guid: 45c20fade71a3ec418860b757ff5a5ce,
       type: 2}
+  - componentType:
+      reference: Microsoft.MixedReality.Toolkit.Extensions.AnchorService, Assembly-CSharp,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    componentName: Anchor Service
+    priority: 10
+    runtimePlatform: 24
+    configurationProfile: {fileID: 11400000, guid: d361a8798df527c438f6604908063a1b,
+      type: 2}

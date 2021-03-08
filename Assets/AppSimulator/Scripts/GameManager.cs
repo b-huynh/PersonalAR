@@ -78,8 +78,8 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("Using multitasking type: " + config.Experiment.Multitasking.ToString());
 
             // RecaugClient.Instance.Init(Config.Params.Recaug);
-            RecaugClient.Instance.OnNearIn += OnNearIn;
-            RecaugClient.Instance.OnNearOut += OnNearOut;
+            // RecaugClient.Instance.OnNearIn += OnNearIn;
+            // RecaugClient.Instance.OnNearOut += OnNearOut;
 
             sessionID = System.Guid.NewGuid().ToString();
             StatsTracker.Instance.LogStart(sessionID);

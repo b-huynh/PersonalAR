@@ -46,7 +46,7 @@ MonoBehaviour:
       axisConstraint: 0
   - localizationKey: 
     keyword: Debug On
-    keyCode: 55
+    keyCode: 54
     action:
       id: 0
       description: Toggle Profiler

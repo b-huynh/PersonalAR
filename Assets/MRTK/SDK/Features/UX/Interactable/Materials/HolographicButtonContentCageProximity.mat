@@ -86,7 +86,7 @@ Material:
     - _BorderLightReplacesAlbedo: 0
     - _BorderLightUsesHoverColor: 1
     - _BorderMinValue: 1
-    - _BorderWidth: 0.06
+    - _BorderWidth: 0.362
     - _BorderWidthHorizontal: 0.1
     - _BorderWidthVertical: 0.1
     - _BumpScale: 1
@@ -120,7 +120,7 @@ Material:
     - _FadeBeginDistance: 0.0101
     - _FadeCompleteDistance: 0.2
     - _FadeMinValue: 0
-    - _FluentLightIntensity: 1
+    - _FluentLightIntensity: 0.569
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1

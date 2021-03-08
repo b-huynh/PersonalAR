@@ -90,15 +90,19 @@ public class BasePervasiveApp : MonoBehaviour
     
     [Header("Pervasive App Settings")]
     public PervasiveAppInfo appInfo;
-    public bool isRendering;
+    public bool Rendering;
 
     private Transform contentRoot;
+
+    private List<IAppEntity> _appEntities;
+
+    public System.Action<bool> OnRenderStateChanged;
 
     private void SetDefaultAppInfo()
     {
         appInfo.name = "DefaultAppName";
         appInfo.description = "Default application description";
-        appInfo.logo = new Material(Shader.Find("DefaultLogo"));
+        // appInfo.logo = new Material(Shader.Find("DefaultLogo"));
     }
 
     void Reset()
@@ -117,6 +121,8 @@ public class BasePervasiveApp : MonoBehaviour
     {
         contentRoot = transform.Find("ContentRoot");
 
+        _appEntities = new List<IAppEntity>();
+
         // Add new app to app registry.
         appId = System.Guid.NewGuid().ToString();
         PervasiveAppRegistry.AddApp(this);
@@ -133,14 +139,14 @@ public class BasePervasiveApp : MonoBehaviour
 
     void LateUpdate()
     {
-        var renderers = contentRoot.GetComponentsInChildren<Renderer>();
-        var colliders = contentRoot.GetComponentsInChildren<Collider>();
-        var canvases = contentRoot.GetComponentsInChildren<Canvas>();
-        var mrtkLineRenderers = contentRoot.GetComponentsInChildren<MixedRealityLineRenderer>();
-        foreach (var r in renderers) { r.enabled = isRendering; }
-        foreach (var c in colliders) { c.enabled = isRendering; }
-        foreach (var c in canvases) { c.enabled = isRendering; }
-        foreach (var r in mrtkLineRenderers) { r.enabled = isRendering; }
+        // var renderers = contentRoot.GetComponentsInChildren<Renderer>();
+        // var colliders = contentRoot.GetComponentsInChildren<Collider>();
+        // var canvases = contentRoot.GetComponentsInChildren<Canvas>();
+        // var mrtkLineRenderers = contentRoot.GetComponentsInChildren<MixedRealityLineRenderer>();
+        // foreach (var r in renderers) { r.enabled = Rendering; }
+        // foreach (var c in colliders) { c.enabled = Rendering; }
+        // foreach (var c in canvases) { c.enabled = Rendering; }
+        // foreach (var r in mrtkLineRenderers) { r.enabled = Rendering; }
     }
 
     public GameObject InstantiateInApp(GameObject original)
@@ -151,6 +157,15 @@ public class BasePervasiveApp : MonoBehaviour
 
     public void SetRenderState(bool value)
     {
-        isRendering = value;
+        if (Rendering != value)
+        {
+            Rendering = value;
+            OnRenderStateChanged?.Invoke(Rendering);
+        }
+    }
+
+    public void ToggleRenderState()
+    {
+        SetRenderState(!Rendering);
     }
 }

@@ -40,6 +40,16 @@ public class Anki : MonoBehaviour
         
     }
 
+    public void Initialize(string anchorName, GameObject target)
+    {
+        frontDialogue = Translator.Translate(
+            anchorName, GameManager.Instance.config.Experiment.TargetLanguage);
+        backDialogue = anchorName;
+
+        transform.Find("SplineToolTip").GetComponent<ToolTip>().ToolTipText = frontDialogue;
+        transform.Find("SplineToolTip").GetComponent<ToolTipConnector>().Target = target;
+    }
+
     public void SetContent(ObjectRegistration registration)
     {
         objectRegistration = registration;
