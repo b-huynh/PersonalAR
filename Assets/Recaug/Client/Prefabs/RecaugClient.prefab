@@ -47,6 +47,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RecaugServerHost: 
   RecaugServerPort: 
+  useConfigFromServer: 0
+  config:
+    CameraWidth: 896
+    CameraHeight: 504
+    FilterWindowSize: 120
+    FilterWindowMinCount: 5
+    FilterMinDist: 0.2
+    _knownObjects: []
+    _validObjects: []
   hitmasks:
     serializedVersion: 2
     m_Bits: 4294967291

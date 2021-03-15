@@ -7,6 +7,15 @@ using Microsoft.MixedReality.Toolkit.Extensions;
 
 public class AnchorActor : MonoBehaviour, IAnchorable
 {
+    // Reference to a scriptable variable, e.g. AnnotationModeBoolVariable
+    [SerializeField]
+    private BoolVariable IsEnabled;
+
+    [SerializeField]
+    private GameObject mesh;
+    [SerializeField]
+    private GameObject label;
+
     private AnchorableObject _anchor;
     public string AnchorName
     {
@@ -17,30 +26,21 @@ public class AnchorActor : MonoBehaviour, IAnchorable
 
     void OnEnable()
     {
-        foreach(Transform child in transform)
-        {
-            AppUtils.SetLayerRecursive(child.gameObject, LayerMask.NameToLayer("Default"));
-        }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        // Match current value
+        OnValueChanged(IsEnabled.RuntimeValue);
+        // Subscribe to value changed events.
+        IsEnabled.OnValueChanged += OnValueChanged;
     }
 
     void OnDisable()
     {
-        foreach(Transform child in transform)
-        {
-            AppUtils.SetLayerRecursive(child.gameObject, LayerMask.NameToLayer("Ignore Raycast"));
-        }
+        IsEnabled.OnValueChanged -= OnValueChanged;
+    }
+
+    private void OnValueChanged(bool newValue)
+    {
+        mesh.SetActive(newValue);
+        label.SetActive(newValue);
     }
 
     public void SetDisplayText(string text)

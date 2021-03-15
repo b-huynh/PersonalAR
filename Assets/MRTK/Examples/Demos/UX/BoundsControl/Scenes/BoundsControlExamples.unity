@@ -5163,8 +5163,8 @@ PrefabInstance:
       value: '<size=42><b>Bounds Control Examples</b></size>
 
 
-        Bounding
-        Box is the standard UI for manipulation objects in mixed reality. BoundsControl.cs
+        Bounding Box
+        is the standard UI for manipulation objects in mixed reality. BoundsControl.cs
         script gives you various types Bounding Box handle visualization and activation
         options.'
       objectReference: {fileID: 0}

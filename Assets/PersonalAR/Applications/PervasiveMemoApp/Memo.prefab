@@ -4773,7 +4773,7 @@ GameObject:
   - component: {fileID: 9194068025640980481}
   - component: {fileID: 1226023585581640360}
   m_Layer: 0
-  m_Name: Sticky Note
+  m_Name: Memo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

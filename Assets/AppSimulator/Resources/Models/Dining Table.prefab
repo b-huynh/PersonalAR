@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4994995856084476210}
   - component: {fileID: 2850599652479558974}
   m_Layer: 0
-  m_Name: Box7685
+  m_Name: Dining Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.MixedReality.Toolkit;
 using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
@@ -16,6 +17,9 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		// Expose service features and abilities here
 		// event Action<ObjectRegistration> OnRegistered;
 		// event Action<ObjectRegistration> OnRemoved;
+
+		// Raised when AnchorStore and AnchorPointsSubsystem are set.
+		event PropertyChangedEventHandler PropertyChanged;
 
 		event Action<AnchorableObject> OnRegistered;
 		event Action<AnchorableObject> OnRemoved;

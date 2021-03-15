@@ -51,21 +51,23 @@ public class AnchorableObject : MonoBehaviour
 
     private void Start()
     {
-#if WINDOWS_UWP
-        if (_anchorService)
+
+        if (_anchorService != null)
         {
+
             _anchorService.PropertyChanged += AnchorStore_PropertyChanged;
- 
+//  #if WINDOWS_UWP
             if (LoadAnchorOnStart && _anchorService.AnchorStore != null)
             {
                 LoadAnchor();
             }
+// #endif
         }
         else
         {
             LogDebugMessage($"No {nameof(IAnchorService)} present in scene.", true);
         }
-#endif
+
     }
 
     private void LateUpdate()

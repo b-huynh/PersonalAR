@@ -211,8 +211,10 @@ public static class Translator {
 		}
 		catch
 		{
-			throw new System.ArgumentException(string.Format(
-				"Cannot translate unknown word {0}", word));
+			// throw new System.ArgumentException(string.Format(
+			// 	"Cannot translate unknown word {0}", word));
+			Debug.LogWarning($"No translation for '{word}'");
+			return $"No translation for '{word}'";
 		}
 	}
 }

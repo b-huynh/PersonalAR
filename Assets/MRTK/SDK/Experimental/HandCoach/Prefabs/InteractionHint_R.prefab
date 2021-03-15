@@ -44,9 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00612bdf43d32f645999b15d3a5888d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkHandTracking: 1
-  MinMaxDelay: {x: 5, y: 10}
-  useMaxTimer: 1
+  hideIfHandTracked: 0
+  minDelay: 5
+  maxDelay: 10
+  useMaxDelay: 1
   repeats: 2
   autoActivate: 1
   animationState: 
@@ -63,6 +64,10 @@ PrefabInstance:
       value: HandRig_R
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -75,6 +80,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -85,14 +94,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c4867650c78612948ac0c914c70aff76, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

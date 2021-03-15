@@ -1,12 +1,6 @@
 ﻿using UnityEngine;
-using System;
-using System.IO;
-using System.Text;
 
-using TMPro;
-
-using Recaug;
-
+[RequireComponent(typeof(TMPro.TextMeshProUGUI))]
 public class DebugConsole : MonoBehaviour
 {
     void Start()
@@ -32,18 +26,17 @@ public class DebugConsole : MonoBehaviour
     public void HandlelogMessageReceived(string condition, string stackTrace, LogType type)
     {
         var culture = new System.Globalization.CultureInfo("en-US");
-        string timestamp = System.DateTime.Now.ToString(culture);
+        string timestamp = System.DateTime.Now.ToString("HH:mm:ss", culture);
+        string stackFormatted = stackTrace.Replace ("\n", "\n    ");
 
         string msg = "";
         if (type == LogType.Log)
         {
-            msg = string.Format("[{0}: {1}] {2}\n", timestamp, type.ToString().ToUpper(), 
-                condition);
+            msg = $"[{timestamp} {type.ToString().ToUpper()}] {condition}\n";
         }
         else
         {
-            msg = string.Format("[{0}: {1}] {2}{3}", timestamp, type.ToString().ToUpper(), 
-                condition, "\n    " + stackTrace.Replace ("\n", "\n    "));
+            msg = $"[{timestamp} {type.ToString().ToUpper()}] {condition}\n {stackFormatted}\n";
         }
 
         string history = GetComponent<TMPro.TextMeshProUGUI>().text;

@@ -218,6 +218,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _appID: 2
+  activeIndicator: {fileID: 0}
+  focusIndicator: {fileID: 0}
 --- !u!114 &5526656910708178995
 MonoBehaviour:
   m_ObjectHideFlags: 0

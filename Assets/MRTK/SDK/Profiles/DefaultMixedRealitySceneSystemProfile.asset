@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: DefaultMixedRealitySceneSystemProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 0
-  useManagerScene: 1
+  useManagerScene: 0
   managerScene:
     Name: ManagerScene
     Path: Assets/PersonalAR/Scenes/ManagerScene.unity
     Included: 1
-    BuildIndex: 0
+    BuildIndex: -1
     Tag: Untagged
     Asset: {fileID: 102900000, guid: b1951b39a28703649b20541d3c81895a, type: 3}
   useLightingScene: 0
@@ -27,20 +27,20 @@ MonoBehaviour:
   - Name: DefaultLightingScene
     Path: Assets/MRTK/Services/SceneSystem/SceneSystemResources/DefaultLightingScene.unity
     Included: 1
-    BuildIndex: 3
+    BuildIndex: -1
     Tag: Untagged
     Asset: {fileID: 102900000, guid: 7e54e36c44f826c438c95da79f8de638, type: 3}
   contentScenes:
-  - Name: Scene0_Startup
-    Path: Assets/PersonalAR/Scenes/Scene0_Startup.unity
+  - Name: ManagerScene
+    Path: Assets/PersonalAR/Scenes/ManagerScene.unity
     Included: 1
-    BuildIndex: 1
+    BuildIndex: -1
     Tag: Untagged
-    Asset: {fileID: 102900000, guid: 3239583cfd2669e43844cb32e44cdfe6, type: 3}
+    Asset: {fileID: 102900000, guid: b1951b39a28703649b20541d3c81895a, type: 3}
   - Name: Scene1_Multitasking
     Path: Assets/PersonalAR/Scenes/Scene1_Multitasking.unity
     Included: 1
-    BuildIndex: 2
+    BuildIndex: -1
     Tag: Untagged
     Asset: {fileID: 102900000, guid: c26c9a511df0b8f4890621a3e15abdeb, type: 3}
   permittedLightingSceneComponentTypes:

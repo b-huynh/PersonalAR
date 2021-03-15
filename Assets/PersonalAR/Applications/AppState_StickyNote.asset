@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3da510abf006c642a165335460fd3db, type: 3}
-  m_Name: LearnAppState
+  m_Name: AppState_StickyNote
   m_EditorClassIdentifier: 
   appName: 
   appDesc: 
   appLogo: {fileID: 0}
+  appDataFile: 

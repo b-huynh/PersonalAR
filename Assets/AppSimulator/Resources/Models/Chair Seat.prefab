@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3364638210426837649}
   - component: {fileID: 4196860953584258184}
   m_Layer: 0
-  m_Name: Plane018
+  m_Name: Chair Seat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

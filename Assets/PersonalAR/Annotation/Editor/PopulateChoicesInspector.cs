@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(PopulateChoices))]
-public class PopulateChoicesEditor : Editor
+public class PopulateChoicesInspector : Editor
 {
     public override void OnInspectorGUI()
     {

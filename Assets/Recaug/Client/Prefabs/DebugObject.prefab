@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   className: Debug
-  confidence: 0
 --- !u!114 &4238105804751437388
 MonoBehaviour:
   m_ObjectHideFlags: 0

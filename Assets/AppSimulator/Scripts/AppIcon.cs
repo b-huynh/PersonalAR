@@ -58,8 +58,8 @@ public class AppIcon : MonoBehaviour
     {
         if (_appRef)
         {
-            GetComponent<MeshRenderer>().material = _appRef.appInfo.logo;
-            GetComponentInChildren<TMPro.TextMeshPro>().text = _appRef.appInfo.name;
+            GetComponent<MeshRenderer>().material = _appRef.appState.appLogo;
+            GetComponentInChildren<TMPro.TextMeshPro>().text = _appRef.appState.appName;
             if (activeIndicator)
             {
                 activeIndicator.SetActive(_appRef.Rendering);
@@ -69,7 +69,7 @@ public class AppIcon : MonoBehaviour
 
     public void OnClick()
     {
-        _appRef.ToggleRenderState();
+        _appRef.ToggleStartOrSuspend();
     }
 
     public void OnFocusEnter()

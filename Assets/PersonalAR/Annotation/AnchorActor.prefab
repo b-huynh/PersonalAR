@@ -164,7 +164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7136093875821228859}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -576,7 +576,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1801922975225538288}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SeeItSayItLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1565,6 +1565,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ab8cff55e50284b8170cfbaa4546ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsEnabled: {fileID: 11400000, guid: b9eaacc69e2b10d46a5e43b8da8661ab, type: 2}
+  mesh: {fileID: 1720772140163125645}
+  label: {fileID: 8903398630190927971}
   tagMesh: {fileID: 7456628563377270879}
 --- !u!114 &5346194464512985355
 MonoBehaviour:
@@ -1675,7 +1678,7 @@ GameObject:
   - component: {fileID: 6955067599089165955}
   - component: {fileID: 7456628563377270879}
   - component: {fileID: 6090584490715783474}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2299,7 +2302,7 @@ GameObject:
   - component: {fileID: 8632293527143154058}
   - component: {fileID: 6938168466803956082}
   - component: {fileID: 1124849239442847987}
-  m_Layer: 29
+  m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2378,7 +2381,7 @@ GameObject:
   - component: {fileID: 6916014210124984249}
   - component: {fileID: 3334521721339378268}
   - component: {fileID: 2540656648906553972}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: UIButtonSquareIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2456,8 +2459,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8900665620526892003}
   - component: {fileID: 8875871759938481545}
-  m_Layer: 5
-  m_Name: Tag
+  m_Layer: 0
+  m_Name: Label
   m_TagString: Annotation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2505,7 +2508,7 @@ GameObject:
   - component: {fileID: 7243026422656053276}
   - component: {fileID: 6769740280303500607}
   - component: {fileID: 7661822937243632340}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Backplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}

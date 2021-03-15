@@ -2,43 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEditor;
-
-[CustomEditor(typeof(ScaleTween))]
-public class ScaleTweenEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-
-        ScaleTween scaleTween = (ScaleTween)target;
-
-        if (GUILayout.Button("TweenIn"))
-        {
-            scaleTween.TweenIn();
-        }
-
-        if (GUILayout.Button("TweenOut"))
-        {
-            scaleTween.TweenOut();
-        }
-    }
-}
 
 public class ScaleTween : MonoBehaviour
 {
     public LeanTweenType inTween;
     public Vector3 inTweenTo;
     public LeanTweenType outTween;
+    public Vector3 outTweenTo;
 
     public float duration;
     public float delay;
     public UnityEvent OnTweenInComplete;
     public UnityEvent OnTweenOutComplete;
 
+    // Is true only if most recent tween call was TweenIn.
+    public bool IsTweenedIn { get; private set; }
+
     void OnEnable()
     {
-        transform.localScale = Vector3.zero;
+        transform.localScale = outTweenTo;
     }
 
     public void TweenIn()
@@ -48,14 +30,16 @@ public class ScaleTween : MonoBehaviour
             .setDelay(delay)
             .setEase(inTween)
             .setOnComplete(delegate () { OnTweenInComplete.Invoke(); });
+        IsTweenedIn = true;
     }
 
     public void TweenOut()
     {
-        LeanTween.scale(gameObject, Vector3.zero, duration)
+        LeanTween.scale(gameObject, outTweenTo, duration)
             .setDelay(delay)
             .setEase(outTween)
             .setOnComplete(delegate () { OnTweenOutComplete.Invoke(); });
+        IsTweenedIn = false;
     }
 
     // Start is called before the first frame update

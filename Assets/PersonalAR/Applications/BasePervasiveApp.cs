@@ -16,15 +16,10 @@ public static class PervasiveAppRegistry
         return registry.Values.ToList();
     }
 
-    public static IList<PervasiveAppInfo> GetAllAppInfos()
-    {
-        return GetAllApps().Select(x => x.appInfo).ToList();
-    }
-
     public static bool AddApp<T>(T appInstance) where T : BasePervasiveApp
     {
         if (appInstance == null || string.IsNullOrEmpty(appInstance.appId) ||
-            string.IsNullOrEmpty(appInstance.appInfo.name))
+            string.IsNullOrEmpty(appInstance.appState.appName))
         {
             // Adding a null instance is not supported.
             return false;
@@ -84,31 +79,24 @@ public struct PervasiveAppInfo
     public Material logo;
 }
 
-public class BasePervasiveApp : MonoBehaviour
+public class BasePervasiveApp : MonoBehaviour, IAppStateListener
 {
-    public string appId { get; private set; }
-    
     [Header("Pervasive App Settings")]
-    public PervasiveAppInfo appInfo;
-    public bool Rendering;
+    public AppState appState;
+    public string appId
+    {
+        get => appState.GetInstanceID().ToString();
+    }
 
-    private Transform contentRoot;
-
-    private List<IAppEntity> _appEntities;
+    public bool Rendering
+    {
+        get => appState.IsRendering;
+    }
 
     public System.Action<bool> OnRenderStateChanged;
 
-    private void SetDefaultAppInfo()
-    {
-        appInfo.name = "DefaultAppName";
-        appInfo.description = "Default application description";
-        // appInfo.logo = new Material(Shader.Find("DefaultLogo"));
-    }
-
     void Reset()
     {
-        SetDefaultAppInfo();
-
         // Test that Content layer is there. If not, create one.
         if (transform.Find("ContentRoot") == null)
         {
@@ -119,53 +107,30 @@ public class BasePervasiveApp : MonoBehaviour
 
     protected virtual void Awake()
     {
-        contentRoot = transform.Find("ContentRoot");
-
-        _appEntities = new List<IAppEntity>();
-
         // Add new app to app registry.
-        appId = System.Guid.NewGuid().ToString();
         PervasiveAppRegistry.AddApp(this);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {   
+    void OnEnable()
+    {
+        appState.AddListener(this);
     }
 
-    void Update()
+    void OnDisable()
     {
+        appState.AddListener(this);
     }
 
-    void LateUpdate()
+    public void AppStart() {}
+    public void AppQuit() {}
+
+    public void RenderStateChanged(bool toValue)
     {
-        // var renderers = contentRoot.GetComponentsInChildren<Renderer>();
-        // var colliders = contentRoot.GetComponentsInChildren<Collider>();
-        // var canvases = contentRoot.GetComponentsInChildren<Canvas>();
-        // var mrtkLineRenderers = contentRoot.GetComponentsInChildren<MixedRealityLineRenderer>();
-        // foreach (var r in renderers) { r.enabled = Rendering; }
-        // foreach (var c in colliders) { c.enabled = Rendering; }
-        // foreach (var c in canvases) { c.enabled = Rendering; }
-        // foreach (var r in mrtkLineRenderers) { r.enabled = Rendering; }
+        OnRenderStateChanged?.Invoke(toValue);
     }
 
-    public GameObject InstantiateInApp(GameObject original)
+    public void ToggleStartOrSuspend()
     {
-        GameObject clone = GameObject.Instantiate(original, contentRoot.transform);
-        return clone;
-    }
-
-    public void SetRenderState(bool value)
-    {
-        if (Rendering != value)
-        {
-            Rendering = value;
-            OnRenderStateChanged?.Invoke(Rendering);
-        }
-    }
-
-    public void ToggleRenderState()
-    {
-        SetRenderState(!Rendering);
+        appState.ToggleStartOrSuspend();
     }
 }
