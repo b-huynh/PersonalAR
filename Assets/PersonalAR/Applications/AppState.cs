@@ -4,19 +4,27 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
-// public interface ISavable
-// {
-//     void Save(string file);
-//     void Load(string file);
-// }
+public enum AppView
+{
+    Spatial, Windowed
+}
+
+public enum ContextLevel
+{
+    Independent, Contextual
+}
 
 [CreateAssetMenu]
 public class AppState : ScriptableObject
 {
+    public AppView appView;
+    public ContextLevel contextLevel;
+
     // Application meta info
     public string appName;
     public string appDesc;
     public Material appLogo;
+
 
     // Application save data
     public string appDataFile;

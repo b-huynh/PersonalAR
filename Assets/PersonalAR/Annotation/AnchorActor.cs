@@ -5,6 +5,8 @@ using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Extensions;
 
+using TMPro;
+
 public class AnchorActor : MonoBehaviour, IAnchorable
 {
     // Reference to a scriptable variable, e.g. AnnotationModeBoolVariable
@@ -22,7 +24,7 @@ public class AnchorActor : MonoBehaviour, IAnchorable
         get => _anchor.WorldAnchorName;
     }
 
-    public TextMesh tagMesh;
+    public TMPro.TextMeshPro tagTextMesh;
 
     void OnEnable()
     {
@@ -45,14 +47,14 @@ public class AnchorActor : MonoBehaviour, IAnchorable
 
     public void SetDisplayText(string text)
     {
-        tagMesh.text = text;
+        tagTextMesh.text = text;
     }
 
     public void SetAnchor(AnchorableObject anchor)
     {
         _anchor = anchor;
         
-        if (tagMesh)
+        if (tagTextMesh != null)
         {
             SetDisplayText(_anchor.WorldAnchorName);
         }

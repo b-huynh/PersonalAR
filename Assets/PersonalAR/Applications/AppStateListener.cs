@@ -46,6 +46,11 @@ public class AppStateListener : MonoBehaviour, IAppStateListener
         }
     }
 
+    public AppState GetAppState()
+    {
+        return this.appState;
+    }
+
     public void AppStart()
     {
         OnAppStart.Invoke();

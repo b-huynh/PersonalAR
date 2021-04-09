@@ -193,6 +193,8 @@ public static class Translator {
 	// Translates English word to a target language.
 	public static string Translate(string word, TargetLanguage tl)
 	{
+		word = word.Trim().ToLower();
+		
 		// Do nothing! Input is assumed to be English.
 		if (tl == TargetLanguage.English)
 		{

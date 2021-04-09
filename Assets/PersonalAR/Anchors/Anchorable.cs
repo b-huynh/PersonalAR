@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Anchorable : MonoBehaviour, IAnchorable
 {
+    [SerializeField]
     private AnchorableObject _anchor;
     public string AnchorName
     {
@@ -12,6 +13,14 @@ public class Anchorable : MonoBehaviour, IAnchorable
     }
 
     public event Action<AnchorableObject> OnAnchorSet;
+
+    void OnEnable()
+    {
+        if (_anchor != null)
+        {
+            SetAnchor(_anchor);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
