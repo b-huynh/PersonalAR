@@ -6,6 +6,9 @@ using System.Text;
 using Recaug;
 
 public class RemoteDebug : Singleton<RemoteDebug> {
+    public string ServerIP;
+    public string DebugLogPort;
+
     private UdpClientUWP udpClient = null;
 
     public CircularBuffer<string> history = new CircularBuffer<string>(50);
@@ -18,6 +21,16 @@ public class RemoteDebug : Singleton<RemoteDebug> {
     public void OnEnable() 
     {
         Application.logMessageReceived += HandlelogMessageReceived;
+
+        if (string.IsNullOrEmpty(ServerIP))
+        {
+            ServerIP = "127.0.0.1";
+        }
+
+        if (string.IsNullOrEmpty(DebugLogPort))
+        {
+            DebugLogPort = "8081";
+        }
     }
 
     public void OnDisable() 
@@ -43,10 +56,9 @@ public class RemoteDebug : Singleton<RemoteDebug> {
         history.PushFront(msg);
 
 #if WINDOWS_UWP
-        if (udpClient != null) {
-            udpClient.SendBytes(Encoding.UTF8.GetBytes(msg),
-                GameManager.Instance.config.System.ServerIP,
-                GameManager.Instance.config.System.DebugLogPort);
+        if (udpClient != null)
+        {
+            udpClient.SendBytes(Encoding.UTF8.GetBytes(msg), ServerIP, DebugLogPort);
         }
 #endif
     }
