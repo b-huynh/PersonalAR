@@ -14,14 +14,11 @@ public class DebugConsoleInspector : Editor
 
         testMessage = EditorGUILayout.TextField("Test Message: ", testMessage);
 
-        if (GUILayout.Button("Test Log Message"))
-        {
-            Debug.Log(testMessage);
-        }
-
-        if (GUILayout.Button("Test Error Message"))
-        {
-            Debug.LogError(testMessage);
-        }
+        GUILayout.BeginHorizontal("box");
+        GUILayout.Label("Test: ");
+        if (GUILayout.Button("Log")) { Debug.Log(testMessage); }
+        if (GUILayout.Button("Warn")) { Debug.LogWarning(testMessage); }
+        if (GUILayout.Button("Error")) { Debug.LogError(testMessage); }
+        GUILayout.EndHorizontal();
     }
 }

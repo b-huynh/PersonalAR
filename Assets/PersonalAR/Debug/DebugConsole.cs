@@ -1,8 +1,24 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Specialized;
+using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(TMPro.TextMeshProUGUI))]
 public class DebugConsole : MonoBehaviour
 {
+    // string/int pairs
+    private OrderedDictionary logStringCount;
+    // string/string pairs
+    private OrderedDictionary stackTraceCache;
+    [Range(10, 1000)]
+    public int TruncateLength;
+
+    public string ConsoleOutput
+    {
+        get => GetConsoleOutput();
+        private set {}
+    }
+
     void Start()
     {
 
@@ -10,36 +26,68 @@ public class DebugConsole : MonoBehaviour
 
     void Update()
     {
-
+        GetComponent<TMPro.TextMeshProUGUI>().text = ConsoleOutput;
     }
 
     public void OnEnable() 
     {
+        logStringCount = new OrderedDictionary();
+        stackTraceCache = new OrderedDictionary();
         Application.logMessageReceived += HandlelogMessageReceived;
     }
 
     public void OnDisable() 
     {
         Application.logMessageReceived -= HandlelogMessageReceived;
+        logStringCount?.Clear();
+        stackTraceCache?.Clear();
     }
 
-    public void HandlelogMessageReceived(string condition, string stackTrace, LogType type)
+    public void HandlelogMessageReceived(string logString, string stackTrace, LogType type)
     {
+        // Ignore warnings.
+        if (type == LogType.Warning) { return; }
+
+        // Format stackTrace with timestamp and proper indentation.
         var culture = new System.Globalization.CultureInfo("en-US");
         string timestamp = System.DateTime.Now.ToString("HH:mm:ss", culture);
-        string stackFormatted = stackTrace.Replace ("\n", "\n    ");
-
-        string msg = "";
         if (type == LogType.Log)
         {
-            msg = $"[{timestamp} {type.ToString().ToUpper()}] {condition}\n";
+            logString = $"({type.ToString().ToUpper()}) {logString}";
+            stackTrace = $"[{timestamp}]";
         }
         else
         {
-            msg = $"[{timestamp} {type.ToString().ToUpper()}] {condition}\n {stackFormatted}\n";
+            logString = $"({type.ToString().ToUpper()}) {logString}";
+            stackTrace = $"[{timestamp}]\n {stackTrace}";
         }
 
-        string history = GetComponent<TMPro.TextMeshProUGUI>().text;
-        GetComponent<TMPro.TextMeshProUGUI>().text = msg + history;
+        // Cache log counts and stackTraces
+        if (!logStringCount.Contains(logString))
+        {
+            logStringCount.Add(logString, 0);
+            stackTraceCache.Add(logString, "");
+        }
+        logStringCount[logString] = (int)logStringCount[logString] + 1;
+        stackTraceCache[logString] = stackTrace;
+    }
+
+    private string TruncateStackTrace(string stackTrace, int numChars)
+    {
+        return stackTrace.Length > numChars ? stackTrace.Substring(0, numChars) + "..." : stackTrace; 
+    }
+
+    private string GetConsoleOutput()
+    {
+        string output = "";
+        foreach(DictionaryEntry de in logStringCount)
+        {
+            string logString = (string)de.Key;
+            int logCount = (int)de.Value;
+            string stackTrace = (string)stackTraceCache[logString];
+            string truncatedStackTrace = TruncateStackTrace(stackTrace, TruncateLength);
+            output += $"({logCount}) {logString} {truncatedStackTrace}\n";
+        }
+        return output;
     }
 }

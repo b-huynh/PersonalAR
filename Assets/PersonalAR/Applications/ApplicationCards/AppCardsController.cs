@@ -43,4 +43,9 @@ public class AppCardsController : MonoBehaviour
         if (IsOpen) { Close(); }
         else { Open(); }
     }
+
+    void AddAppCard(AppCard card)
+    {
+        
+    }
 }

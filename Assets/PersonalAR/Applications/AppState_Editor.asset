@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appView: 0
   contextLevel: 0
-  appName: 
+  appName: Editor
   appDesc: 
   appLogo: {fileID: 0}
   appDataFile: 

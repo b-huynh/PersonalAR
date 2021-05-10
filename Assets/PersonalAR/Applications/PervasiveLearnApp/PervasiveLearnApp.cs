@@ -100,6 +100,6 @@ public class PervasiveLearnApp : BasePervasiveApp
         GameObject menu = objectMenu.gameObject.Instantiate(appState);
         // AppEntity menu = AppEntity.Instantiate(objectTagPrefab, this);
         objectMenu.GetComponent<LearnObjectMenu>().targetLanguage = language;
-        menu.GetComponent<IAnchorable>().SetAnchor(anchor);
+        menu.GetComponent<IAnchorable>().Anchor = anchor;
     }
 }

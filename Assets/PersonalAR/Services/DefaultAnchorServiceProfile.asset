@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DefaultAnchorServiceProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 1
-  anchorActorPrefab: {fileID: 7135156322907431751, guid: 68f09b5212d776644ae87b220f116464,
+  anchorActorPrefab: {fileID: 3647562099537496378, guid: 3d8d3dc6adee3744c8b4782fae57ecc1,
     type: 3}

@@ -52,12 +52,12 @@ public class LearnObjectMenu : MonoBehaviour
 
     void OnEnable()
     {
-        GetComponent<Anchorable>().OnAnchorSet += OnAnchorSet;
+        GetComponent<Anchorable>().OnAnchorSet.AddListener(OnAnchorSet);
     }
 
     void OnDisable()
     {
-        GetComponent<Anchorable>().OnAnchorSet -= OnAnchorSet;
+        GetComponent<Anchorable>().OnAnchorSet.RemoveListener(OnAnchorSet);
     }
 
     // Start is called before the first frame update

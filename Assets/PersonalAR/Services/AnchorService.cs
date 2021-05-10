@@ -77,12 +77,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 				if (AnchorPointsSubsystem == null)
 				{
-					Debug.Log($"[{GetType()}] Reference Point Subsystem not initialized.");
+					// Debug.Log($"[{GetType()}] Reference Point Subsystem not initialized.");
+					Debug.Log($"Reference Point Subsystem not initialized.");
 				}
 
 				if (AnchorStore != null)
 				{
-					Debug.Log($"[{GetType()}] Anchor store initialized.");
+					// Debug.Log($"[{GetType()}] Anchor store initialized.");
+					Debug.Log($"Anchor store initialized.");
 				}
 	
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AnchorStore)));
@@ -326,11 +328,16 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		private GameObject CreateAnchorActor(string name)
 		{
 			GameObject newAnchor = GameObject.Instantiate(anchorServiceProfile.AnchorActorPrefab);
+			newAnchor.name += $" [{name}]";
 
 			AnchorableObject anchor = newAnchor.GetComponent<AnchorableObject>();
 			anchor.WorldAnchorName = name;
 
-			newAnchor.GetComponent<IAnchorable>().SetAnchor(anchor);
+			// newAnchor.GetComponent<IAnchorable>().SetAnchor(anchor);
+			foreach(IAnchorable anchorView in newAnchor.GetComponentsInChildren<IAnchorable>())
+			{
+				anchorView.Anchor = anchor;
+			}
 
 			newAnchor.SetActive(true);
 			return newAnchor;

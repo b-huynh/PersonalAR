@@ -23,15 +23,8 @@ public class PervasiveHomeApp : BasePervasiveApp
 
     void OnObjectRegistered(AnchorableObject anchor)
     {
-        // Remove AnchorActors if leftover from startup staging.
-        AnchorActor anchorActor;
-        if (anchor.TryGetComponent<AnchorActor>(out anchorActor))
-        {
-            anchorActor.enabled = false;
-        }
-
         GameObject newAnchorView = AppEntity.Instantiate(anchorView.gameObject, this);
-        newAnchorView.GetComponent<IAnchorable>().SetAnchor(anchor);
+        newAnchorView.GetComponent<IAnchorable>().Anchor = anchor;
     }
 
     // Update is called once per frame

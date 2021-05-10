@@ -15070,6 +15070,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _anchor: {fileID: 0}
+  OnAnchorSet:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAnchorRemoved:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7890751712945259189
 MonoBehaviour:
   m_ObjectHideFlags: 0

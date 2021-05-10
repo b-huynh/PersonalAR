@@ -6,6 +6,10 @@ using UnityEngine;
 public interface IAnchorable
 {
     // The name of the anchor this object is associated with.
-    string AnchorName { get; }
-    void SetAnchor(AnchorableObject anchor);
+    // string AnchorName { get; }
+    // void SetAnchor(AnchorableObject anchor);
+
+    AnchorableObject Anchor { get; set; }
+
+    bool Anchored { get; }
 }
