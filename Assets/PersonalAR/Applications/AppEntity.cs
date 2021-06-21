@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete("Use BaseEntity instead")]
 public class AppEntity : MonoBehaviour, IAppEntity
 {
     [SerializeField]
@@ -60,7 +62,7 @@ public class AppEntity : MonoBehaviour, IAppEntity
         int visibleLayer = ParentApp != null ? ParentApp.gameObject.layer :  LayerMask.NameToLayer("Default");
         int newLayer = newState ? visibleLayer : LayerMask.NameToLayer("Ignore Raycast");
 
-        AppUtils.SetLayerRecursive(this.gameObject, newLayer);
+        gameObject.SetLayerInChildren(newLayer);
     }
 
     public static GameObject Instantiate(GameObject template, BasePervasiveApp parentApp)

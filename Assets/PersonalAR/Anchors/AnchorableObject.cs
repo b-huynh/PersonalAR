@@ -26,8 +26,9 @@ public class AnchorableObject : MonoBehaviour
  
     [Space(10)]
     public UnityEvent OnAnchorLoaded;
+    public bool IsTrackingPosition { get; private set; }
  
-    private TrackableId _xrAnchorId;
+    public TrackableId _xrAnchorId { get; private set; }
     // public AnchorStoreManager _anchorStoreManager;
 
     public IAnchorService _anchorService;
@@ -68,6 +69,7 @@ public class AnchorableObject : MonoBehaviour
             LogDebugMessage($"No {nameof(IAnchorService)} present in scene.", true);
         }
 
+        IsTrackingPosition = false;
     }
 
     private void LateUpdate()
@@ -129,6 +131,7 @@ public class AnchorableObject : MonoBehaviour
  
         // Look for the matching anchor in the anchor point subsystem.
         TrackableChanges<XRReferencePoint> referencePointChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
+        Debug.Log($"[LoadAnchor] GetChanges added {referencePointChanges.added.Length}");
         foreach (XRReferencePoint anchor in referencePointChanges.added)
         {
             if (anchor.trackableId == trackableId)
@@ -136,7 +139,10 @@ public class AnchorableObject : MonoBehaviour
                 _xrAnchorId = anchor.trackableId;
                 PositionFromAnchor(anchor);
                 OnAnchorLoaded.Invoke();
+
+                Debug.Log($"[LoadAnchor] Added {_worldAnchorName} at {anchor.pose.position.ToString("F3")}");
                 LogDebugMessage($"Found anchor {_worldAnchorName} in added reference points.");
+                
                 return true;
             }
         }
@@ -171,6 +177,11 @@ public class AnchorableObject : MonoBehaviour
  
     private void UpdateAnchorPose()
     {
+#if UNITY_EDITOR
+        // PositionFromAnchor is not called in editor so just set tracking position status to always true in enditor.
+        IsTrackingPosition = true;
+#endif
+
         // if (_xrAnchorId == default || _anchorService?.AnchorPointsSubsystem == null)
         if (_xrAnchorId == default || !_anchorService.AnchorStoreInitialized)
         {
@@ -178,7 +189,19 @@ public class AnchorableObject : MonoBehaviour
         }
  
         TrackableChanges<XRReferencePoint> anchorChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
- 
+        Debug.Log($"[UpdateAnchorPose] GetChanges added {anchorChanges.added.Length}");
+        Debug.Log($"[UpdateAnchorPose] GetChanges updated {anchorChanges.added.Length}");
+
+        // TESTING.
+        foreach (XRReferencePoint anchor in anchorChanges.added)
+        {
+            if (anchor.trackableId == _xrAnchorId)
+            {
+                PositionFromAnchor(anchor);
+                break;
+            }
+        }
+
         foreach (XRReferencePoint anchor in anchorChanges.updated)
         {
             if (anchor.trackableId == _xrAnchorId)
@@ -195,9 +218,17 @@ public class AnchorableObject : MonoBehaviour
         {
             _debugLabel.text = $"{_worldAnchorName} | status: {anchor.trackingState}\r\n{anchor.pose.position}\r\n{anchor.pose.rotation}";
         }
- 
-        transform.position = anchor.pose.position;
-        transform.rotation = anchor.pose.rotation;
+
+        if (anchor.pose.position == Vector3.zero)
+        {
+            IsTrackingPosition = false;
+        }
+        else
+        {
+            IsTrackingPosition = true;
+            transform.position = anchor.pose.position;
+            transform.rotation = anchor.pose.rotation;
+        }
     }
  
     private void AnchorStore_PropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 using Recaug;
 using Recaug.Client;
 
-public class WebcamStreaming : Singleton<WebcamStreaming> {
+public class WebcamStreaming : Recaug.Singleton<WebcamStreaming> {
     // HoloLens Camera Stream
     private HoloLensCameraStream.Resolution _resolution;
     private VideoCapture _videoCapture;

@@ -64,7 +64,7 @@ MonoBehaviour:
   defaultHandGesture: 1
   leftMouseHandGesture: 3
   middleMouseHandGesture: 0
-  rightMouseHandGesture: 0
+  rightMouseHandGesture: 5
   handGestureAnimationSpeed: 8
   holdStartDuration: 0.5
   navigationStartThreshold: 0.03

@@ -4116,6 +4116,7 @@ MonoBehaviour:
   inTweenTo: {x: 0.216, y: 0.144, z: 1}
   outTween: 2
   outTweenTo: {x: 0, y: 0, z: 0}
+  tweenOutOnStart: 0
   duration: 0.1
   delay: 0
   OnTweenInComplete:

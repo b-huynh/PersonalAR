@@ -28,7 +28,7 @@ public class AnnotationCountVisuals : MonoBehaviour
         if (countTextMesh != null)
         {
             string anchorCount = anchorService.AnchorCount.ToString();
-            countTextMesh.text = $"Anchros Set: {anchorCount}";
+            countTextMesh.text = $"Anchors Set: {anchorCount} / 15";
         }        
     }
 }

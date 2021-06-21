@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Microsoft.MixedReality.Toolkit.UI;
+
 public class AnnotationModeController : MonoBehaviour
 {
     public BoolVariable IsEnabled;
@@ -31,8 +33,13 @@ public class AnnotationModeController : MonoBehaviour
     {
         anchorPlacement.enabled = newValue;
         if (newValue == true)
+        {
             annotationMenu.GetComponent<ScaleTween>().TweenIn();
+            annotationMenu.GetComponent<FollowMeToggle>().SetFollowMeBehavior(true);
+        }
         else
+        {
             annotationMenu.GetComponent<ScaleTween>().TweenOut();
+        }
     }
 }

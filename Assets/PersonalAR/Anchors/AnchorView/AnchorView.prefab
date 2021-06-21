@@ -323,6 +323,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9f10775daedc6c45af4a9e65b58bd3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _anchor: {fileID: 0}
+  OnAnchorSet:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAnchorRemoved:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2249776770203258375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3376,8 +3383,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8148767305629488355}
   - component: {fileID: 8148767305629488354}
+  - component: {fileID: 4590228026710106547}
   m_Layer: 0
-  m_Name: Buttons
+  m_Name: ContextMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3415,6 +3423,7 @@ MonoBehaviour:
   inTweenTo: {x: 1, y: 1, z: 1}
   outTween: 2
   outTweenTo: {x: 0, y: 0, z: 0}
+  tweenOutOnStart: 0
   duration: 0.1
   delay: 0
   OnTweenInComplete:
@@ -3423,6 +3432,22 @@ MonoBehaviour:
   OnTweenOutComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4590228026710106547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8148767305629488352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85fbcba5ac7fe004eae7e2824d429d04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appButtonPrefab: {fileID: 2868915923907236537, guid: 79c754a54e7710d4aad6272524f5b4d1,
+    type: 3}
+  objectCollection: {fileID: 8148767305674865116}
+  anchor: {fileID: 0}
 --- !u!1 &8148767305629988874
 GameObject:
   m_ObjectHideFlags: 0
@@ -5809,6 +5834,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PressableAppButton (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2868915923907236537, guid: 79c754a54e7710d4aad6272524f5b4d1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2868915924461409368, guid: 79c754a54e7710d4aad6272524f5b4d1,
         type: 3}
       propertyPath: m_RootOrder
@@ -5916,6 +5946,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PressableAppButton
       objectReference: {fileID: 0}
+    - target: {fileID: 2868915923907236537, guid: 79c754a54e7710d4aad6272524f5b4d1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2868915924461409368, guid: 79c754a54e7710d4aad6272524f5b4d1,
         type: 3}
       propertyPath: m_RootOrder
@@ -5995,6 +6030,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PressableAppButton (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2868915923907236537, guid: 79c754a54e7710d4aad6272524f5b4d1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2868915924461409368, guid: 79c754a54e7710d4aad6272524f5b4d1,
         type: 3}

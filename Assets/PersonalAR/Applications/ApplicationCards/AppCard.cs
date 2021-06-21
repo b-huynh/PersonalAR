@@ -11,7 +11,7 @@ public class AppCard : BaseEntity
     public AppState AppState;
 
     [SerializeField] private TMPro.TextMeshPro _headerText;
-    [SerializeField] private MeshFilter _headerBackPlate;
+    // [SerializeField] private MeshFilter _headerBackPlate;
 
     [SerializeField] private Collider _pinnableBounds;
     [SerializeField] private ObjectManipulator _objectManipulator;

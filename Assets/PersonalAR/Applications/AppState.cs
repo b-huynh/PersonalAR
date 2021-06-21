@@ -1,25 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum AppView
-{
-    Spatial, Windowed
-}
-
-public enum ContextLevel
-{
-    Independent, Contextual
-}
+public enum RenderState { Off, Full, Partial, Background, Unknown }
 
 [CreateAssetMenu]
 public class AppState : ScriptableObject
 {
-    public AppView appView;
-    public ContextLevel contextLevel;
-
     // Application meta info
     public string appName;
     public string appDesc;
@@ -29,9 +19,25 @@ public class AppState : ScriptableObject
     // Application save data
     public string appDataFile;
 
+
     // Application execution state
     public bool IsInitialized { get; private set; }
     public bool IsRendering { get; private set; }
+    // public RenderState RenderState
+    // {
+    //     get
+    //     {
+    //         if (RunningActivities.Count == 0)
+    //         {
+    //             return RenderState.Off;
+    //         }
+
+    //         if (RunningActivities.
+    //     }
+    //     private set {}
+    // }
+    public Dictionary<Guid, ActivityType> RunningActivities = new Dictionary<Guid, ActivityType>();
+
 
     // Application state handlers
     private List<IAppStateListener> listeners = new List<IAppStateListener>();
@@ -42,6 +48,44 @@ public class AppState : ScriptableObject
         IsRendering = false;
     }
 
+    // ***** VIEW / LISTENER INTERFACE *****
+    public void AddListener(IAppStateListener listener)
+    {
+        listeners.Add(listener);
+    }
+
+    public void RemoveListener(IAppStateListener listener)
+    {
+        listeners.Remove(listener);
+    }
+
+    private void AppStart()
+    {
+        if (IsInitialized == false)
+        {
+            foreach(var listener in listeners)
+            {
+                listener.AppStart();
+            }
+            // OnAppStart.Invoke();
+            IsInitialized = true;
+        }
+    }
+
+    private void AppQuit()
+    {
+        if (IsInitialized == true)
+        {
+            foreach(var listener in listeners)
+            {
+                listener.AppQuit();
+            }   
+            // OnAppQuit.Invoke();
+            IsInitialized = false;
+        }
+    }
+
+    // ***** CONTROLLER INTERFACE *****
     public void Save(object obj)
     {
         if (!string.IsNullOrEmpty(appDataFile))
@@ -91,32 +135,6 @@ public class AppState : ScriptableObject
         return obj;
     }
 
-    private void AppStart()
-    {
-        if (IsInitialized == false)
-        {
-            foreach(var listener in listeners)
-            {
-                listener.AppStart();
-            }
-            // OnAppStart.Invoke();
-            IsInitialized = true;
-        }
-    }
-
-    private void AppQuit()
-    {
-        if (IsInitialized == true)
-        {
-            foreach(var listener in listeners)
-            {
-                listener.AppQuit();
-            }   
-            // OnAppQuit.Invoke();
-            IsInitialized = false;
-        }
-    }
-
     private void SetRenderState(bool value)
     {
         if (IsRendering != value)
@@ -144,14 +162,51 @@ public class AppState : ScriptableObject
             SetRenderState(!IsRendering);
         }
     }
-    
-    public void AddListener(IAppStateListener listener)
+
+    public Guid StartActivity(ActivityType activityType, ExecutionContext executionContext) 
     {
-        listeners.Add(listener);
+        // Update internal state
+        Guid activityID = System.Guid.NewGuid();
+        RunningActivities.Add(activityID, activityType);
+
+        // Create Event Data
+        ActivityEventData eventData = new ActivityEventData
+        {
+            EventTime = System.DateTime.Now,
+            ActivityID = activityID,
+            ActivityType = activityType,
+            StartContext = executionContext
+        };
+
+        // Invoke listeners / view updates
+        foreach(var listener in listeners)
+        {
+            listener.OnActivityStart(eventData);
+        }
+
+        return activityID;
     }
 
-    public void RemoveListener(IAppStateListener listener)
+    public void StopActivity(Guid activityID, ExecutionContext executionContext)
     {
-        listeners.Remove(listener);
+        if (RunningActivities.ContainsKey(activityID) == false) { return; }
+
+        // Create Event Data
+        ActivityEventData eventData = new ActivityEventData
+        {
+            EventTime = System.DateTime.Now,
+            ActivityID = activityID,
+            ActivityType = RunningActivities[activityID],
+            StopContext = executionContext,
+        };
+
+        // Update internal state
+        RunningActivities.Remove(activityID);
+
+        // Invoke listeners / view updates
+        foreach (var listener in listeners)
+        {
+            listener.OnActivityStop(eventData);
+        }
     }
 }

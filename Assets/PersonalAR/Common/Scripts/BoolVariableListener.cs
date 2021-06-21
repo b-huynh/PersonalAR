@@ -1,18 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class BoolVariableListener : VariableListener<bool>
+public class BoolVariableListener : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private BoolVariable variable;
+    public UnityEvent OnTrue;
+    public UnityEvent OnFalse;
+    public BoolEvent OnToggle;
+
+    void OnValidate()
     {
-        
+        if (variable == null)
+        {
+            Debug.LogWarning("Field 'variable' not set to a value");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
-        
+        if (variable.RuntimeValue) { OnTrue.Invoke(); }
+        else { OnFalse.Invoke(); }
+
+        variable.OnValueChanged += this.OnValueChanged;
+    }
+    void OnDisable() => variable.OnValueChanged -= this.OnValueChanged;
+
+    void OnValueChanged(bool value)
+    {
+        OnToggle.Invoke(value);
+        if (value) { OnTrue.Invoke(); }
+        else { OnFalse.Invoke(); }
     }
 }

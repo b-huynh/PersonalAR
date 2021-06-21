@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4243880353987475395}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CompressableButtonVisuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3454990903223074342}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LabelPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 2868915923320259382}
   - component: {fileID: 2868915923320259400}
   - component: {fileID: 2868915923320259401}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TextMeshPro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lang. Learn
+  m_text: Enter Pin
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a84f857bec7e7345843ae29404c57ce, type: 2}
   m_sharedMaterial: {fileID: 21202819797275496, guid: 6a84f857bec7e7345843ae29404c57ce,
@@ -279,7 +279,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2868915923402324419}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ButtonContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,8 @@ GameObject:
   - component: {fileID: 2868915923907236536}
   - component: {fileID: 4318342546658544145}
   - component: {fileID: 5612289800294725760}
-  m_Layer: 0
+  - component: {fileID: 2472697842900967924}
+  m_Layer: 5
   m_Name: PressableAppButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +512,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 81428e9368ad3be46b54d60aa51bdead, type: 2}
-        m_MethodName: ToggleStartOrSuspend
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -813,11 +814,24 @@ MonoBehaviour:
   iconSprite: {fileID: 21300000, guid: 20f25674b9512834f88938d45ed495d7, type: 3}
   iconQuadRenderer: {fileID: 2868915924426522131}
   iconQuadTextureNameID: _MainTex
-  iconQuadTexture: {fileID: 2800000, guid: 2d09bb4a065cec248b99602d7f5c071b, type: 3}
+  iconQuadTexture: {fileID: 2800000, guid: 79d312da0022bc14e98dfb839089c150, type: 3}
   defaultButtonQuadMaterial: {fileID: 2100000, guid: fa419ab56051229449e3b813df8f295f,
     type: 2}
   iconSet: {fileID: 11400000, guid: 8b386ef895f7c924f8c4b03d1d3ed683, type: 2}
   defaultIconSet: {fileID: 11400000, guid: 8b386ef895f7c924f8c4b03d1d3ed683, type: 2}
+--- !u!114 &2472697842900967924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2868915923907236537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00bff7c2da1f554c8b18e5c29759dca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activityType: 2
 --- !u!1 &2868915924426522133
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +923,7 @@ GameObject:
   - component: {fileID: 2868915924478237989}
   - component: {fileID: 2868915924478237990}
   - component: {fileID: 1777540889499618387}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: FrontPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1000,7 +1014,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3142429376032829204}
   - component: {fileID: 5046756867602262851}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: UIButtonSpriteIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1080,7 +1094,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 55499755872982831}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: IconAndText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1114,7 +1128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6197049511134525765}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LabelPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1148,7 +1162,7 @@ GameObject:
   - component: {fileID: 6197049511134525762}
   - component: {fileID: 6197049511134525761}
   - component: {fileID: 6197049511134525767}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1232,6 +1246,7 @@ MonoBehaviour:
   inTweenTo: {x: 0.016, y: 0.00125, z: 0.01}
   outTween: 2
   outTweenTo: {x: 0, y: 0, z: 0}
+  tweenOutOnStart: 0
   duration: 0.2
   delay: 0
   OnTweenInComplete:
@@ -1320,6 +1335,18 @@ MonoBehaviour:
   OnAppQuit:
     m_PersistentCalls:
       m_Calls: []
+  OnMainActivityStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMainActivityStop:
+    m_PersistentCalls:
+      m_Calls: []
+  OnObjectActivityStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnObjectActivityStop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6391886107416905391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1331,7 +1358,7 @@ GameObject:
   - component: {fileID: 1116112578488473476}
   - component: {fileID: 4055644592799364820}
   - component: {fileID: 5850310636555086362}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1412,7 +1439,7 @@ GameObject:
   - component: {fileID: 483897914190824704}
   - component: {fileID: 8059616993995129825}
   - component: {fileID: 6394039217526784483}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TextMeshPro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1597,7 +1624,7 @@ GameObject:
   - component: {fileID: 5027117209529723607}
   - component: {fileID: 9162450603894253133}
   - component: {fileID: 6934641815434454148}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: UIButtonCharIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1780,7 +1807,7 @@ GameObject:
   - component: {fileID: 3616225968338712081}
   - component: {fileID: 2588118574193442611}
   - component: {fileID: 6937236788128747618}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HighlightPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}

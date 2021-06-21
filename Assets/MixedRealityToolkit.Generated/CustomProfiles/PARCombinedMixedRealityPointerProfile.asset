@@ -16,7 +16,11 @@ MonoBehaviour:
   pointingExtent: 10
   pointingRaycastLayerMasks:
   - serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 32
+  - serializedVersion: 2
+    m_Bits: 1
+  - serializedVersion: 2
+    m_Bits: 2147483648
   debugDrawPointingRays: 1
   debugDrawPointingRayColors:
   - {r: 1, g: 0.58280706, b: 0, a: 1}
@@ -34,10 +38,6 @@ MonoBehaviour:
   - controllerType: 1071
     handedness: 7
     pointerPrefab: {fileID: 1247086986094436, guid: d5b94136462644c9873bb3347169ae7e,
-      type: 3}
-  - controllerType: 0
-    handedness: 0
-    pointerPrefab: {fileID: 1196247974088106, guid: c4fd3c6fc7ff484eb434775066e7f327,
       type: 3}
   - controllerType: 256
     handedness: 7

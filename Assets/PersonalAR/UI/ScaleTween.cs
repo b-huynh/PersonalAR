@@ -9,7 +9,7 @@ public class ScaleTween : MonoBehaviour
     public Vector3 inTweenTo;
     public LeanTweenType outTween;
     public Vector3 outTweenTo;
-
+    public bool tweenOutOnStart;
     public float duration;
     public float delay;
     public UnityEvent OnTweenInComplete;
@@ -18,9 +18,14 @@ public class ScaleTween : MonoBehaviour
     // Is true only if most recent tween call was TweenIn.
     public bool IsTweenedIn { get; private set; }
 
-    void OnEnable()
+    // void OnEnable()
+    // {
+    //     transform.localScale = outTweenTo;
+    // }
+
+    void Reset()
     {
-        transform.localScale = outTweenTo;
+        tweenOutOnStart = true;
     }
 
     public void TweenIn()
@@ -45,7 +50,10 @@ public class ScaleTween : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (tweenOutOnStart)
+        {
+            TweenOut();
+        }
     }
 
     // Update is called once per frame

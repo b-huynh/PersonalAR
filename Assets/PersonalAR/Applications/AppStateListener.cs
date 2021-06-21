@@ -1,14 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
-public interface IAppStateListener
-{
-    void AppStart();
-    void RenderStateChanged(bool newValue);
-    void AppQuit();
-}
 
 public class AppStateListener : MonoBehaviour, IAppStateListener
 {
@@ -23,6 +17,12 @@ public class AppStateListener : MonoBehaviour, IAppStateListener
     public UnityEvent OnAppRenderOn;
     public UnityEvent OnAppRenderOff;
     public UnityEvent OnAppQuit;
+
+
+    public UnityEvent OnMainActivityStart;
+    public UnityEvent OnMainActivityStop;
+    public UnityEvent OnObjectActivityStart;
+    public UnityEvent OnObjectActivityStop;
 
     void OnEnable()
     {
@@ -82,5 +82,29 @@ public class AppStateListener : MonoBehaviour, IAppStateListener
 
         if (RouteAppEvents)
             gameObject.SendMessage("RenderStateChanged", newValue, SendMessageOptions.DontRequireReceiver);
+    }
+
+    public void OnActivityStart(ActivityEventData eventData)
+    {
+        if (eventData.ActivityType == ActivityType.MainMenu)
+        {
+            OnMainActivityStart.Invoke();
+        }
+        else if (eventData.ActivityType == ActivityType.ObjectMenu)
+        {
+            OnObjectActivityStart.Invoke();
+        }
+    }
+
+    public void OnActivityStop(ActivityEventData eventData)
+    {
+        if (eventData.ActivityType == ActivityType.MainMenu)
+        {
+            OnMainActivityStop.Invoke();
+        }
+        else if (eventData.ActivityType == ActivityType.ObjectMenu)
+        {
+            OnObjectActivityStop.Invoke();
+        }
     }
 }

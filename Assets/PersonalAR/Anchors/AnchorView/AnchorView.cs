@@ -7,10 +7,11 @@ using Microsoft.MixedReality.Toolkit.UI;
 using TMPro;
 
 [RequireComponent(typeof(Anchorable))]
+[RequireComponent(typeof(Interactable))]
 public class AnchorView : MonoBehaviour
 {
     public GameObject label;
-    public GameObject buttons;
+    public GameObject contextMenu;
     public TextMeshPro textMeshPro;
 
     void OnEnable()
@@ -18,7 +19,7 @@ public class AnchorView : MonoBehaviour
         GetComponent<Anchorable>().OnAnchorSet.AddListener(OnAnchorSet);
 
         var interactable = GetComponent<Interactable>();
-        interactable.OnClick.AddListener(OnClick);
+        interactable.OnClick.AddListener(OnClickHandler);
     }
 
     void OnDisable()
@@ -26,7 +27,7 @@ public class AnchorView : MonoBehaviour
         GetComponent<Anchorable>().OnAnchorSet.RemoveListener(OnAnchorSet);
 
         var interactable = GetComponent<Interactable>();
-        interactable.OnClick.RemoveListener(OnClick);
+        interactable.OnClick.RemoveListener(OnClickHandler);
     }
 
     // Start is called before the first frame update
@@ -50,14 +51,18 @@ public class AnchorView : MonoBehaviour
         label.SetActive(false);
     }
 
-    void OnClick()
+    void OnClickHandler()
     {
-        ScaleTween tween = buttons.GetComponent<ScaleTween>();
+        contextMenu.GetComponent<IMenu>().Toggle();
 
-        if (tween.IsTweenedIn)
-            tween.TweenOut();
-        else
-            tween.TweenIn();
+        // ScaleTween tween = contextMenu.GetComponent<ScaleTween>();
+
+        // if (tween.IsTweenedIn)
+        //     tween.TweenOut();
+        // else
+        //     tween.TweenIn();
+
+
 
         // bool toggleNext = !buttons.activeSelf;
         // buttons.SetActive(toggleNext);

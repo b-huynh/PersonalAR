@@ -118,13 +118,13 @@ public class BasePervasiveApp : MonoBehaviour, IAppStateListener
 
     void OnDisable()
     {
-        appState.AddListener(this);
+        appState.RemoveListener(this);
     }
 
-    public void AppStart() {}
-    public void AppQuit() {}
+    public virtual void AppStart() {}
+    public virtual void AppQuit() {}
 
-    public void RenderStateChanged(bool toValue)
+    public virtual void RenderStateChanged(bool toValue)
     {
         OnRenderStateChanged?.Invoke(toValue);
     }
@@ -133,4 +133,7 @@ public class BasePervasiveApp : MonoBehaviour, IAppStateListener
     {
         appState.ToggleStartOrSuspend();
     }
+
+    public void OnActivityStart(ActivityEventData eventData) {}
+    public void OnActivityStop(ActivityEventData eventData) {}
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 using Recaug;
 
-public class RemoteDebug : Singleton<RemoteDebug> {
+public class RemoteDebug : Recaug.Singleton<RemoteDebug> {
     public string ServerIP;
     public string DebugLogPort;
 

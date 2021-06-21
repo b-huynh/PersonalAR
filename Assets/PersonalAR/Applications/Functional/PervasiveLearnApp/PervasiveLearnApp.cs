@@ -39,15 +39,13 @@ public class PervasiveLearnApp : BasePervasiveApp
 {
     [Header("Learn App Settings")]
     // Learning Activity Prefab
-    [SerializeField]
-    private LearnObjectMenu objectMenu;
+    [SerializeField] private LearnObjectMenu objectMenu;
 
     // Learning State
     public Translator.TargetLanguage language;
-
     private LearnAppData _appData;
 
-    private List<string> knownWords = new List<string>
+    private List<string> keywords = new List<string>
     {
         "chair",
         "tv",

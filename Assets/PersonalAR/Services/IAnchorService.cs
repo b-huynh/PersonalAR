@@ -15,8 +15,6 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 	public interface IAnchorService : IMixedRealityExtensionService
 	{
 		// Expose service features and abilities here
-		// event Action<ObjectRegistration> OnRegistered;
-		// event Action<ObjectRegistration> OnRemoved;
 
 		// Raised when AnchorStore and AnchorPointsSubsystem are set.
 		event PropertyChangedEventHandler PropertyChanged;
@@ -25,7 +23,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		event Action<AnchorableObject> OnRemoved;
 
 		int AnchorCount { get; }
-		IList<string> AnchorNames { get;}
+		IList<string> AnchorNames { get; }
 		XRAnchorStore AnchorStore { get; }
 		XRReferencePointSubsystem AnchorPointsSubsystem { get; }
 		bool AnchorStoreInitialized { get; }
@@ -35,5 +33,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		bool ContainsAnchor(string name);
 		AnchorableObject GetAnchor(string name);
 		void Clear();
+
+		void AddHandler(AnchorableObject anchor, AppState app);
+		void RemoveHandler(AnchorableObject anchor, AppState app);
 	}
 }

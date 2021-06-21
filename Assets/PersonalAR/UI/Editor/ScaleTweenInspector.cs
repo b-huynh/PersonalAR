@@ -10,6 +10,8 @@ public class ScaleTweenEditor : Editor
 
         ScaleTween scaleTween = (ScaleTween)target;
 
+        GUILayout.BeginHorizontal("box");
+        GUILayout.Label($"IsTweenedIn: {scaleTween.IsTweenedIn}");
         if (GUILayout.Button("TweenIn"))
         {
             scaleTween.TweenIn();
@@ -19,5 +21,6 @@ public class ScaleTweenEditor : Editor
         {
             scaleTween.TweenOut();
         }
+        GUILayout.EndHorizontal();
     }
 }
