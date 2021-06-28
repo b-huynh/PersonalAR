@@ -14,7 +14,7 @@ public class BoolVariableListener : MonoBehaviour
     {
         if (variable == null)
         {
-            Debug.LogWarning("Field 'variable' not set to a value");
+            ARDebug.LogWarning("Field 'variable' not set to a value");
         }
     }
 

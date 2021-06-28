@@ -100,6 +100,7 @@ public class BaseApp : MonoBehaviour, IAppStateListener
                 GameObject newClone = GameObject.Instantiate(entry.activity.gameObject, transform);
                 BaseAppActivity newActivity = newClone.GetComponent<BaseAppActivity>();
                 newActivity.appState = appState;
+                newActivity.activityID = eventData.ActivityID;
                 newActivity.StartActivity(eventData.StartContext);
                 runningActivities.Add(eventData.ActivityID, newActivity);
             }

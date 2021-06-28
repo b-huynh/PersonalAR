@@ -114,7 +114,7 @@ public class StatsTracker : Singleton<StatsTracker>
         lines.Add(String.Format("{0}, {1}, {2}, {3}", 
             "object", Time.time.ToString(), className, positionStr));
 
-        Debug.LogFormat("Object Registered: {0}, {1} / {2}",
+        ARDebug.LogFormat("Object Registered: {0}, {1} / {2}",
             className, DiscoveredObjects, TotalObjects);
     }
 
@@ -128,7 +128,7 @@ public class StatsTracker : Singleton<StatsTracker>
             lines.Add(String.Format("{0}, {1}, {2}, {3}, {4}", 
                 "activity", Time.time.ToString(), className, appName, response));
 
-            Debug.LogFormat("Complete Activities: {0} / {1}",
+            ARDebug.LogFormat("Complete Activities: {0} / {1}",
                 CompletedActivities, TotalActivities);
 
             if (CompletedActivities >= TotalActivities)
@@ -223,7 +223,7 @@ public class StatsTracker : Singleton<StatsTracker>
             Path.Combine(Application.persistentDataPath, cameraFileName);
 #endif
 
-        Debug.Log("Writing to file: " + filePath);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+        ARDebug.Log("Writing to file: " + filePath);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
         File.WriteAllLines(filePath, lines);
         File.WriteAllLines(cameraFilePath, cameraLog);
     }

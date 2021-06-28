@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface IMenu
+public interface IMenu : IOpen, IClose, IToggle
 {
     bool Visible { get; }
-
-    void Open();
-    void Close();
-    void Toggle();
 }

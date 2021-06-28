@@ -3,20 +3,19 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(TMPro.TextMeshProUGUI))]
 public class DebugConsole : MonoBehaviour
 {
-    // string/int pairs
-    private OrderedDictionary logStringCount;
-    // string/string pairs
-    private OrderedDictionary stackTraceCache;
+    // Provide reference in Editor
+    [SerializeField] private TMPro.TextMeshProUGUI textMesh;
+
+    private OrderedDictionary logStringCount;     // string/int pairs
+    private OrderedDictionary stackTraceCache;     // string/string pairs
     [Range(10, 1000)]
     public int TruncateLength;
 
     public string ConsoleOutput
     {
-        get => GetConsoleOutput();
-        private set {}
+        get => textMesh.text;
     }
 
     void Start()
@@ -26,21 +25,28 @@ public class DebugConsole : MonoBehaviour
 
     void Update()
     {
-        GetComponent<TMPro.TextMeshProUGUI>().text = ConsoleOutput;
+
     }
 
     public void OnEnable() 
     {
         logStringCount = new OrderedDictionary();
         stackTraceCache = new OrderedDictionary();
-        Application.logMessageReceived += HandlelogMessageReceived;
+        // Application.logMessageReceived += HandlelogMessageReceived;
+        ARDebug.logMessageReceived += HandlelogMessageReceived;
     }
 
     public void OnDisable() 
     {
-        Application.logMessageReceived -= HandlelogMessageReceived;
+        // Application.logMessageReceived -= HandlelogMessageReceived;
+        ARDebug.logMessageReceived -= HandlelogMessageReceived;
         logStringCount?.Clear();
         stackTraceCache?.Clear();
+    }
+
+    public void SetLogToUnityConsole(bool value)
+    {
+        ARDebug.logToUnityConsole = value;
     }
 
     public void HandlelogMessageReceived(string logString, string stackTrace, LogType type)
@@ -70,6 +76,8 @@ public class DebugConsole : MonoBehaviour
         }
         logStringCount[logString] = (int)logStringCount[logString] + 1;
         stackTraceCache[logString] = stackTrace;
+
+        textMesh.text = GetConsoleOutput();
     }
 
     private string TruncateStackTrace(string stackTrace, int numChars)

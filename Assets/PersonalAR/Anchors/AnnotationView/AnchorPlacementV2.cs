@@ -21,12 +21,12 @@ public class AnchorPlacementV2 : MonoBehaviour
     {
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
-            Debug.LogError($"Failed to get AnchorService");
+            ARDebug.LogError($"Failed to get AnchorService");
         }
 
         if (!anchorActorPrefab)
         {
-            Debug.LogError($"AnchorActorPrefab not assigned.");
+            ARDebug.LogError($"AnchorActorPrefab not assigned.");
         }
 
         // Create objects that visualize anchor placement using the anchor prefab

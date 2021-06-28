@@ -7,6 +7,6 @@ public class BoolVariable : Variable<bool>
     public void ToggleValue()
     {
         SetValue(!RuntimeValue);
-        Debug.Log($"BoolVariable {name} set to {RuntimeValue}");
+        ARDebug.Log($"BoolVariable {name} set to {RuntimeValue}");
     }
 }

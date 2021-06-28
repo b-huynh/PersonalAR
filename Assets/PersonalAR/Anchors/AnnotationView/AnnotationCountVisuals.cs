@@ -18,7 +18,7 @@ public class AnnotationCountVisuals : MonoBehaviour
     {
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out anchorService))
         {
-            Debug.LogError($"Failed to get AnchorService");
+            ARDebug.LogError($"Failed to get AnchorService");
         }
     }
 

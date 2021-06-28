@@ -26,26 +26,37 @@ public class AnchorsInfoGUI : MonoBehaviour
 
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
-            Debug.LogError($"Could not get Anchor Service");
+            ARDebug.LogError($"Could not get Anchor Service");
         }
         else
         {
-            _anchorService.OnRegistered += OnAnchorRegistered;
-        }
-    }
-
-    private void OnAnchorRegistered(AnchorableObject anchor)
-    {
-        if (!_anchorNameMap.ContainsKey(anchor._xrAnchorId))
-        {
-            _anchorNameMap.Add(anchor._xrAnchorId, anchor.WorldAnchorName);
+            _anchorService.OnRegistered += OnRegisteredHandler;
+            _anchorService.OnRemoved += OnRemovedHandler;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void ForceRefreshInfoText()
+    {
         _textMesh.text = GetAnchorsInfoText(isVerbose);
+    }
+
+    public void OnRegisteredHandler(AnchorableObject anchor)
+    {
+        if (!_anchorNameMap.ContainsKey(anchor._xrAnchorId))
+        {
+            _anchorNameMap.Add(anchor._xrAnchorId, anchor.WorldAnchorName);
+        }
+        ForceRefreshInfoText();
+    }
+
+    public void OnRemovedHandler(string anchorName)
+    {
+        ForceRefreshInfoText();
     }
 
     public string GetAnchorsInfoText(bool verbose = false)

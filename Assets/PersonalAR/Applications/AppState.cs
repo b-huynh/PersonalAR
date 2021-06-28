@@ -99,7 +99,7 @@ public class AppState : ScriptableObject
         }
         else
         {
-            Debug.Log("Cannot save file. No file name specified");
+            ARDebug.Log("Cannot save file. No file name specified");
         }
     }
 
@@ -130,7 +130,7 @@ public class AppState : ScriptableObject
         }
         catch (System.Exception ex)
         {
-            Debug.LogError($"Failed to load object in file {filePath}. Exception {ex}");
+            ARDebug.LogError($"Failed to load object in file {filePath}. Exception {ex}");
         }
         return obj;
     }

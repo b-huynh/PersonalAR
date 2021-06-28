@@ -136,7 +136,7 @@ public class ExtrudeHandle : MonoBehaviour, IMixedRealityPointerHandler, IMixedR
             + "Bounding Box World Position: " + targetObject.transform.position.ToString("F4") + "\n"
             + "Bounding Box Extents: " + targetObject.bounds.extents.ToString("F4") + "\n"
             + "Bounding Box lossyScale: " + targetObject.transform.lossyScale.ToString("F4") + "\n";
-        Debug.Log(log);
+        ARDebug.Log(log);
     }
 
     // Event is not used

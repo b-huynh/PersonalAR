@@ -70,6 +70,6 @@ public class AppCard : BaseEntity
 
     public void OnPointerDragged(MixedRealityPointerEventData eventData)
     {
-        Debug.Log($"Pointer: {eventData.Pointer.PointerName}, Count: {eventData.Count}");
+        ARDebug.Log($"Pointer: {eventData.Pointer.PointerName}, Count: {eventData.Count}");
     }
 }

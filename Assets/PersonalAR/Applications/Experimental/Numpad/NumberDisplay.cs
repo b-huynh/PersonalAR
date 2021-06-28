@@ -6,10 +6,18 @@ using TMPro;
 
 public class NumberDisplay : MonoBehaviour
 {
+    // Display properties
     public int maxLength;
+
+    // Assign in editor
     [SerializeField] private TextMeshPro textMesh;
 
-    public RandomPinCodes pinCodes {get; set;}
+    // Assign at runtime
+    private System.Guid activityID;
+    [ReadOnly] public string activityIDDebug;
+
+    // Initialize in scripts on Instantiate()
+    public RandomPinCodes pinCodes { get; set; }
 
     void OnEnable()
     {
@@ -20,6 +28,8 @@ public class NumberDisplay : MonoBehaviour
     void Start()
     {
         textMesh.color = Color.white;
+        activityID = GetComponentInParent<BaseAppActivity>().activityID;
+        activityIDDebug = activityID.ToString();
     }
 
     // Update is called once per frame
@@ -55,10 +65,18 @@ public class NumberDisplay : MonoBehaviour
         if (pinCodes.pinCodes.Contains(entered))
         {
             textMesh.color = Color.green;
+            textMesh.text = "SUCCESS";
         }
         else
         {
             textMesh.color = Color.red;
+            textMesh.text = "INVALID";
         }
+    }
+
+    public void CloseActivity()
+    {
+        var ec = new ExecutionContext(this.gameObject);
+        GetComponentInParent<BaseAppActivity>().appState.StopActivity(activityID, ec);   
     }
 }

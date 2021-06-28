@@ -66,13 +66,13 @@ public class RedditPostsManager : MonoBehaviour
 
         if (request.isNetworkError)
         {
-            Debug.Log("Request failed");
+            ARDebug.Log("Request failed");
         }
         else
         {
-            Debug.Log($"Request succeeded, response {request.responseCode}");
+            ARDebug.Log($"Request succeeded, response {request.responseCode}");
             TokenInfo = JsonUtility.FromJson<OAuthTokenInfo>(request.downloadHandler.text);
-            Debug.Log($"Access Token: {TokenInfo.access_token}");
+            ARDebug.Log($"Access Token: {TokenInfo.access_token}");
             callback.Invoke();
         }
     }
@@ -82,7 +82,7 @@ public class RedditPostsManager : MonoBehaviour
         StartCoroutine(GetSubredditPosts("PS5", delegate(IList<PostInfo> posts) {
             foreach(PostInfo p in posts)
             {
-                Debug.Log($"[{p.score}] {p.title}: {p.selftext} | {p.num_comments} comments");
+                ARDebug.Log($"[{p.score}] {p.title}: {p.selftext} | {p.num_comments} comments");
             }
         }));
     }
@@ -110,14 +110,14 @@ public class RedditPostsManager : MonoBehaviour
 
         if (req.isNetworkError)
         {
-            Debug.Log($"Request failed, response code {req.responseCode}");
+            ARDebug.Log($"Request failed, response code {req.responseCode}");
         }
         else
         {
-            Debug.Log($"Request success, response code {req.responseCode}");
+            ARDebug.Log($"Request success, response code {req.responseCode}");
             JObject res = JObject.Parse(req.downloadHandler.text);
             JArray posts = (JArray)res["data"]["children"];
-            Debug.Log($"Posts: {posts.ToString()}");
+            ARDebug.Log($"Posts: {posts.ToString()}");
 
             IList<PostInfo> subPosts = posts.Select(p => new PostInfo
             {
@@ -166,6 +166,6 @@ public class RedditPostsManager : MonoBehaviour
     //         Body = WebUtility.HtmlDecode((string)p["BodyHtml"])
     //     }).ToList();
 
-    //     Debug.Log(blogPosts[0].Body);
+    //     ARDebug.Log(blogPosts[0].Body);
     // }
 }

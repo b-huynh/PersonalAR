@@ -6,7 +6,7 @@ using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Extensions;
 using Microsoft.MixedReality.Toolkit.Utilities;
 
-public class ContextMenuVisuals : MonoBehaviour, IMenu
+public class ContextMenuVisuals : MonoBehaviour
 {
     // To be assigned at runtime
     [ReadOnly] public AnchorableObject anchor;
@@ -34,7 +34,7 @@ public class ContextMenuVisuals : MonoBehaviour, IMenu
         }
         else
         {
-            Debug.LogWarning($"[{gameObject.name}] Failed to get AnchorService.");
+            ARDebug.LogWarning($"[{gameObject.name}] Failed to get AnchorService.");
         }
     }
 
@@ -54,6 +54,7 @@ public class ContextMenuVisuals : MonoBehaviour, IMenu
         }
     }
 
+    // OPTIMIZE: Don't destroy and instantiate everything from scratch, probably use anchorService events.
     void UpdateAppList(HashSet<AppState> appSet)
     {
         // Remove any existing app buttons
@@ -73,25 +74,26 @@ public class ContextMenuVisuals : MonoBehaviour, IMenu
         objectCollection.UpdateCollection();
     }
 
-    // IMenu Implementation
-    public bool Visible { get; private set; }
+    // // *** IMenu Implementation ***
+    // public bool Visible { get; private set; }
+    // public bool ToggleValue { get; }
 
-    public void Open()
-    {
-        GetComponent<ScaleTween>().TweenIn();
-        Visible = true;
-    }
+    // public void Open()
+    // {
+    //     GetComponent<ScaleTween>().TweenIn();
+    //     Visible = true;
+    // }
 
-    public void Close()
-    {
-        GetComponent<ScaleTween>().TweenOut();
-        Visible = false;
-    }
+    // public void Close()
+    // {
+    //     GetComponent<ScaleTween>().TweenOut();
+    //     Visible = false;
+    // }
 
-    public void Toggle()
-    {
-        if (Visible) { Close(); }
-        else { Open(); }
-    }
-    // End IMenu
+    // public void Toggle()
+    // {
+    //     if (Visible) { Close(); }
+    //     else { Open(); }
+    // }
+    // // *** end IMenu ***
 }

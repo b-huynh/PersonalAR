@@ -23,6 +23,6 @@ public class HUDActivity : BaseAppActivity
     }
     public override void StopActivity(ExecutionContext executionContext)
     {
-
+        
     }
 }

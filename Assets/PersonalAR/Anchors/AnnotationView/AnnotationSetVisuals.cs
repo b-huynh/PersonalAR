@@ -33,12 +33,14 @@ public class AnnotationSetVisuals : MonoBehaviour
     {
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
-            Debug.LogError($"Failed to get AnchorService");
+            ARDebug.LogError($"Failed to get AnchorService");
         }
+        _anchorService.OnRegistered += OnRegisteredHandler;
+        _anchorService.OnRemoved += OnRemovedHandler;
 
         if (_buttonTemplate == null)
         {
-            Debug.LogErrorFormat("{0}: _buttonTemplate variable not set", gameObject.name);
+            ARDebug.LogError($"{gameObject.name}: _buttonTemplate variable not set");
         }
 
         RepopulateButtons();
@@ -46,6 +48,13 @@ public class AnnotationSetVisuals : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+
+    }
+
+    public void OnRegisteredHandler(AnchorableObject anchor) => ForceRefreshInteractableVisuals();
+    public void OnRemovedHandler(string anchorName) => ForceRefreshInteractableVisuals();
+    public void ForceRefreshInteractableVisuals()
     {
         foreach(var kv in _buttons)
         {

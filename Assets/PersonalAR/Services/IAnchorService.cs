@@ -20,7 +20,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		event PropertyChangedEventHandler PropertyChanged;
 
 		event Action<AnchorableObject> OnRegistered;
-		event Action<AnchorableObject> OnRemoved;
+		event Action<string> OnRemoved;
 
 		int AnchorCount { get; }
 		IList<string> AnchorNames { get; }

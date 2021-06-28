@@ -14,7 +14,7 @@ public class BaseEntity : MonoBehaviour
 
         // if (parentEntities.Length != 1 || childEntities.Length != 1)
         // {
-        //     Debug.LogError($"Only one BaseEntity allowed in hierarchy!");
+        //     ARDebug.LogError($"Only one BaseEntity allowed in hierarchy!");
         // }
     }
 }

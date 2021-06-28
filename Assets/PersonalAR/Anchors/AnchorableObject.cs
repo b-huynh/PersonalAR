@@ -46,7 +46,7 @@ public class AnchorableObject : MonoBehaviour
         // _anchorStoreManager = AnchorStoreManager.Instance;
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
-            Debug.LogError($"Could not get Anchor Service");
+            ARDebug.LogError($"Could not get Anchor Service");
         }
     }
 
@@ -131,7 +131,7 @@ public class AnchorableObject : MonoBehaviour
  
         // Look for the matching anchor in the anchor point subsystem.
         TrackableChanges<XRReferencePoint> referencePointChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
-        Debug.Log($"[LoadAnchor] GetChanges added {referencePointChanges.added.Length}");
+        // ARDebug.Log($"[LoadAnchor] GetChanges added {referencePointChanges.added.Length}");
         foreach (XRReferencePoint anchor in referencePointChanges.added)
         {
             if (anchor.trackableId == trackableId)
@@ -140,7 +140,7 @@ public class AnchorableObject : MonoBehaviour
                 PositionFromAnchor(anchor);
                 OnAnchorLoaded.Invoke();
 
-                Debug.Log($"[LoadAnchor] Added {_worldAnchorName} at {anchor.pose.position.ToString("F3")}");
+                // ARDebug.Log($"[LoadAnchor] Added {_worldAnchorName} at {anchor.pose.position.ToString("F3")}");
                 LogDebugMessage($"Found anchor {_worldAnchorName} in added reference points.");
                 
                 return true;
@@ -155,7 +155,7 @@ public class AnchorableObject : MonoBehaviour
     // {
     //     foreach (XRReferencePoint anchor in trackedChanges)
     //     {
-    //         Debug.Log($"Found anchor {anchor}, id {trackableId}, position {anchor.pose.position}");
+    //         ARDebug.Log($"Found anchor {anchor}, id {trackableId}, position {anchor.pose.position}");
     //         if (anchor.trackableId == trackableId)
     //         {
     //             LogDebugMessage($"Found anchor {_worldAnchorName} in added reference points.");
@@ -189,8 +189,6 @@ public class AnchorableObject : MonoBehaviour
         }
  
         TrackableChanges<XRReferencePoint> anchorChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
-        Debug.Log($"[UpdateAnchorPose] GetChanges added {anchorChanges.added.Length}");
-        Debug.Log($"[UpdateAnchorPose] GetChanges updated {anchorChanges.added.Length}");
 
         // TESTING.
         foreach (XRReferencePoint anchor in anchorChanges.added)
@@ -249,11 +247,11 @@ public class AnchorableObject : MonoBehaviour
  
         if (isWarning)
         {
-            Debug.LogWarning($"[{GetType()}] {message}");
+            ARDebug.LogWarning($"[{GetType()}] {message}");
         }
         else
         {
-            Debug.Log($"[{GetType()}] {message}");
+            ARDebug.Log($"[{GetType()}] {message}");
         }
     }
 }

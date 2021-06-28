@@ -17,20 +17,20 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
     protected override void RegisterHandlers()
     {
         CoreServices.InputSystem?.RegisterHandler<IMixedRealityGestureHandler>(this);
-        Debug.Log("Registered gestuer handler");
+        ARDebug.Log("Registered gestuer handler");
     }
 
     protected override void UnregisterHandlers()
     {
         CoreServices.InputSystem?.UnregisterHandler<IMixedRealityGestureHandler>(this);
-        Debug.Log("Unregistered Gesture Handler");
+        ARDebug.Log("Unregistered Gesture Handler");
     }
 
     #endregion InputSystemGlobalHandlerListener Implementation
 
     public void OnGestureStarted(InputEventData eventData)
     {
-        Debug.Log($"OnGestureStarted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
+        ARDebug.Log($"OnGestureStarted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
 
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")
@@ -52,7 +52,7 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
 
     public void OnGestureUpdated(InputEventData eventData)
     {
-        Debug.Log($"OnGestureUpdated [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
+        ARDebug.Log($"OnGestureUpdated [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
 
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")
@@ -63,7 +63,7 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
 
     public void OnGestureUpdated(InputEventData<Vector3> eventData)
     {
-        Debug.Log($"OnGestureUpdated [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
+        ARDebug.Log($"OnGestureUpdated [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
 
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Manipulate Action")
@@ -79,7 +79,7 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
 
     public void OnGestureCompleted(InputEventData eventData)
     {
-        Debug.Log($"OnGestureCompleted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
+        ARDebug.Log($"OnGestureCompleted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
 
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")
@@ -94,7 +94,7 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
 
     public void OnGestureCompleted(InputEventData<Vector3> eventData)
     {
-        Debug.Log($"OnGestureCompleted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
+        ARDebug.Log($"OnGestureCompleted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
 
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Manipulate Action")
@@ -110,7 +110,7 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
 
     public void OnGestureCanceled(InputEventData eventData)
     {
-        Debug.Log($"OnGestureCanceled [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
+        ARDebug.Log($"OnGestureCanceled [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
 
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")

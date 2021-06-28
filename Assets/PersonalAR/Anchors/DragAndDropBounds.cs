@@ -137,7 +137,7 @@ public class DragAndDropBounds : BaseInputHandler, IMixedRealityPointerHandler
 
     public void TestOnEntityDropped(BaseEntity entity)
     {
-        Debug.Log($"Dropped entity {entity.name} to bounds {this.name}");
+        ARDebug.Log($"Dropped entity {entity.name} to bounds {this.name}");
     }
 
 

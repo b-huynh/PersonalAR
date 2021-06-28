@@ -24,12 +24,12 @@ public class PopulateChoices : MonoBehaviour
     {
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
-            Debug.LogError($"Failed to get AnchorService");
+            ARDebug.LogError($"Failed to get AnchorService");
         }
 
         if (_buttonTemplate == null)
         {
-            Debug.LogErrorFormat("{0}: _buttonTemplate variable not set", gameObject.name);
+            ARDebug.LogError($"{gameObject.name}: _buttonTemplate variable not set");
         }
 
         RepopulateButtons();

@@ -55,7 +55,7 @@ public class GlobalSelectListener : MonoBehaviour, IMixedRealityInputActionHandl
 
     public void OnActionEnded(BaseInputEventData eventData)
     {
-        // Debug.Log(eventData.MixedRealityInputAction.Description);
+        // ARDebug.Log(eventData.MixedRealityInputAction.Description);
     }
 
     public void DoSelect(Vector3 hitPos)

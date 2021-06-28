@@ -215,7 +215,7 @@ public static class Translator {
 		{
 			// throw new System.ArgumentException(string.Format(
 			// 	"Cannot translate unknown word {0}", word));
-			Debug.LogWarning($"No translation for '{word}'");
+			ARDebug.LogWarning($"No translation for '{word}'");
 			return $"No translation for '{word}'";
 		}
 	}

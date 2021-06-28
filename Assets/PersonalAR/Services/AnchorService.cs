@@ -77,14 +77,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 				if (AnchorPointsSubsystem == null)
 				{
-					// Debug.Log($"[{GetType()}] Reference Point Subsystem not initialized.");
-					Debug.Log($"Reference Point Subsystem not initialized.");
+					// ARDebug.Log($"[{GetType()}] Reference Point Subsystem not initialized.");
+					ARDebug.Log($"Reference Point Subsystem not initialized.");
 				}
 
 				if (AnchorStore != null)
 				{
-					// Debug.Log($"[{GetType()}] Anchor store initialized.");
-					Debug.Log($"Anchor store initialized.");
+					// ARDebug.Log($"[{GetType()}] Anchor store initialized.");
+					ARDebug.Log($"Anchor store initialized.");
 				}
 	
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AnchorStore)));
@@ -105,7 +105,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		}
 
 		public event Action<AnchorableObject> OnRegistered;
-		public event Action<AnchorableObject> OnRemoved;
+		public event Action<string> OnRemoved;
 
 		private string _editorAnchorSaveFile = Path.Combine(Application.persistentDataPath, "editor_anchors.json");
 
@@ -195,14 +195,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			{
 				// Add to list tracking anchored game objects
 				AnchoredObjects.Add(name, anchor);
-				Debug.Log($"Saved anchor {name}");
+				ARDebug.Log($"Saved anchor {name}");
 				returnValue = true;
 			}
 			else
 			{
 				// Could not save, so destroy the newly created game object
 				GameObject.Destroy(newAnchoredObject);
-				Debug.Log($"Failed to save anchor {name}");
+				ARDebug.Log($"Failed to save anchor {name}");
 				returnValue = false;
 			}
 #endif
@@ -223,6 +223,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			// Experimental write to save file for editor emulation purposes
 			File.WriteAllText(_editorAnchorSaveFile, SerializeAnchors());
 #endif
+			OnRemoved?.Invoke(name);
 		}
 
 		public bool ContainsAnchor(string name)
@@ -246,6 +247,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			foreach(var kv in AnchoredObjects)
 			{
 				GameObject.Destroy(kv.Value.gameObject);
+				OnRemoved?.Invoke(kv.Key);
 			}
 			AnchoredObjects.Clear();
 		}
@@ -264,7 +266,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				descriptors += $"{descriptor.id} {descriptor.subsystemImplementationType}\r\n";
 			}
 	
-			Debug.Log($"[{GetType()}] {rpSubSystemsDescriptors.Count} reference point subsystem descriptors:\r\n{descriptors}");
+			ARDebug.Log($"[{GetType()}] {rpSubSystemsDescriptors.Count} reference point subsystem descriptors:\r\n{descriptors}");
 	
 			XRReferencePointSubsystem rpSubSystem = null;
 			if (rpSubSystemsDescriptors.Count > 0)
@@ -284,7 +286,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				if (AnchorStore == null)
 				{
 					// This means we're likely running in editor.
-					Debug.LogFormat("Cannot load existing anchors, no anchor store found");
+					ARDebug.LogFormat("Cannot load existing anchors, no anchor store found");
 					return;
 				}
 				else
@@ -299,12 +301,12 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 #if UNITY_EDITOR
 			// Experimental editor emulation of anchor save and load
 			string editorAnchorsJson = File.ReadAllText(_editorAnchorSaveFile);
-			Debug.Log($"Reading anchors from {_editorAnchorSaveFile}");
+			ARDebug.Log($"Reading anchors from {_editorAnchorSaveFile}");
 			DeserializeAnchors(editorAnchorsJson);
 #endif
 
 			var existingAnchors = AnchorStore.PersistedAnchorNames;
-			Debug.LogFormat("Found {0} existing anchor store anchors", existingAnchors.Count);
+			ARDebug.LogFormat("Found {0} existing anchor store anchors", existingAnchors.Count);
 
 			foreach (string anchorName in existingAnchors)
 			{
@@ -313,14 +315,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				anchor.OnAnchorLoaded.AddListener(
 					delegate 
 					{
-						Debug.LogFormat("Loaded anchor {0}", anchorName);
+						ARDebug.LogFormat("Loaded anchor {0}", anchorName);
 						AnchoredObjects.Add(anchorName, anchor);
 						OnRegistered?.Invoke(anchor);
 					}
 				);
 				if (!anchor.LoadAnchor())
 				{
-					Debug.LogFormat("Unable to load anchor {0}", anchorName);
+					ARDebug.LogFormat("Unable to load anchor {0}", anchorName);
 				}
 			}
 		}

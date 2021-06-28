@@ -95,7 +95,7 @@ public class AppCardBounds : MonoBehaviour
     // {
     //     _pointerDown = true;
     //     _pointerPosition = eventData.Pointer.Position;
-    //     Debug.Log($"Pointer down position:")
+    //     ARDebug.Log($"Pointer down position:")
     // }
 
     // void OnPointerUp(MixedRealityPointerEventData eventData)

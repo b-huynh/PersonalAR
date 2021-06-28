@@ -11,6 +11,21 @@ public class AppStateInspector : Editor
         AppState appState = (AppState)target;
 
         GUILayout.BeginVertical("box");
+
+        GUILayout.BeginHorizontal("box");
+        GUILayout.Label("Launch: ");
+        if (GUILayout.Button("Main"))
+        {
+            var ec = new ExecutionContext(new GameObject());
+            appState.StartActivity(ActivityType.MainMenu, ec);
+        }
+        if (GUILayout.Button("Default"))
+        {
+            var ec = new ExecutionContext(new GameObject());
+            appState.StartActivity(ActivityType.Default, ec);
+        }
+        GUILayout.EndHorizontal();
+
         GUILayout.Label("Running Activities");
 
         foreach(var kv in appState.RunningActivities)

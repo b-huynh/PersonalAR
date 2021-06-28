@@ -21,12 +21,12 @@ public class AnchorPlacement : MonoBehaviour
     {
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
-            Debug.LogError($"Failed to get AnchorService");
+            ARDebug.LogError($"Failed to get AnchorService");
         }
 
         if (!anchorActorPrefab)
         {
-            Debug.LogError($"AnchorActorPrefab not assigned.");
+            ARDebug.LogError($"AnchorActorPrefab not assigned.");
         }
 
         _rightHandPlacer = GameObject.Instantiate(anchorActorPrefab, this.transform);
@@ -43,6 +43,7 @@ public class AnchorPlacement : MonoBehaviour
 
     }
 
+    // OPTIMIZE: Probably don't need to SetActive constantly.
     void Update()
     {
         if (_objectToPlace != null)
