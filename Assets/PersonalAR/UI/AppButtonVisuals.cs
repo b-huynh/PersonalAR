@@ -8,7 +8,7 @@ using Microsoft.MixedReality.Toolkit.UI;
 [RequireComponent(typeof(ButtonConfigHelper))]
 public class AppButtonVisuals : MonoBehaviour
 {
-    private AppState _app;
+    [SerializeField] private AppState _app;
     public AppState App
     {
         get => _app;
@@ -19,7 +19,9 @@ public class AppButtonVisuals : MonoBehaviour
         }
     }
     public ActivityType activityType;
- 
+    public GameObject activeVisuals;
+
+    private System.Guid cachedActivityID = System.Guid.Empty;
     private ButtonConfigHelper buttonConfig;
 
     void OnValidate()
@@ -31,6 +33,9 @@ public class AppButtonVisuals : MonoBehaviour
     void Start()
     {
         ForceRefresh();
+
+        // Set Active Visuals
+        // activeVisuals.GetComponent<AppStateListener>()
     }
 
     // Update is called once per frame
@@ -57,15 +62,24 @@ public class AppButtonVisuals : MonoBehaviour
 
     public void OnClickDelegate()
     {
-        // Manipulate appState on click
+        // Create execution context
         ExecutionContext ec = new ExecutionContext(gameObject);
-
         IAnchorable anchorable = GetComponentInParent<IAnchorable>();
         if (anchorable != null)
         {
             ec.Anchor = anchorable.Anchor;
         }
 
-        _app.StartActivity(activityType, ec);
+        // Toggle activity
+        if (cachedActivityID == System.Guid.Empty)
+        {
+            // Save activity ID to toggle off later.
+            cachedActivityID = _app.StartActivity(activityType, ec);
+        }
+        else
+        {
+            _app.StopActivity(cachedActivityID, ec);
+            cachedActivityID = System.Guid.Empty;
+        }
     }
 }

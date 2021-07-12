@@ -62,7 +62,7 @@ public class NumberDisplay : MonoBehaviour
     public void Validate()
     {
         int entered = System.Int32.Parse(textMesh.text);
-        if (pinCodes.pinCodes.Contains(entered))
+        if (pinCodes.Contains(entered))
         {
             textMesh.color = Color.green;
             textMesh.text = "SUCCESS";

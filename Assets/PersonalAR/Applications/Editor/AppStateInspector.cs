@@ -1,9 +1,23 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
+using Microsoft.MixedReality.Toolkit;
+using Microsoft.MixedReality.Toolkit.Extensions;
+
 [CustomEditor(typeof(AppState))]
 public class AppStateInspector : Editor
 {
+    AnchorService anchorService;
+
+    void OnEnable()
+    {
+        IAnchorService serviceInterface;
+        if (MixedRealityServiceRegistry.TryGetService<IAnchorService>(out serviceInterface))
+        {
+            anchorService = (AnchorService)serviceInterface;
+        }
+    }
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -25,6 +39,19 @@ public class AppStateInspector : Editor
             appState.StartActivity(ActivityType.Default, ec);
         }
         GUILayout.EndHorizontal();
+        
+        if (anchorService != null && anchorService.AnchoredObjects != null)
+        {
+            foreach(var kv in anchorService.AnchoredObjects)
+            {
+                if (GUILayout.Button(kv.Key, GUILayout.Width(50)))
+                {
+                    var ec = new ExecutionContext(new GameObject());
+                    ec.Anchor = kv.Value;
+                    appState.StartActivity(ActivityType.ObjectMenu, ec);
+                }
+            }
+        }
 
         GUILayout.Label("Running Activities");
 
