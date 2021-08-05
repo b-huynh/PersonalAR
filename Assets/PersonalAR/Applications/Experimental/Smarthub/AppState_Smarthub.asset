@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3da510abf006c642a165335460fd3db, type: 3}
   m_Name: AppState_Smarthub
   m_EditorClassIdentifier: 
-  appName: Smarthub
+  appName: Item Inspector
   appDesc: 
   appLogo: {fileID: 2100000, guid: 313e5ade3ab87484ab86fa1782f4bdf0, type: 2}
   appDataFile: 

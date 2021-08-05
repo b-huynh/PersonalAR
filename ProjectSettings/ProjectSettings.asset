@@ -125,7 +125,9 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.2
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: -8977014809447212338, guid: a959e02d3289bc0469307bda60a99289, type: 2}
+  - {fileID: 8123899743057825792, guid: 660fb099214df9644bbae41c6a2b1ce5, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -595,7 +597,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: PersonalAR
-  metroPackageVersion: 1.1.56.0
+  metroPackageVersion: 1.1.58.0
   metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany

@@ -24,37 +24,42 @@ public class AppStateInspector : Editor
 
         AppState appState = (AppState)target;
 
+        GUILayout.Label("Execution State");
         GUILayout.BeginVertical("box");
 
-        GUILayout.BeginHorizontal("box");
-        GUILayout.Label("Launch: ");
-        if (GUILayout.Button("Main"))
-        {
-            var ec = new ExecutionContext(new GameObject());
-            appState.StartActivity(ActivityType.MainMenu, ec);
-        }
-        if (GUILayout.Button("Default"))
-        {
-            var ec = new ExecutionContext(new GameObject());
-            appState.StartActivity(ActivityType.Default, ec);
-        }
-        GUILayout.EndHorizontal();
-        
-        if (anchorService != null && anchorService.AnchoredObjects != null)
-        {
-            foreach(var kv in anchorService.AnchoredObjects)
+            GUILayout.Label($"[{appState.ExecutionState}]");
+            GUILayout.BeginHorizontal("box");
+            if (GUILayout.Button("Main"))
             {
-                if (GUILayout.Button(kv.Key, GUILayout.Width(50)))
+                var ec = new ExecutionContext(new GameObject());
+                appState.StartActivity(ActivityType.MainMenu, ec);
+            }
+            if (GUILayout.Button("Default"))
+            {
+                var ec = new ExecutionContext(new GameObject());
+                appState.StartActivity(ActivityType.Default, ec);
+            }
+            GUILayout.EndHorizontal();
+            
+            GUILayout.BeginHorizontal("box");
+            if (anchorService != null && anchorService.AnchoredObjects != null)
+            {
+                foreach(var kv in anchorService.AnchoredObjects)
                 {
-                    var ec = new ExecutionContext(new GameObject());
-                    ec.Anchor = kv.Value;
-                    appState.StartActivity(ActivityType.ObjectMenu, ec);
+                    if (GUILayout.Button(kv.Key, GUILayout.Width(50)))
+                    {
+                        var ec = new ExecutionContext(new GameObject());
+                        ec.Anchor = kv.Value;
+                        appState.StartActivity(ActivityType.ObjectMenu, ec);
+                    }
                 }
             }
-        }
+            GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
 
         GUILayout.Label("Running Activities");
-
+        GUILayout.BeginVertical("box");
         foreach(var kv in appState.RunningActivities)
         {
             GUILayout.BeginHorizontal("box");
@@ -62,11 +67,21 @@ public class AppStateInspector : Editor
             GUILayout.Label(kv.Key.ToString());
             if (GUILayout.Button("Stop"))
             {
-                // Do nothing for now...
+                var ec = new ExecutionContext(new GameObject());
+                appState.StopActivity(kv.Key, ec);
+                break;
             }
             GUILayout.EndHorizontal();
         }
+        GUILayout.EndVertical();
 
+        GUILayout.Label("App Variables");
+        GUILayout.BeginVertical("box");
+        if (appState.Variables != null)
+        {
+            var variablesEditor = Editor.CreateEditor(appState.Variables);
+            variablesEditor.OnInspectorGUI();
+        }
         GUILayout.EndVertical();
     }
 }

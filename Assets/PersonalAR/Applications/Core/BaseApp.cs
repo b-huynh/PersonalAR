@@ -125,4 +125,15 @@ public class BaseApp : MonoBehaviour, IAppStateListener
         // Remove activity ID.
         runningActivities.Remove(activityID);
     }
+
+    public void OnStateChanged(ExecutionState executionState) {}
+
+    public void OnMessage(string methodName, object value, SendMessageOptions options)
+    {
+        this.gameObject.SendMessage(methodName, value, options);
+        foreach(var kv in runningActivities)
+        {
+            kv.Value.SendMessage(methodName, value, options);
+        }
+    }
 }

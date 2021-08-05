@@ -43,7 +43,7 @@ public class LaunchPoints : MonoBehaviour
 
     void Awake()
     {
-        CreateHUDPoints();
+        // CreateHUDPoints();
         occupancy = Enumerable.Repeat(0, gridPoints).ToList();
 
         if (hudRange == HUDRange.Near)

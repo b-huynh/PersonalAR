@@ -26,7 +26,7 @@ MonoBehaviour:
   lightingScenes:
   - Name: DefaultLightingScene
     Path: Assets/MRTK/Services/SceneSystem/SceneSystemResources/DefaultLightingScene.unity
-    Included: 1
+    Included: 0
     BuildIndex: -1
     Tag: Untagged
     Asset: {fileID: 102900000, guid: 7e54e36c44f826c438c95da79f8de638, type: 3}

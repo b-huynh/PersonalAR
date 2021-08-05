@@ -136,4 +136,10 @@ public class BasePervasiveApp : MonoBehaviour, IAppStateListener
 
     public void OnActivityStart(ActivityEventData eventData) {}
     public void OnActivityStop(ActivityEventData eventData) {}
+    public void OnStateChanged(ExecutionState executionState) {}
+
+    public void OnMessage(string methodName, object value, SendMessageOptions options)
+    {
+        this.gameObject.SendMessage(methodName, value, options);
+    }
 }
