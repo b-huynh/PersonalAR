@@ -40,6 +40,23 @@ public class AppState : ScriptableObject
     {
         IsInitialized = false;
         IsRendering = false;
+
+        UpdateExecutionState();
+    }
+
+    void OnDestroy()
+    {
+        UpdateExecutionState();
+    }
+
+    void OnEnable()
+    {
+        UpdateExecutionState();
+    }
+
+    void OnDisable()
+    {
+        UpdateExecutionState();
     }
 
     // ***** VIEW / LISTENER INTERFACE *****

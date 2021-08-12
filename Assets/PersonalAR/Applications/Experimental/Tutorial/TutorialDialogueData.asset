@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d803705d80e005e4c8307fa76e2ad611, type: 3}
+  m_Name: TutorialDialogueData
+  m_EditorClassIdentifier: 
+  Dialogues:
+  - text: Test Dialogue. Should not be encountered...
+    audioClip: {fileID: 8300000, guid: 1cc958afd438b74469dfe54e6163f3e2, type: 3}
+  - text: "Welcome to PersonalAR! \n\nThis tutorial will guide you through the various
+      features of PersonalAR.\n\nTo continue, press the OK button with your finger."
+    audioClip: {fileID: 8300000, guid: 659fa813b7e92f240969e542b8be61bc, type: 3}
+  - text: "Great! \n\nNext, raise your left hand towards your face and look at your
+      palm to bring up the Hand Menu."
+    audioClip: {fileID: 8300000, guid: 89f50f624d15328428cc088fedee60f3, type: 3}
+  - text: "This is the Hand Menu.  \n\nFrom here, you can see currently running applications
+      and start new ones.\n\nBring up the Hand Menu at any time by looking at your
+      left palm."
+    audioClip: {fileID: 8300000, guid: 1807c5fff6aecfb49afafd0bc01fc9da, type: 3}
+  - text: 'Currently, there are no running applications.
+
+
+      Try starting the
+      Planet Earth application by pressing the icon.'
+    audioClip: {fileID: 0}
+  - text: 'Planet Earth is a Spatial App.
+
+
+      Spatial apps display 3D objects
+      and content in the environment.
+
+
+      Now bring up the Hand Menu again and
+      open the Numpad app.'
+    audioClip: {fileID: 0}
+  - text: 'Numpad is a Windowed App. All of the application content is displayed
+      within a slate or window.
+
+
+      To close the apps, simply press the Icons
+      again in the Hand Menu.'
+    audioClip: {fileID: 0}
+  - text: 
+    audioClip: {fileID: 0}
+  - text: 
+    audioClip: {fileID: 0}

@@ -20,25 +20,18 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
     //     base.Update();
     // }
 
+    [Header("Visual Components")]
     [SerializeField] private TextMeshPro bodyTextMesh;
     [TextArea(5, 8)] public string bodyText;
 
     [SerializeField] private TextMeshPro stepTextMesh;
 
-    public void OnValidate()
-    {
-        if (bodyTextMesh != null)
-        {
-            bodyTextMesh.text = bodyText;
-        }
 
-        if (stepTextMesh != null)
-        {
-            int totalItems = GetTutorialItems().Count;
-            string stepStr = $"{m_itemOrder.ToString()} / {totalItems.ToString()}";
-            stepTextMesh.text = stepStr;
-        }
-    }
+
+
+    [Header("Tutorial Data")]
+    [SerializeField] private DialogueData tutorialData;
+    public Dialogue dialogue { get; private set; }
 
     // *** ITutorialItem Implementation ***
     [SerializeField] private int m_itemOrder;
@@ -55,6 +48,31 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
             .Where(item => item.gameObject.scene.IsValid())
             .OrderBy(item => item.ItemOrder)
             .ToList();
+    }
+
+    public void OnValidate()
+    {
+        if (tutorialData == null || tutorialData.Dialogues.Count <= m_itemOrder)
+        {
+            Debug.Log("Invalid Tutorial Data");
+            return;
+        }
+        else
+        {
+            dialogue = tutorialData.Dialogues[m_itemOrder];
+        }
+
+        if (bodyTextMesh != null)
+        {
+            bodyTextMesh.text = dialogue.text;
+        }
+
+        if (stepTextMesh != null)
+        {
+            int totalItems = GetTutorialItems().Count;
+            string stepStr = $"{m_itemOrder.ToString()} / {totalItems.ToString()}";
+            stepTextMesh.text = stepStr;
+        }
     }
 
     protected override void Start()

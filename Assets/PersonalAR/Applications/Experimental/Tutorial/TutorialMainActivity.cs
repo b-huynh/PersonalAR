@@ -10,7 +10,25 @@ public class TutorialMainActivity : BaseAppActivity
     private TutorialItem currentItem;
 
     // Start is called before the first frame update
-    void Start() {}
+    void Start()
+    {
+        tutorialItems = TutorialItem.GetTutorialItems();
+        foreach(TutorialItem item in tutorialItems)
+        {
+            item.OnTweenInComplete.AddListener(delegate
+            {
+                AudioSource audio = item.gameObject.GetComponent<AudioSource>();
+                audio.clip = item.dialogue.audioClip;
+                audio.Play();
+            });
+
+            item.OnTweenOutComplete.AddListener(delegate
+            {
+                AudioSource audio = item.gameObject.GetComponent<AudioSource>();
+                audio.Stop();
+            });
+        }
+    }
 
     // Update is called once per frame
     void Update() {}
@@ -58,4 +76,17 @@ public class TutorialMainActivity : BaseAppActivity
             NextItem();
         }
     }
+
+    // public void OnItemOpen()
+    // {
+    //     AudioSource audio = currentItem.gameObject.GetComponent<AudioSource>();
+    //     audio.clip = currentItem.dialogue.audioClip;
+    //     audio.Play();
+    // }
+
+    // public void OnItemClose()
+    // {
+    //     AudioSource audio = currentItem.gameObject.GetComponent<AudioSource>();
+    //     audio.Stop();
+    // }
 }
