@@ -40,6 +40,10 @@ public class ScaleTween : MonoBehaviour
         {
             onCompleteCallback?.Invoke();
             OnTweenInComplete.Invoke();
+
+            ARDebug.logToUnityConsole = true;
+            ARDebug.Log($"TweenIn Complete Called");
+            ARDebug.logToUnityConsole = false;
         });
         IsTweenedIn = true; 
     }
@@ -60,6 +64,10 @@ public class ScaleTween : MonoBehaviour
         {
             onCompleteCallback?.Invoke();
             OnTweenOutComplete.Invoke();
+
+            ARDebug.logToUnityConsole = true;
+            ARDebug.Log($"TweenOut Complete Called");
+            ARDebug.logToUnityConsole = false;
         });
         IsTweenedIn = false;
     }

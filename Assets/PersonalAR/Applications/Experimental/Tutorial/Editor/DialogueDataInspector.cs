@@ -163,7 +163,7 @@ public class DialogueDataInspector : Editor
         Debug.Log($"Sending... \n{bodyJsonString}");
 
         // Create HTTP POST Request
-        string urlWithKey = "https://texttospeech.googleapis.com/v1/text:synthesize";
+        string urlWithKey = "https://texttospeech.googleapis.com/v1/text:synthesize?key=AIzaSyA8EeaT0fYdmdQ0UrcDoMYQ9O0PkYqtlT0";
         www = new UnityWebRequest(urlWithKey, "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(bodyJsonString);
         www.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);

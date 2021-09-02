@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Dialogue
 {
-    [TextArea] public string text;
+    [TextArea(6, 6)] public string text;
     public AudioClip audioClip;
 }
 

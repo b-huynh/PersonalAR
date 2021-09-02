@@ -595,12 +595,12 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: PersonalAR
-  metroPackageVersion: 1.1.60.0
+  metroPackageVersion: 1.1.74.0
   metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
-  metroCertificateNotAfter: 80789c3b0790d701
+  metroCertificateNotAfter: 803f48a703b9d801
   metroApplicationDescription: Experimental Interfaces in AR
   wsaImages: {}
   metroTileShortName: 

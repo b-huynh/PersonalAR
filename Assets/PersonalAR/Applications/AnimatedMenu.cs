@@ -31,14 +31,14 @@ public class AnimatedMenu : ScaleTween, IMenu
 
     public bool Visible => ToggleValue;
 
-    public void Open()
+    public virtual void Open()
     {
         ToggleValue = true;
         gameObject.SetActive(true);
         base.TweenIn();
     }
 
-    public void Close()
+    public virtual void Close()
     {
         ToggleValue = false;
         base.TweenOut(delegate ()

@@ -12,22 +12,25 @@ public class TutorialMainActivity : BaseAppActivity
     // Start is called before the first frame update
     void Start()
     {
-        tutorialItems = TutorialItem.GetTutorialItems();
-        foreach(TutorialItem item in tutorialItems)
-        {
-            item.OnTweenInComplete.AddListener(delegate
-            {
-                AudioSource audio = item.gameObject.GetComponent<AudioSource>();
-                audio.clip = item.dialogue.audioClip;
-                audio.Play();
-            });
+        ARDebug.logToUnityConsole = true;
+        ARDebug.Log($"TutorialMainActivity Start");
+        ARDebug.logToUnityConsole = false;
+        // tutorialItems = TutorialItem.GetTutorialItems();
+        // foreach(TutorialItem item in tutorialItems)
+        // {
+        //     item.OnTweenInComplete.AddListener(
+        //         delegate
+        //         {
 
-            item.OnTweenOutComplete.AddListener(delegate
-            {
-                AudioSource audio = item.gameObject.GetComponent<AudioSource>();
-                audio.Stop();
-            });
-        }
+        //         }
+        //     );
+
+        //     ARDebug.logToUnityConsole = true;
+        //     ARDebug.Log($"[Tutorial Item {item.ItemOrder}] TweenIn Callbacks: {item.OnTweenInComplete.GetPersistentEventCount()}");
+        //     ARDebug.logToUnityConsole = false;
+
+        //     item.OnTweenOutComplete.AddListener(DoTutorialItemExit);
+        // }
     }
 
     // Update is called once per frame
@@ -38,6 +41,7 @@ public class TutorialMainActivity : BaseAppActivity
         tutorialItems = TutorialItem.GetTutorialItems();
         currentItem = tutorialItems[0];
         currentItem.Open();
+        currentItem.OnTutorialEnter();
     }
 
     public override void StopActivity(ExecutionContext executionContext)
@@ -46,6 +50,7 @@ public class TutorialMainActivity : BaseAppActivity
         foreach(var tutorialItem in tutorialItems)
         {
             tutorialItem.Close();
+            tutorialItem.OnTutorialExit();
             currentItem = null;
         }
     }
@@ -54,6 +59,7 @@ public class TutorialMainActivity : BaseAppActivity
     {
         // Close current step
         currentItem.Close();
+        currentItem.OnTutorialExit();
         tutorialItems.Remove(currentItem);
 
         // Start next step
@@ -65,6 +71,7 @@ public class TutorialMainActivity : BaseAppActivity
                 currentItem.CloseCondition.OnValueChanged += CloseConditionHandler;
             }
             currentItem.Open();
+            currentItem.OnTutorialEnter();
         }
     }
 

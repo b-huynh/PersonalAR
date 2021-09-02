@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Extensions;
@@ -16,6 +17,8 @@ public class AnchorPlacement : MonoBehaviour
     private GameObject _rightHandPlacer;
     private GameObject _leftHandPlacer;
     private IAnchorService _anchorService;
+
+    public UnityEvent OnObjectPlaced;
 
     void Awake()
     {
@@ -101,11 +104,13 @@ public class AnchorPlacement : MonoBehaviour
             _anchorService.RegisterAnchor(_objectToPlace, _rightHandPlacer.transform.position))
         {
             _objectToPlace = null;
+            OnObjectPlaced?.Invoke();
         }
         else if (leftPointers.Contains(eventData.Pointer) &&
                  _anchorService.RegisterAnchor(_objectToPlace, _leftHandPlacer.transform.position))
         {
             _objectToPlace = null;
+            OnObjectPlaced?.Invoke();
         }
     }
 
