@@ -86,7 +86,7 @@ public class AnchorableObject : MonoBehaviour
             return false;
         }
  
-        XRReferencePoint anchor;
+        XRAnchor anchor;
  
         if (overwrite)
         {
@@ -95,7 +95,7 @@ public class AnchorableObject : MonoBehaviour
         }
  
         // Attempt to save the anchor.
-        if (_anchorService.AnchorPointsSubsystem.TryAddReferencePoint(new Pose(transform.position, transform.rotation), out anchor))
+        if (_anchorService.AnchorPointsSubsystem.TryAddAnchor(new Pose(transform.position, transform.rotation), out anchor))
         {
             if (_anchorService.AnchorStore.TryPersistAnchor(anchor.trackableId, _worldAnchorName))
             {
@@ -130,9 +130,9 @@ public class AnchorableObject : MonoBehaviour
         TrackableId trackableId = _anchorService.AnchorStore.LoadAnchor(_worldAnchorName);
  
         // Look for the matching anchor in the anchor point subsystem.
-        TrackableChanges<XRReferencePoint> referencePointChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
+        TrackableChanges<XRAnchor> referencePointChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
         // ARDebug.Log($"[LoadAnchor] GetChanges added {referencePointChanges.added.Length}");
-        foreach (XRReferencePoint anchor in referencePointChanges.added)
+        foreach (XRAnchor anchor in referencePointChanges.added)
         {
             if (anchor.trackableId == trackableId)
             {
@@ -188,10 +188,10 @@ public class AnchorableObject : MonoBehaviour
             return;
         }
  
-        TrackableChanges<XRReferencePoint> anchorChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
+        TrackableChanges<XRAnchor> anchorChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
 
         // TESTING.
-        foreach (XRReferencePoint anchor in anchorChanges.added)
+        foreach (XRAnchor anchor in anchorChanges.added)
         {
             if (anchor.trackableId == _xrAnchorId)
             {
@@ -200,7 +200,7 @@ public class AnchorableObject : MonoBehaviour
             }
         }
 
-        foreach (XRReferencePoint anchor in anchorChanges.updated)
+        foreach (XRAnchor anchor in anchorChanges.updated)
         {
             if (anchor.trackableId == _xrAnchorId)
             {
@@ -210,7 +210,7 @@ public class AnchorableObject : MonoBehaviour
         }
     }
  
-    private void PositionFromAnchor(XRReferencePoint anchor)
+    private void PositionFromAnchor(XRAnchor anchor)
     {
         if (_debugLabel)
         {

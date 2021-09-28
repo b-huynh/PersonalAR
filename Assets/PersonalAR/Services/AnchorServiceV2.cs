@@ -18,9 +18,9 @@ using Newtonsoft.Json.Linq;
 // public class AnchorServiceV2 : BaseExtensionService, IAnchorService, IMixedRealityExtensionService
 public class AnchorServiceV2 : MonoBehaviour
 {
-    ARReferencePointManager anchorManager;
+    ARAnchorManager anchorManager;
 
-    public XRReferencePointSubsystem AnchorPointsSubsystem
+    public XRAnchorSubsystem AnchorPointsSubsystem
     {
         get => anchorManager?.subsystem;
     }
@@ -46,7 +46,7 @@ public class AnchorServiceV2 : MonoBehaviour
             tracked.trackableId.ToString();
         }
 
-        ARReferencePoint referencePoint = anchorManager.AddReferencePoint(new Pose(position, Quaternion.identity));
+        ARAnchor referencePoint = anchorManager.AddAnchor(new Pose(position, Quaternion.identity));
 
         if (referencePoint.IsNull()) { return false; }
     
@@ -55,7 +55,7 @@ public class AnchorServiceV2 : MonoBehaviour
         return referencePoint != null;
     }
 
-    private IEnumerator PersistAnchor(ARReferencePoint referencePoint)
+    private IEnumerator PersistAnchor(ARAnchor referencePoint)
     {
         yield return new WaitUntil(() => referencePoint.pending == false);
     }

@@ -11,6 +11,8 @@ public enum ExecutionState { Stopped, Suspended, RunningFull, RunningPartial };
 [CreateAssetMenu]
 public class AppState : ScriptableObject
 {
+    public static AppState lastAppStarted;
+
     // Application meta info
     public string appName;
     public string appDesc;
@@ -196,6 +198,8 @@ public class AppState : ScriptableObject
         }
 
         UpdateExecutionState();
+
+        lastAppStarted = this;
 
         return activityID;
     }

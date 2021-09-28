@@ -86,10 +86,10 @@ public class AnchorsInfoGUI : MonoBehaviour
         return infoText;
     }
 
-    private string GetAnchorChangesInfoText(NativeArray<XRReferencePoint> changes)
+    private string GetAnchorChangesInfoText(NativeArray<XRAnchor> changes)
     {
         string infoText = string.Empty;
-        foreach (XRReferencePoint anchor in changes)
+        foreach (XRAnchor anchor in changes)
         {
             // If we have a user-defined name for this anchor, use it, otherewise use TrackableId
             string displayText = _anchorNameMap.ContainsKey(anchor.trackableId) ? 
@@ -129,7 +129,7 @@ public class AnchorsInfoGUI : MonoBehaviour
         string infoText = $"<size=20><b>{_anchorService.AnchorCount} Placed Objects</b></size>\n";
         if (verbose)
         {
-            TrackableChanges<XRReferencePoint> anchorChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
+            TrackableChanges<XRAnchor> anchorChanges = _anchorService.AnchorPointsSubsystem.GetChanges(Allocator.Temp);
 
             // Log changes for added/updated/removed
             infoText += $"ADDED {anchorChanges.added.Length}\n{new string('_', 20)}\n";

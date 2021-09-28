@@ -18,8 +18,6 @@ using Windows.Web.Http.Filters;
 using System.Net.Http;
 #endif
 
-using Recaug.Client;
-
 [System.Serializable]
 public class SystemParams
 {

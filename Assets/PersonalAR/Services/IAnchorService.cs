@@ -6,8 +6,6 @@ using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.WindowsMR;
 
-using Recaug;
-
 namespace Microsoft.MixedReality.Toolkit.Extensions
 {
 	// public enum AnchorRegistrationPolicy { OVERWRITE, FIRST_IN }
@@ -25,7 +23,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		int AnchorCount { get; }
 		IList<string> AnchorNames { get; }
 		XRAnchorStore AnchorStore { get; }
-		XRReferencePointSubsystem AnchorPointsSubsystem { get; }
+		XRAnchorSubsystem AnchorPointsSubsystem { get; }
 		bool AnchorStoreInitialized { get; }
 
 		bool RegisterAnchor(string name, Vector3 position);

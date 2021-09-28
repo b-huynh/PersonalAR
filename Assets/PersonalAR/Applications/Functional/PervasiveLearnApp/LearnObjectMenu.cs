@@ -5,8 +5,6 @@ using UnityEngine;
 using Microsoft.MixedReality.Toolkit.UI;
 using TMPro;
 
-using Recaug;
-
 // public interface IInitializable<T>
 // {
 //     T initData { set; }

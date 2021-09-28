@@ -8,8 +8,6 @@ using UnityEngine;
 using Windows.Storage;
 #endif
 
-using Recaug;
-
 public class StatsTracker : Singleton<StatsTracker>
 {
     private string SessionID = "";

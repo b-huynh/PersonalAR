@@ -11,8 +11,6 @@ using UnityEngine.XR.WindowsMR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using Recaug;
-
 namespace Microsoft.MixedReality.Toolkit.Extensions
 {
 	[MixedRealityExtensionService(SupportedPlatforms.WindowsUniversal|SupportedPlatforms.WindowsEditor)]
@@ -56,8 +54,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		public event PropertyChangedEventHandler PropertyChanged;
 	
-		private XRReferencePointSubsystem _anchorPointSubsystem;
-		public XRReferencePointSubsystem AnchorPointsSubsystem
+		private XRAnchorSubsystem _anchorPointSubsystem;
+		public XRAnchorSubsystem AnchorPointsSubsystem
 		{
 			get { return _anchorPointSubsystem; }
 			private set
@@ -255,20 +253,21 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		/*
 			Private helpers
 		*/
-		private XRReferencePointSubsystem CreateReferencePointSubSystem()
+		private XRAnchorSubsystem CreateReferencePointSubSystem()
 		{
-			List<XRReferencePointSubsystemDescriptor> rpSubSystemsDescriptors = new List<XRReferencePointSubsystemDescriptor>();
+			List<XRAnchorSubsystemDescriptor> rpSubSystemsDescriptors = new List<XRAnchorSubsystemDescriptor>();
 			SubsystemManager.GetSubsystemDescriptors(rpSubSystemsDescriptors);
 	
 			string descriptors = "";
 			foreach (var descriptor in rpSubSystemsDescriptors)
 			{
-				descriptors += $"{descriptor.id} {descriptor.subsystemImplementationType}\r\n";
+				descriptors += $"{descriptor.id} \r\n";
+				// {descriptor.subsystemImplementationType}
 			}
 	
 			ARDebug.Log($"[{GetType()}] {rpSubSystemsDescriptors.Count} reference point subsystem descriptors:\r\n{descriptors}");
 	
-			XRReferencePointSubsystem rpSubSystem = null;
+			XRAnchorSubsystem rpSubSystem = null;
 			if (rpSubSystemsDescriptors.Count > 0)
 			{
 				rpSubSystem = rpSubSystemsDescriptors[0].Create();
