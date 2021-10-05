@@ -19,8 +19,13 @@ public class DialogueDataInspector : Editor
     Dialogue audioClipRecipient;
     int recipientIndex;
 
+    TextAsset apiKeyFile;
+
     public override void OnInspectorGUI()
     {
+        apiKeyFile =
+            (TextAsset)EditorGUILayout.ObjectField("API Key JSON File", apiKeyFile, typeof(TextAsset), false);
+
         DrawDefaultInspector();
         
         DialogueData dialogueData = (DialogueData)target;
@@ -36,13 +41,13 @@ public class DialogueDataInspector : Editor
                 
                 // Draw additional butotns
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"# {i.ToString()}", GUILayout.Width(25));
-                if (GUILayout.Button("+", GUILayout.Width(25)))
+                GUILayout.Label($"#{i.ToString()}", GUILayout.Width(35));
+                if (GUILayout.Button("Move Down", GUILayout.Width(100)))
                 {
                     Swap<Dialogue>(DList, i, Math.Min(i + 1, DList.Count - 1));
                     break;
                 }
-                if (GUILayout.Button("-", GUILayout.Width(25)))
+                if (GUILayout.Button("Move Up", GUILayout.Width(100)))
                 {
                     Swap<Dialogue>(DList, i, Math.Max(i - 1, 0));
                     break;
@@ -50,7 +55,7 @@ public class DialogueDataInspector : Editor
                 
                 // Only allow one TTS asset to be created at a time, disable when request pending.
                 GUI.enabled = www == null;
-                if (GUILayout.Button("Create TTS", GUILayout.Width(75)))
+                if (GUILayout.Button("Create TTS", GUILayout.Width(100)))
                 {
                     audioClipRecipient = DList[i];
                     recipientIndex = i;
@@ -74,7 +79,8 @@ public class DialogueDataInspector : Editor
             GUILayout.EndVertical();
         }
 
-        if (GUILayout.Button("New Dialogue"))
+        GUILayout.Space(20);
+        if (GUILayout.Button("New Dialogue Entry"))
         {
             dialogueData.Dialogues.Add(new Dialogue());
         }
@@ -129,18 +135,6 @@ public class DialogueDataInspector : Editor
                 writer.WriteStartObject();
                 writer.WritePropertyName("text");
                 writer.WriteValue(text);
-                // writer.WriteValue(
-                //     @"<speak>
-                //         Here are <say-as interpret-as=""characters"">SSML</say-as> samples.
-                //         I can pause <break time=""3s""/>.
-                //         I can speak in cardinals. Your number is <say-as interpret-as=""cardinal"">10</say-as>.
-                //         Or I can speak in ordinals. You are <say-as interpret-as=""ordinal"">10</say-as> in line.
-                //         Or I can even speak in digits. The digits for ten are <say-as interpret-as=""characters"">10</say-as>.
-                //         I can also substitute phrases, like the <sub alias=""World Wide Web Consortium"">W3C</sub>.
-                //         Finally, I can speak a paragraph with two sentences.
-                //         <p><s>This is sentence one.</s><s>This is sentence two.</s></p>
-                //     </speak>"
-                // );
                 writer.WriteEndObject();
             writer.WritePropertyName("voice");
                 writer.WriteStartObject();
@@ -160,10 +154,27 @@ public class DialogueDataInspector : Editor
         }
         string bodyJsonString = sb.ToString();
 
-        Debug.Log($"Sending... \n{bodyJsonString}");
-
         // Create HTTP POST Request
-        string urlWithKey = "https://texttospeech.googleapis.com/v1/text:synthesize?key=AIzaSyA8EeaT0fYdmdQ0UrcDoMYQ9O0PkYqtlT0";
+        if (apiKeyFile.text == null)
+            Debug.LogError("Missing API Key File");
+
+        JsonTextReader reader = new JsonTextReader(new StringReader(apiKeyFile.text));
+        string apiKey = "";
+        while (reader.Read())
+        {
+            if (reader.TokenType == JsonToken.PropertyName &&
+                (string)reader.Value == "google_tts_api_key")
+            {
+                apiKey = reader.ReadAsString();
+                Debug.Log(apiKey);
+            }
+        }
+
+        if (apiKey == "")
+            Debug.LogError("Failed to read API Key File");
+        
+        string urlWithKey =
+            $"https://texttospeech.googleapis.com/v1/text:synthesize?key={apiKey}";
         www = new UnityWebRequest(urlWithKey, "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(bodyJsonString);
         www.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);
