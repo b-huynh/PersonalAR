@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using Microsoft.MixedReality.OpenXR;
 using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit;
 using UnityEngine;
@@ -137,7 +138,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 			// Initialized the (1) Reference Point Subsystem and (2) XRAnchorStore
 			AnchorPointsSubsystem = CreateReferencePointSubSystem();
-			AnchorStore = await _anchorPointSubsystem.TryGetAnchorStoreAsync();
+			// AnchorStore = await _anchorPointSubsystem.TryGetAnchorStoreAsync();
+			AnchorStore = await XRAnchorStore.LoadAsync(AnchorPointsSubsystem);
 		}
 
 		public override void Update()
@@ -161,7 +163,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			}
 			if (AnchorStore != null)
 			{
-				AnchorStore.Dispose();
+				// AnchorStore.Dispose();
+				AnchorStore.Clear();
 			}
 
             base.Destroy();

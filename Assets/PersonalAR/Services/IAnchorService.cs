@@ -1,10 +1,15 @@
+using Microsoft.MixedReality.OpenXR.ARFoundation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.MixedReality.Toolkit;
+//using Microsoft.MixedReality.Toolkit;
 using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.WindowsMR;
+
+using Microsoft.MixedReality.OpenXR;
 
 namespace Microsoft.MixedReality.Toolkit.Extensions
 {

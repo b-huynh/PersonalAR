@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 using Microsoft.MixedReality.Toolkit.Utilities;
-using Microsoft.MixedReality.Toolkit.Experimental.Utilities;
+using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 
 public class LaunchPoints : MonoBehaviour
 {
