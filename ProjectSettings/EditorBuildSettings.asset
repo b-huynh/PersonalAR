@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/PersonalAR/Scenes/Scene1_Multitasking.unity
     guid: c26c9a511df0b8f4890621a3e15abdeb
   - enabled: 1
-    path: Assets/PersonalAR/Scenes/CombinedScene.unity
+    path: Assets/PersonalAR/Scenes/MainScene.unity
     guid: a5c19c6882d708a489f6ab9bdbfac6ca
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: a959e02d3289bc0469307bda60a99289,
