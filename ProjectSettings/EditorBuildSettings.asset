@@ -5,15 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/PersonalAR/Scenes/ManagerScene.unity
-    guid: b1951b39a28703649b20541d3c81895a
-  - enabled: 0
-    path: Assets/PersonalAR/Scenes/Scene0_Startup.unity
-    guid: 3239583cfd2669e43844cb32e44cdfe6
-  - enabled: 0
-    path: Assets/PersonalAR/Scenes/Scene1_Multitasking.unity
-    guid: c26c9a511df0b8f4890621a3e15abdeb
   - enabled: 1
     path: Assets/PersonalAR/Scenes/MainScene.unity
     guid: a5c19c6882d708a489f6ab9bdbfac6ca

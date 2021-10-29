@@ -65,3 +65,6 @@ api_keys.json.meta
 
 # UserSettings directory
 /[Uu]serSettings/
+
+# MRTK Examples
+[Aa]ssets/Samples*
