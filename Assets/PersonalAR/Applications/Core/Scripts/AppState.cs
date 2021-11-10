@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public enum ExecutionState { Stopped, Suspended, RunningFull, RunningPartial };
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Applications/AppState")]
 public class AppState : ScriptableObject
 {
     public static AppState lastAppStarted;
@@ -200,6 +200,11 @@ public class AppState : ScriptableObject
         UpdateExecutionState();
 
         lastAppStarted = this;
+        // If we are currently in immersive mode, we need to close other existing apps after starting this one.
+        if (ImmersiveModeController.IsImmersiveMode)
+        {
+            ImmersiveModeController.Instance.StopAllAppsExceptLastOpened();
+        }
 
         return activityID;
     }
@@ -227,6 +232,15 @@ public class AppState : ScriptableObject
         }
 
         UpdateExecutionState();
+    }
+
+    public void StopAllActivities(ExecutionContext executionContext)
+    {
+        List<Guid> immutableGuids = RunningActivities.Keys.ToList();
+        foreach(Guid activityGuid in immutableGuids)
+        {
+            StopActivity(activityGuid, executionContext);
+        }
     }
 
     private void UpdateExecutionState()

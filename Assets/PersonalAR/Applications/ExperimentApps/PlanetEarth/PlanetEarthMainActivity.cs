@@ -39,6 +39,6 @@ public class PlanetEarthMainActivity : BaseAppActivity
     }
     public override void StopActivity(ExecutionContext executionContext)
     {
-        Destroy(cachedEntity);
+        Destroy(cachedEntity);    
     }
 }
