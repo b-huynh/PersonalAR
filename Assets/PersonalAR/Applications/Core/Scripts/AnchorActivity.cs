@@ -51,7 +51,11 @@ public class AnchorActivity : BaseAppActivity
 
     public override void StopActivity(ExecutionContext executionContext)
     {
-
+        if (cachedEntity != null) 
+        {
+            Destroy(cachedEntity);
+            cachedEntity = null;
+        }
     }
  
 }

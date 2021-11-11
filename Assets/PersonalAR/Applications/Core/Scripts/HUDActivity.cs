@@ -23,6 +23,10 @@ public class HUDActivity : BaseAppActivity
     }
     public override void StopActivity(ExecutionContext executionContext)
     {
-        
+        if (cachedEntity != null) 
+        {
+            Destroy(cachedEntity);
+            cachedEntity = null;
+        }
     }
 }

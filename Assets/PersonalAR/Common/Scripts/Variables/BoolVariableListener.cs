@@ -20,9 +20,10 @@ public class BoolVariableListener : MonoBehaviour
 
     void OnEnable()
     {
-        if (variable.RuntimeValue) { OnTrue.Invoke(); }
-        else { OnFalse.Invoke(); }
+        // if (variable.RuntimeValue) { OnTrue.Invoke(); }
+        // else { OnFalse.Invoke(); }
 
+        OnValueChanged(variable.RuntimeValue);
         variable.OnValueChanged += this.OnValueChanged;
     }
     void OnDisable() => variable.OnValueChanged -= this.OnValueChanged;

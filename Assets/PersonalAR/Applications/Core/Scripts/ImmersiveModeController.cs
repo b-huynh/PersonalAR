@@ -2,12 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ImmersiveModeController : MonoBehaviour
+[RequireComponent(typeof(BoolVariableListener))]
+public class ImmersiveModeController : Singleton<ImmersiveModeController>
 {
+    public AppList appList;
+
+    public static bool IsImmersiveMode;
+    public static bool IsLayerableMode
+    {
+        get 
+        { 
+            return !IsImmersiveMode; 
+        }
+    }
+
+    void Awake()
+    {
+        GetComponent<BoolVariableListener>().OnToggle.AddListener(OnImmersiveModeToggle);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        // allKnownApps = new List<AppState>();
         
+        // Get all known apps on start.        
     }
 
     // Update is called once per frame
@@ -21,9 +40,24 @@ public class ImmersiveModeController : MonoBehaviour
         Debug.Log(AppState.lastAppStarted?.name);
     }
 
-    public void TransitionToImmersive()
+    public void StopAllAppsExceptLastOpened()
     {
-        // Stop other running apps except last started app
-        
+        foreach(AppState app in appList.appList)
+        {
+            if (app != AppState.lastAppStarted)
+            {
+                ExecutionContext executionContext = new ExecutionContext(gameObject);
+                app.StopAllActivities(executionContext);
+            }
+        }
+    }
+
+    private void OnImmersiveModeToggle(bool value)
+    {
+        IsImmersiveMode = value;
+        if (IsImmersiveMode)
+        {
+            StopAllAppsExceptLastOpened();
+        }
     }
 }

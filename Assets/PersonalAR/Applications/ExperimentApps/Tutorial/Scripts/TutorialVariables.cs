@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(menuName = "App Variables/Tutorial Variables")]
+[CreateAssetMenu(menuName = "Applications/App Variables/Tutorial Variables")]
 public class TutorialVariables : AppVariables
 {
     public bool StartFlag;

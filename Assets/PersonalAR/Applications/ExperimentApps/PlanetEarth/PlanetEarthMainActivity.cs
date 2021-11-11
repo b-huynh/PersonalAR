@@ -36,6 +36,11 @@ public class PlanetEarthMainActivity : BaseAppActivity
         
     }
 
+    void OnDestroy()
+    {
+        Destroy(cachedEntity);
+    }
+
     public override void StartActivity(ExecutionContext executionContext)
     {
         // Calculate a launch point set distance away from users current forward position.
@@ -79,10 +84,14 @@ public class PlanetEarthMainActivity : BaseAppActivity
     }
     public override void StopActivity(ExecutionContext executionContext)
     {
-        Destroy(cachedEntity);
-        for (int i=0; i<markerList.Count; i++)
+        for (int i = 0; i < markerList.Count; i++)
         {
             Destroy(markerList[i]);
+        }
+        if (cachedEntity != null) 
+        {
+            Destroy(cachedEntity);
+            cachedEntity = null;
         }
     }
 
