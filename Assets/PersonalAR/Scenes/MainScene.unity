@@ -114337,6 +114337,42 @@ MonoBehaviour:
   launchDistance: 1.01
   entityToLaunch: {fileID: 3043026599237192973, guid: ad22c41ea5d5ce44ea0e167ad8e4e7c1,
     type: 3}
+  locationMarker: {fileID: 4826036753238846428, guid: cc0155f11e457a1438da01d535091a0b,
+    type: 3}
+  cities:
+  - cityName: London
+    latitude: 51.5
+    longitude: -0.1
+  - cityName: Cape Town
+    latitude: -33.9
+    longitude: 18.4
+  - cityName: Cairo
+    latitude: 30
+    longitude: 31.2
+  - cityName: Rio De Janeiro
+    latitude: -22.9
+    longitude: -43.17
+  - cityName: Sydney
+    latitude: -33.8
+    longitude: 151.2
+  - cityName: Tokyo
+    latitude: 35.7
+    longitude: 139.7
+  - cityName: San Francisco
+    latitude: 37.8
+    longitude: -122.4
+  - cityName: Honolulu
+    latitude: 21.3
+    longitude: -157.9
+  - cityName: Buenos Aires
+    latitude: -34.6
+    longitude: -58.4
+  - cityName: Dubai
+    latitude: 25.2
+    longitude: 55.3
+  - cityName: Dubai
+    latitude: 25.2
+    longitude: 55.3
 --- !u!1 &2097338564
 GameObject:
   m_ObjectHideFlags: 0
