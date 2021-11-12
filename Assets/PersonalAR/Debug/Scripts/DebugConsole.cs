@@ -10,12 +10,24 @@ public class DebugConsole : MonoBehaviour
 
     private OrderedDictionary logStringCount;     // string/int pairs
     private OrderedDictionary stackTraceCache;     // string/string pairs
+
+    [Tooltip("Has significant impact to performance, use ARDebug to minimize performance impact")]
+    public bool HandleUnityDebugLogMessages;
+
     [Range(10, 1000)]
     public int TruncateLength;
 
     public string ConsoleOutput
     {
         get => textMesh.text;
+    }
+
+    void Awake()
+    {
+        if (HandleUnityDebugLogMessages)
+        {
+            Application.logMessageReceived += HandlelogMessageReceived;
+        }
     }
 
     void Start()
@@ -32,14 +44,18 @@ public class DebugConsole : MonoBehaviour
     {
         logStringCount = new OrderedDictionary();
         stackTraceCache = new OrderedDictionary();
-        // Application.logMessageReceived += HandlelogMessageReceived;
+
         ARDebug.logMessageReceived += HandlelogMessageReceived;
     }
 
     public void OnDisable() 
     {
-        // Application.logMessageReceived -= HandlelogMessageReceived;
+        if (HandleUnityDebugLogMessages)
+        {
+            Application.logMessageReceived -= HandlelogMessageReceived;
+        }
         ARDebug.logMessageReceived -= HandlelogMessageReceived;
+
         logStringCount?.Clear();
         stackTraceCache?.Clear();
     }

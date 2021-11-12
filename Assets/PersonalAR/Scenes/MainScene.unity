@@ -20362,6 +20362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMesh: {fileID: 0}
+  HandleUnityDebugLogMessages: 0
   TruncateLength: 200
 --- !u!114 &364107362
 MonoBehaviour:
@@ -22864,7 +22865,7 @@ PrefabInstance:
     - target: {fileID: 641394363191424523, guid: 4cdf6dffd67e8434884b2c8fe85da3a5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cdf6dffd67e8434884b2c8fe85da3a5, type: 3}
@@ -24215,6 +24216,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 441240275}
   m_CullTransparentMesh: 0
+--- !u!1 &443663513 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 641394362982409528, guid: 4cdf6dffd67e8434884b2c8fe85da3a5,
+    type: 3}
+  m_PrefabInstance: {fileID: 420989715}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &443663518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443663513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0c7e5fff2ca9ae41a6a0b6f60cfefdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delaySeconds: 0.97
+  delayedSpherePrefab: {fileID: 3810134928819873560, guid: e1f61a955150df246855d4421a2788bf,
+    type: 3}
+  lineRendererPrefab: {fileID: 1818218759152345913, guid: ce63887e1dc5f28448e37ed4dbe7bb93,
+    type: 3}
 --- !u!1 &447834074
 GameObject:
   m_ObjectHideFlags: 0
@@ -73520,6 +73544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMesh: {fileID: 670301473}
+  HandleUnityDebugLogMessages: 1
   TruncateLength: 200
 --- !u!1 &1315334533
 GameObject:
