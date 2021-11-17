@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: PARCombinedXRSDKConfigurationProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 1
-  experienceSettingsProfile: {fileID: 11400000, guid: 1ccbb3b1d759d6a49b4161a958329d9d,
-    type: 2}
+  experienceSettingsProfile: {fileID: 0}
   targetExperienceScale: 3
   enableCameraSystem: 1
   cameraProfile: {fileID: 11400000, guid: 9b1c08e200c7d2b4591f28a3e8b9d6d7, type: 2}

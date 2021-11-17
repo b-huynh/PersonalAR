@@ -27,14 +27,17 @@ public class DrawDelayedSphere : MonoBehaviour
         if (delayedSpherePrefab != null)
         {
             var delayedSphere = GameObject.Instantiate(delayedSpherePrefab);
-            Vector3 towardsUserOffset = (Camera.main.transform.position - transform.position).normalized * 0.01f;
-            delayedSphere.transform.SetPositionAndRotation(transform.position + towardsUserOffset, transform.rotation);
+            delayedSphere.transform.SetPositionAndRotation(transform.position, transform.rotation);
             delayedSphere.GetComponent<DisappearAfterDelay>().SetDelay(delaySeconds);
 
             if (lastSphereDrawn != null)
             {
+                Vector3 towardsUserOffset = (Camera.main.transform.position - transform.position).normalized * 0.02f;
+
                 // Draw a line connecting this sphere with last sphere.
-                var lineRenderer = CreateLineObject(lastSphereDrawn.transform.position, delayedSphere.transform.position);
+                var lineRenderer = CreateLineObject(
+                    lastSphereDrawn.transform.position + towardsUserOffset,
+                    delayedSphere.transform.position + towardsUserOffset);
                 // lineRenderer.GetComponent<MixedRealityLineRenderer>().LineColor = lineColorGradient;
                 lineRenderer.GetComponent<MixedRealityLineRenderer>().WidthMultiplier = 0.02f;
                 lineRenderer.AddComponent<DisappearAfterDelay>().SetDelay(delaySeconds);
