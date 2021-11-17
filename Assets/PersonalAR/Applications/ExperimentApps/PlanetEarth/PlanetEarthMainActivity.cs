@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -78,7 +79,7 @@ public class PlanetEarthMainActivity : BaseAppActivity
             // move marker to position
             marker.transform.localPosition = markerPosition;
             //marker.transform.SetPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
-            Text cityCoords = marker.transform.GetChild(0).transform.GetChild(0).GetComponentInChildren<Text>();
+            TextMeshPro cityCoords = marker.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
             cityCoords.text = name + "\n" + latitude + ", " + longitude;
         }
     }
