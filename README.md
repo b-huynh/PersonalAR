@@ -82,3 +82,20 @@ Once it's done compiling, you should be able to find your app packages (**.appx*
 In order to deploy the app package onto a HoloLens, follow the steps [listed here using the Device Portal](https://docs.microsoft.com/en-us/windows/mixed-reality/develop/advanced-concepts/using-the-windows-device-portal) from the beginning up until "Sideloading applications". You only need to set up the device portal the first time you deploy, the connection settings should be saved on your PC for the next time.
 
 Additionally, pre-built app packages can be found [under releases](https://github.com/b-huynh/PersonalAR/releases).
+
+
+# (OPTIONAL) Setting up Google API Keys for generating text-to-speech assets.
+The project uses text-to-speech to convey instructions and audio cues to users. To generate new text-to-speech audio files, you will need to create a Google API Key and place it in the appropriate location for the project to pick up. [Sign up for Google Cloud](https://cloud.google.com/text-to-speech). It may ask for your credit card information but there is a free tier of up to 4 million characters per month for the text-to-speech API.
+
+To create an API key, follow [the instructions here](https://cloud.google.com/docs/authentication/api-keys). For added security, you can restrict the key applications to only Google Cloud Text-to-speech.
+
+Once you have your API key, create a new file in your Unity project repo called api_keys.json and fill it with the following, replacing with your Google Cloud API key as needed:
+```
+{
+    "google_tts_api_key": "YOUR_API_KEY_HERE"
+}
+```
+
+Finally, head over to Assets > PersonalAR > Applications > ExperimentApps > Tutorial > TutorialDialogueData.asset and drag-and-drop the api_keys.json file into the "API Key JSON File" field in the inspector.
+
+Now you should be able to create new text-to-speech MP3 files. Click "New Dialogue Entry" to create a new dialogue text entry box. Enter your desired text and click "Create TTS" to generate the corresponding text-to-speech MP3 file, which should automatically be referenced in the Audio Clip field.
