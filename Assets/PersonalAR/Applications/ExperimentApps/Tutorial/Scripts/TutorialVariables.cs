@@ -11,4 +11,9 @@ public class TutorialVariables : AppVariables
     public bool AppTriggered;
     public bool EndFlag;
     public int CompletionCounter;
+
+    public void removeStartFlag()
+    {
+        StartFlag = false;
+    }
 }

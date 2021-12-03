@@ -95,6 +95,7 @@ public class DialogueDataInspector : Editor
         {
             // Decode response bytes
             JObject responseData = JObject.Parse(www.downloadHandler.text);
+            Debug.Log(www.downloadHandler.text);
             string encodedText = responseData["audioContent"].ToString();
             byte[] decodedBytes = Convert.FromBase64String(encodedText);
 

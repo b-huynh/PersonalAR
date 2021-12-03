@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: TutorialVariables
   m_EditorClassIdentifier: 
   FileName: Tutorial Variables
-  FilePath: C:/Users/BrandonHuynh/AppData/LocalLow/Brandon Huynh/PersonalAR\Tutorial
-    Variables
-  StartFlag: 0
-  HandMenuTriggered: 0
+  FilePath: C:/Users/Lab/AppData/LocalLow/Brandon Huynh/PersonalAR\Tutorial Variables
+  StartFlag: 1
   AppTriggered: 0
   EndFlag: 0
   CompletionCounter: 25

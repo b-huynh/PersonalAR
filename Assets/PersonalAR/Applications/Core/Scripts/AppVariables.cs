@@ -22,6 +22,17 @@ public class AppVariables : ScriptableObject, ISavable
             FilePath = string.Empty;
         }
     }
+    void OnEnable()
+    {
+        if (!String.IsNullOrEmpty(FileName))
+        {
+            FilePath = Path.Combine(Application.persistentDataPath, FileName);
+        }
+        else
+        {
+            FilePath = string.Empty;
+        }
+    }
 
     public bool Save()
     {

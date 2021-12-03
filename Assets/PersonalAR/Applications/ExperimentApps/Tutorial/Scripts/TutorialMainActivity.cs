@@ -9,6 +9,8 @@ public class TutorialMainActivity : BaseAppActivity
     private List<TutorialItem> tutorialItems;
     private TutorialItem currentItem;
 
+    [SerializeField] private TutorialVariables vars;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +41,10 @@ public class TutorialMainActivity : BaseAppActivity
     public override void StartActivity(ExecutionContext executionContext)
     {
         tutorialItems = TutorialItem.GetTutorialItems();
+        if (!vars.StartFlag)
+        {
+            tutorialItems.RemoveAt(0);
+        }
         currentItem = tutorialItems[0];
         currentItem.Open();
         currentItem.OnTutorialEnter();
@@ -53,6 +59,7 @@ public class TutorialMainActivity : BaseAppActivity
             tutorialItem.OnTutorialExit();
             currentItem = null;
         }
+        vars.Save();
     }
 
     public void NextItem()

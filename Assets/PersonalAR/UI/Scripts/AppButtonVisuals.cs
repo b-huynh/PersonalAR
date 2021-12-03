@@ -19,7 +19,6 @@ public class AppButtonVisuals : MonoBehaviour
         {
             _app = value;
             ForceRefreshVisuals();
-            ForceRefreshReferences();
         }
     }
     public ActivityType activityType;
@@ -31,7 +30,6 @@ public class AppButtonVisuals : MonoBehaviour
     public TextMeshPro SemiActiveCount;
 
     // Private State Variables
-    private System.Guid cachedActivityID = System.Guid.Empty;
     private ButtonConfigHelper buttonConfig;
 
     void OnValidate()
@@ -41,7 +39,6 @@ public class AppButtonVisuals : MonoBehaviour
 
     void Awake()
     {
-        ForceRefreshReferences();
 
         var appListener = GetComponent<AppStateListener>();
         appListener.OnExecutionStopped.AddListener(OnExecutionStoppedDelegate);
@@ -69,50 +66,6 @@ public class AppButtonVisuals : MonoBehaviour
             buttonConfig = GetComponent<ButtonConfigHelper>();
             buttonConfig.MainLabelText = _app.appName;
             buttonConfig.SetQuadIcon(_app.appLogo.mainTexture);
-        }
-    }
-
-    public void ForceRefreshReferences()
-    {
-        if (_app != null)
-        {
-            buttonConfig = GetComponent<ButtonConfigHelper>();
-
-            // Probably have to remove existing listeners?...
-            buttonConfig.OnClick.RemoveListener(OnClickDelegate);
-            buttonConfig.OnClick.AddListener(OnClickDelegate);
-
-            GetComponent<AppStateListener>().SetAppState(_app);
-            // GetComponent<AppStateListener>().appState = _app;
-
-            // if (activeVisuals != null)
-            // {
-            //     // activeVisuals.GetComponent<AppStateListener>().appState = _app;
-            //     activeVisuals.GetComponent<AppStateListener>().SetAppState(_app);
-            // }
-        }
-    }
-
-    public void OnClickDelegate()
-    {
-        // Create execution context
-        ExecutionContext ec = new ExecutionContext(gameObject);
-        IAnchorable anchorable = GetComponentInParent<IAnchorable>();
-        if (anchorable != null)
-        {
-            ec.Anchor = anchorable.Anchor;
-        }
-
-        // Toggle activity
-        if (cachedActivityID == System.Guid.Empty)
-        {
-            // Save activity ID to toggle off later.
-            cachedActivityID = _app.StartActivity(activityType, ec);
-        }
-        else
-        {
-            _app.StopActivity(cachedActivityID, ec);
-            cachedActivityID = System.Guid.Empty;
         }
     }
 

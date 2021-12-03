@@ -243,6 +243,12 @@ public class AppState : ScriptableObject
         }
     }
 
+    public void StopTutorial()
+    {
+        ExecutionContext context = new ExecutionContext(new GameObject());
+        StopAllActivities(context);
+    }
+
     private void UpdateExecutionState()
     {
         ExecutionState potentialNewState;

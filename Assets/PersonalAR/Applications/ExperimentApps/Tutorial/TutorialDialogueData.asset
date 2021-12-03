@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TutorialDialogueData
   m_EditorClassIdentifier: 
   Dialogues:
-  - text: Test Dialogue. Should not be encountered...
+  - text: Would you like to begin the tutorial? Press Yes with your finger to continue.
     audioClip: {fileID: 8300000, guid: 1cc958afd438b74469dfe54e6163f3e2, type: 3}
   - text: "Welcome to PersonalAR! \n\nThis tutorial will guide you through the various
       features of PersonalAR.\n\nTo continue, press the OK button with your finger."
