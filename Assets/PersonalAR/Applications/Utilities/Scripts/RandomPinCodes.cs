@@ -14,11 +14,30 @@ public class Code
     public int Value;
     public string Label;
     public List<CodePiece> Pieces = new List<CodePiece>();
+    public bool Used; // Mark is code has already been used and completed
+
+    private int codeLength;
+    private int numPieces;
 
     public Code(string label, int code, int codeLength, int numPieces)
     {
         Value = code;
         Label = label;
+
+        this.codeLength = codeLength;
+        this.numPieces = numPieces;
+
+        Pieces = SplitIntoPieces(code, codeLength, numPieces);
+    }
+
+    public override string ToString()
+    {
+        return $"{Label}-{Value}";
+    }
+
+    private List<CodePiece> SplitIntoPieces(int code, int codeLength, int numPieces)
+    {
+        List<CodePiece> codePieces = new List<CodePiece>();
 
         // Calculate intermediate values
         // int codeMin = Int32.Parse("1" + new String('0', codeLength - 1));
@@ -42,22 +61,52 @@ public class Code
                 Value = pieceValue
             };
 
-            Pieces.Add(codePiece);
+            codePieces.Add(codePiece);
         }
+
+        return codePieces;
     }
 
-    public override string ToString()
+    public bool CompareEntry(int entry)
     {
-        return $"{Label}-{Value}";
+        string entryStr = entry.ToString();
+        if (entryStr.Length != codeLength)
+        {
+            return false;
+        }
+
+        List<CodePiece> entryPieces = SplitIntoPieces(entry, codeLength, numPieces);
+        
+        bool isEquivalent = (Pieces.Count == entryPieces.Count);
+        foreach(CodePiece entryPiece in entryPieces)
+        {
+            if (Pieces.Any(p => p.Value == entryPiece.Value))
+            {
+                isEquivalent = (isEquivalent && true);
+            }
+            else
+            {
+                isEquivalent = (isEquivalent && false);
+            }
+        }
+        return isEquivalent;
     }
 }
 
-public struct CodePiece
+/*
+Example Code:
+Code: A-123456
+Label: A
+Order: 2
+Value: 34
+*/
+public class CodePiece
 {
     public Code Code;
     public string Label;
     public int Order;
     public string Value;
+    public bool Assigned; // Bit to flag for assignment
 }
 
 [CreateAssetMenu(menuName = "Experiment/Random Pin Codes")]
@@ -65,6 +114,7 @@ public class RandomPinCodes : ScriptableObject
 {
     [Header("Code Set")]
     [SerializeField] public int randomSeed;
+    [Range(1, 676)]
     [SerializeField] public int numCodes;
 
     [Header("Properties")]
@@ -75,6 +125,13 @@ public class RandomPinCodes : ScriptableObject
 
 
     [ReadOnly] public List<Code> Codes = new List<Code>();
+    public int CodesCompleted
+    {
+        get
+        {
+            return Codes.Where(code => code.Used == true).Count();
+        }
+    }
 
     void Reset()
     {
@@ -101,66 +158,32 @@ public class RandomPinCodes : ScriptableObject
 
     public void Generate()
     {
+        Codes.Clear();
+
         // Generate random codes and labels
         System.Random rand = new System.Random(randomSeed);
-        const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const string letters1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const string letters2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        List<string> labels = new List<string>();
+        foreach(char letter1 in letters1)
+        {
+            foreach(char letter2 in letters2)
+            {
+                string newLabel = letter1.ToString() + letter2.ToString();
+                labels.Add(newLabel);
+            }
+        }
+        Shuffle(labels, randomSeed);
+
         for(int i = 0; i < numCodes; ++i)
         {
             // Generate random code
-            string label = letters[i].ToString();
+            string label = labels[i].ToString();
             int randCode = rand.Next(100000, 999999);
             Code code = new Code(label, randCode, codeLength, numPieces);
             Codes.Add(code);
-        }   
+        }
     }
-
-
-    // [Header("Codes")]
-    [ReadOnly] public List<int> pinCodes = new List<int>();
-
-    // Scripting-only public variables
-    [NonSerialized] public OrderedDictionary labeledCodePieces = new OrderedDictionary();
-    [NonSerialized] public List<string> codePieceLabels = new List<string>();
-    [NonSerialized] public List<string> codePieces = new List<string>();
-
-    // public void Generate()
-    // {
-    //     // Clear container variables
-    //     pinCodes.Clear();
-    //     labeledCodePieces.Clear();
-
-    //     // Calculate intermediate values
-    //     int codeMin = Int32.Parse("1" + new String('0', codeLength - 1));
-    //     int codeMax = Int32.Parse(new String('9', codeLength));
-    //     int pieceLength = codeLength / numPieces;
-
-    //     // Generate random codes and labels
-    //     System.Random rand = new System.Random(randomSeed);
-    //     const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    //     for(int i = 0; i < numCodes; ++i)
-    //     {
-    //         // Generate random code
-    //         string label = letters[i].ToString();
-    //         int code = rand.Next(100000, 999999);
-    //         pinCodes.Add(code);
-
-    //         Code c = new Code(label, code, codeLength, numPieces);
-            
-
-    //         // // Split code into pieces and label
-    //         // string codeStr = code.ToString();
-    //         // for(int j = 0; j < numPieces; ++j)
-    //         // {
-    //         //     string label = letters[i] + (j + 1).ToString();
-    //         //     string piece = codeStr.Substring(j * pieceLength, pieceLength);
-    //         //     if (j == numPieces - 1)
-    //         //     {
-    //         //         piece = codeStr.Substring(j * pieceLength);
-    //         //     }
-    //         //     labeledCodePieces.Add(label, piece);
-    //         // }
-    //     }
-    // }
 
     private Dictionary<AnchorableObject, CodePiece> _assignment = new Dictionary<AnchorableObject, CodePiece>();
     public Dictionary<AnchorableObject, CodePiece> Assignment
@@ -176,7 +199,8 @@ public class RandomPinCodes : ScriptableObject
             }
             
             // Create a new assignment based on current list of anchored objects.
-            _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
+            // _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
+            _assignment = AssignCodePieces(anchorService.AnchoredObjects.Values.ToList(), 0);
 
             // if (_assignment.Count != anchorService.AnchorCount)
             // {
@@ -187,16 +211,6 @@ public class RandomPinCodes : ScriptableObject
         }
     }
 
-    // Assign generated code pieces to objects
-    public void Assign()
-    {
-        AnchorService anchorService;
-        if (MixedRealityServiceRegistry.TryGetService<AnchorService>(out anchorService))
-        {
-            Debug.Log(anchorService.AnchorCount);
-        }
-    }
-
     // Assign anchors to code pieces.
     public Dictionary<AnchorableObject, CodePiece> Assign(List<AnchorableObject> anchors)
     {
@@ -204,6 +218,7 @@ public class RandomPinCodes : ScriptableObject
         if (anchors.Count != numCodes * numPieces)
         {
             Debug.LogWarning($"Not enough anchors placed to assign code pieces. Need {numCodes * numPieces} pieces");
+            return new Dictionary<AnchorableObject, CodePiece>();
         }
         
         // Gather all CodePieces
@@ -230,8 +245,76 @@ public class RandomPinCodes : ScriptableObject
         return assignments;
     }
 
+    public Dictionary<T, CodePiece> AssignCodePieces<T>(List<T> assignableObjects, int pieceIndex)
+    {
+        if (assignableObjects.Count != Codes.Count)
+        {
+            Debug.LogWarning($"Not enough codes ({Codes.Count}) for assignableObjects ({assignableObjects.Count}) of type {typeof(T)}.");
+        }
+
+        var assigned = new Dictionary<T, CodePiece>();
+
+        foreach(T toAssign in assignableObjects)
+        {
+            foreach(Code code in Codes)
+            {
+                CodePiece piece = code.Pieces[pieceIndex];
+                if (piece.Assigned == false)
+                {
+                    assigned.Add(toAssign, piece);
+                    piece.Assigned = true;
+                    break;
+                }
+            }
+        }
+
+        return assigned;
+    }
+
+    public void MarkCodeEntryComplete(int codeEntry)
+    {
+        foreach(Code code in Codes)
+        {
+            if (code.Used == false && code.CompareEntry(codeEntry))
+            {
+                code.Used = true;
+            }
+        }
+    }
+
+    // ONLY checks among codes that have all pieces Assigned"
     public bool Contains(int codeNum)
     {
-        return Codes.Any(code => code.Value == codeNum);
+        // return Codes.Any(code => code.Value == codeNum);
+
+        return Codes.Any(code => code.CompareEntry(codeNum));
+
+        // foreach (Code code in Codes)
+        // {
+        //     bool codeAssigned = code.Pieces.All(p => p.Assigned == true);
+        //     if (codeAssigned == true)
+        //     {
+        //         if (code.CompareEntry(codeNum))
+        //         {
+        //             return true;
+        //         }
+        //     }
+        // }
+        // return false;
+    }
+
+    public static void Shuffle<T>(IList<T> list, int seed)
+    {
+        var rng = new System.Random(seed);
+        int n = list.Count;
+
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 }

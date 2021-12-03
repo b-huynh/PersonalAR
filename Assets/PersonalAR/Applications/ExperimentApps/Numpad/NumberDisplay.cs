@@ -66,6 +66,7 @@ public class NumberDisplay : MonoBehaviour
         {
             textMesh.color = Color.green;
             textMesh.text = "SUCCESS";
+            pinCodes.MarkCodeEntryComplete(entered);
         }
         else
         {

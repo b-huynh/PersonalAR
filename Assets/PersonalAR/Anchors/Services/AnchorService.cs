@@ -147,11 +147,28 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			AnchorPointsSubsystem = null;
 			AnchorStore = null;
 #endif
+
+#if UNITY_EDITOR
+			Debug.Log($"Editor Anchor File: {_editorAnchorSaveFile}");
+#endif
+		}
+
+		private bool StartHasRun = false;
+		private void Start()
+		{
+			LoadExistingAnchors();
+			StartHasRun = true;
 		}
 
 		public override void Update()
 		{
 			base.Update();
+
+			// To be used for communication after scene objects have been initialized, but prior to first frame update.
+			if (StartHasRun == false)
+			{
+				Start();
+			}
 
 			// Do service updates here.
 		}
@@ -224,9 +241,12 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		public void UnregisterAnchor(string name)
 		{
+#if WINDOWS_UWP
 			AnchorStore.UnpersistAnchor(name);
 			GameObject.Destroy(AnchoredObjects[name].gameObject);
 			AnchoredObjects.Remove(name);
+#endif
+
 #if UNITY_EDITOR
 			// Experimental write to save file for editor emulation purposes
 			File.WriteAllText(_editorAnchorSaveFile, SerializeAnchors());
@@ -315,6 +335,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			DeserializeAnchors(editorAnchorsJson);
 #endif
 
+#if WINDOWS_UWP
 			var existingAnchors = AnchorStore.PersistedAnchorNames;
 			ARDebug.LogFormat("Found {0} existing anchor store anchors", existingAnchors.Count);
 
@@ -335,6 +356,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 					ARDebug.LogFormat("Unable to load anchor {0}", anchorName);
 				}
 			}
+#endif
 		}
 
 		private GameObject CreateAnchorActor(string name)

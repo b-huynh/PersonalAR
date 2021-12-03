@@ -29,11 +29,14 @@ public class SmarthubObjectActivity : AnchorActivity
     {
         base.StartActivity(executionContext);
 
-        // Get assignment
-        var assignment = codeSet.Assignment;
-
-        // Get assigned anchor and code piece.
+        // Get assigned anchor 
         anchor = executionContext.Anchor;
+
+        // Get and code piece
+        // var assignment = codeSet.Assignment;
+
+        var assignableObjects = new List<AnchorableObject>() { anchor };
+        Dictionary<AnchorableObject, CodePiece> assignment = codeSet.AssignCodePieces(assignableObjects, 0);
         codePiece = assignment[anchor];
 
         // Update visual elements

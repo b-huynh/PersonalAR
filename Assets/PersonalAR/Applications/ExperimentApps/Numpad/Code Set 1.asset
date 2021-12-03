@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Code Set 1
   m_EditorClassIdentifier: 
   randomSeed: 9458
-  numCodes: 1
+  numCodes: 200
   codeLength: 6
-  numPieces: 2
-  pinCodes: 89da0c00ecda0e00
+  numPieces: 3
