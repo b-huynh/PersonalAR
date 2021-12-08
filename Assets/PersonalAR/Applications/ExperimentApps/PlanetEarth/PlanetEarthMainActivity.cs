@@ -20,6 +20,9 @@ public class PlanetEarthMainActivity : BaseAppActivity
     //private float latitude = 51.5072f; // lat
     //private float longitude = -0.1275f; // long
 
+    [Header("Experiment Parameters")]
+    [SerializeField] private RandomPinCodes pinCodes;
+
     void Reset()
     {
         launchDistance = 1.0f;
@@ -54,7 +57,7 @@ public class PlanetEarthMainActivity : BaseAppActivity
         cachedEntity.transform.SetPositionAndRotation(launchPoint, Quaternion.identity);
         //marker.transform.parent = cachedEntity.transform;
 
-        for (int i=0; i<cities.Count; i++)
+        for (int i = 0; i < cities.Count; i++)
         {
             markerList.Add(new GameObject());
             GameObject marker = markerList[i];
@@ -81,6 +84,15 @@ public class PlanetEarthMainActivity : BaseAppActivity
             //marker.transform.SetPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
             TextMeshPro cityCoords = marker.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
             cityCoords.text = name + "\n" + latitude + ", " + longitude;
+
+            // Add code piece
+            if (pinCodes != null)
+            {
+                var assignableObjects = new List<CityCoords>() {cities[i]};
+                var assignment = pinCodes.AssignCodePieces(assignableObjects, 2);
+                var codePiece = assignment[cities[i]];
+                cityCoords.text += $"\n (CODE) {codePiece.Label}-{codePiece.Value}";
+            }
         }
     }
     public override void StopActivity(ExecutionContext executionContext)

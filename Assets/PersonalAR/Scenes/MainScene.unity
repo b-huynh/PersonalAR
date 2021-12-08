@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -105643,6 +105643,8 @@ MonoBehaviour:
   codeSet: {fileID: 11400000, guid: afb48ffb0a1c54c4184c1021634f8675, type: 2}
   rendererPrefab: {fileID: 5086223569729325255, guid: 3073817f488a5d4418ea73c8d7ca695a,
     type: 3}
+  numGroups: 3
+  avgGroupSize: 3
 --- !u!1 &1891777645
 GameObject:
   m_ObjectHideFlags: 0
@@ -114729,6 +114731,7 @@ MonoBehaviour:
   - cityName: Dubai
     latitude: 25.2
     longitude: 55.3
+  pinCodes: {fileID: 11400000, guid: afb48ffb0a1c54c4184c1021634f8675, type: 2}
 --- !u!1 &2097338564
 GameObject:
   m_ObjectHideFlags: 0
