@@ -7,14 +7,13 @@ public class AppButtonBehavior : MonoBehaviour
 {
     [SerializeField] private AppState _app;
     [SerializeField] private bool tutorial;
-    [SerializeField] private TutorialVariables tutorialVariables;
     public ActivityType activityType;
 
     private System.Guid cachedActivityID = System.Guid.Empty;
     private ButtonConfigHelper buttonConfig;
     private void Awake()
     {
-        ForceRefreshReferences();
+        ConfigureButtonClick();
     }
     // Start is called before the first frame update
     void Start()
@@ -28,7 +27,7 @@ public class AppButtonBehavior : MonoBehaviour
         
     }
 
-    public void ForceRefreshReferences()
+    public void ConfigureButtonClick()
     {
         if (_app != null)
         {
@@ -39,18 +38,6 @@ public class AppButtonBehavior : MonoBehaviour
             buttonConfig.OnClick.AddListener(OnClickDelegate);
 
             GetComponent<AppStateListener>().SetAppState(_app);
-            // GetComponent<AppStateListener>().appState = _app;
-
-            // if (activeVisuals != null)
-            // {
-            //     // activeVisuals.GetComponent<AppStateListener>().appState = _app;
-            //     activeVisuals.GetComponent<AppStateListener>().SetAppState(_app);
-            // }
-            tutorialVariables.Load();
-            if (tutorialVariables.StartFlag)
-            {
-                cachedActivityID = System.Guid.NewGuid();
-            }
         }
     }
 
@@ -74,9 +61,11 @@ public class AppButtonBehavior : MonoBehaviour
         {
             if (tutorial)
             {
-                _app.StopTutorial();
+                // _app.StopTutorial();
+                _app.StopAllActivities(ec);
                 cachedActivityID = System.Guid.Empty;
-            } else
+            }
+            else
             {
                 _app.StopActivity(cachedActivityID, ec);
                 cachedActivityID = System.Guid.Empty;

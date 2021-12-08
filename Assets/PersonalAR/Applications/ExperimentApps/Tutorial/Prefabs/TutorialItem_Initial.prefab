@@ -614,7 +614,6 @@ GameObject:
   m_Component:
   - component: {fileID: 690268018007411347}
   - component: {fileID: 690268018007411350}
-  - component: {fileID: 690268018007411345}
   - component: {fileID: 690268018007411344}
   m_Layer: 0
   m_Name: TitleText
@@ -683,14 +682,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!222 &690268018007411345
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 690268018007411346}
-  m_CullTransparentMesh: 0
 --- !u!114 &690268018007411344
 MonoBehaviour:
   m_ObjectHideFlags: 0

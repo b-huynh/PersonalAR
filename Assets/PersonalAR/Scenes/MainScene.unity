@@ -3890,7 +3890,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6776738325b100047be2e9af7ded408f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vars: {fileID: 11400000, guid: b887425fd04669c4eb03ca91175ed57d, type: 2}
   _app: {fileID: 11400000, guid: 18b124a8f03c0f9459d013f0c9d1fa30, type: 2}
   activityType: 1
 --- !u!1 &56798288
@@ -73613,6 +73612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsEnabled: {fileID: 11400000, guid: 8e710a483a6d3ed458e5592f2ce7929b, type: 2}
+  LaunchOnStartup: 1
   debugMenu: {fileID: 1476737475}
 --- !u!114 &1314640211
 MonoBehaviour:
@@ -81958,6 +81958,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 572992256}
     m_Modifications:
+    - target: {fileID: 690268017062156080, guid: e5e37a3b87e1aad4498b3b594ae1915a,
+        type: 3}
+      propertyPath: m_text
+      value: 0 / 20
+      objectReference: {fileID: 0}
     - target: {fileID: 690268017714761218, guid: e5e37a3b87e1aad4498b3b594ae1915a,
         type: 3}
       propertyPath: m_RootOrder
@@ -82092,8 +82097,8 @@ PrefabInstance:
     - target: {fileID: 690268018166064575, guid: e5e37a3b87e1aad4498b3b594ae1915a,
         type: 3}
       propertyPath: m_text
-      value: "Welcome to PersonalAR! \n\nWould you like to begin the tutorial? Press
-        Yes to continue"
+      value: Would you like to begin the tutorial? Press Yes with your finger to
+        continue.
       objectReference: {fileID: 0}
     - target: {fileID: 1657956600419421765, guid: e5e37a3b87e1aad4498b3b594ae1915a,
         type: 3}

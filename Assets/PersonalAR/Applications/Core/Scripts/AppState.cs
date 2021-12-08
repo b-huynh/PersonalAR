@@ -53,6 +53,11 @@ public class AppState : ScriptableObject
 
     void OnEnable()
     {
+       if (Variables != null)
+        {
+            Variables.Load();
+        }
+    
         UpdateExecutionState();
     }
 

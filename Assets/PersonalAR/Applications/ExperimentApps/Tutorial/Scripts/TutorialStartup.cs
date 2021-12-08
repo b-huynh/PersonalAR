@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TutorialStartup : MonoBehaviour
 {
-    [SerializeField] private TutorialVariables vars;
     [SerializeField] private AppState _app;
     public ActivityType activityType;
 
@@ -13,8 +12,9 @@ public class TutorialStartup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        vars.Load();
-        if (vars.StartFlag)
+        // vars.Load();
+        TutorialVariables tutorialVariables = (TutorialVariables)_app.Variables;
+        if (tutorialVariables.StartFlag)
         {
             // Create execution context
             ExecutionContext ec = new ExecutionContext(gameObject);
@@ -23,18 +23,7 @@ public class TutorialStartup : MonoBehaviour
             {
                 ec.Anchor = anchorable.Anchor;
             }
-            /*
-            // Toggle activity
-            if (cachedActivityID == System.Guid.Empty)
-            {
-                // Save activity ID to toggle off later.
-                cachedActivityID = _app.StartActivity(activityType, ec);
-            }
-            else
-            {
-                _app.StopActivity(cachedActivityID, ec);
-                cachedActivityID = System.Guid.Empty;
-            }*/
+
             _app.StartActivity(activityType, ec);
         }
     }

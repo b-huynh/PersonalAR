@@ -5,9 +5,18 @@ using UnityEngine;
 public class DebugModeController : MonoBehaviour
 {
     public BoolVariable IsEnabled;
+    public bool LaunchOnStartup;
 
     [SerializeField]
     private GameObject debugMenu;
+
+    void Awake()
+    {
+        if (LaunchOnStartup)
+        {
+            IsEnabled.SetValue(true);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
