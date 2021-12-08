@@ -247,7 +247,7 @@ public class RandomPinCodes : ScriptableObject
 
     public Dictionary<T, CodePiece> AssignCodePieces<T>(List<T> assignableObjects, int pieceIndex)
     {
-        if (assignableObjects.Count != Codes.Count)
+        if (assignableObjects.Count > Codes.Count)
         {
             Debug.LogWarning($"Not enough codes ({Codes.Count}) for assignableObjects ({assignableObjects.Count}) of type {typeof(T)}.");
         }
