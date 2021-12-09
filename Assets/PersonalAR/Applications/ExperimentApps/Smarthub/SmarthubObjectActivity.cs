@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -40,7 +40,7 @@ public class SmarthubObjectActivity : AnchorActivity
         codePiece = assignment[anchor];
 
         // Update visual elements
-        cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE PIECE) {codePiece.Label}-{codePiece.Value}");
+        cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) {codePiece.Label}-{codePiece.Value}");
 
         // Add smart info entity anchor content
         cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = executionContext.Anchor;

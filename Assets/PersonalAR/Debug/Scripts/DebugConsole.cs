@@ -24,10 +24,14 @@ public class DebugConsole : MonoBehaviour
 
     void Awake()
     {
+        logStringCount = new OrderedDictionary();
+        stackTraceCache = new OrderedDictionary();
+
         if (HandleUnityDebugLogMessages)
         {
             Application.logMessageReceived += HandlelogMessageReceived;
         }
+        ARDebug.logMessageReceived += HandlelogMessageReceived;
     }
 
     void Start()
@@ -42,10 +46,7 @@ public class DebugConsole : MonoBehaviour
 
     public void OnEnable() 
     {
-        logStringCount = new OrderedDictionary();
-        stackTraceCache = new OrderedDictionary();
 
-        ARDebug.logMessageReceived += HandlelogMessageReceived;
     }
 
     public void OnDisable() 

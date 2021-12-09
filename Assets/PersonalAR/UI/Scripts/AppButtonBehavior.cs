@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AppButtonVisuals))]
 public class AppButtonBehavior : MonoBehaviour
 {
     [SerializeField] private AppState _app;
@@ -13,12 +14,13 @@ public class AppButtonBehavior : MonoBehaviour
     private ButtonConfigHelper buttonConfig;
     private void Awake()
     {
-        ConfigureButtonClick();
+
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        _app = GetComponent<AppButtonVisuals>().App;
+        ConfigureButtonClick();
     }
 
     // Update is called once per frame

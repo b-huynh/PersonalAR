@@ -73612,7 +73612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsEnabled: {fileID: 11400000, guid: 8e710a483a6d3ed458e5592f2ce7929b, type: 2}
-  LaunchOnStartup: 1
+  LaunchOnStartup: 0
   debugMenu: {fileID: 1476737475}
 --- !u!114 &1314640211
 MonoBehaviour:
@@ -73628,7 +73628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textMesh: {fileID: 670301473}
   HandleUnityDebugLogMessages: 1
-  TruncateLength: 200
+  TruncateLength: 802
 --- !u!1 &1315334533
 GameObject:
   m_ObjectHideFlags: 0

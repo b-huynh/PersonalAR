@@ -68,6 +68,7 @@ public class ContextMenuVisuals : MonoBehaviour
         {
             GameObject appButton = GameObject.Instantiate(appButtonPrefab, objectCollection.transform);
             appButton.GetComponent<AppButtonVisuals>().App = app;
+            appButton.GetComponent<AppButtonBehavior>().activityType = ActivityType.ObjectMenu;
         }
 
         // Update grid object collection

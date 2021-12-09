@@ -156,7 +156,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		private bool StartHasRun = false;
 		private void Start()
 		{
-			LoadExistingAnchors();
+			try
+			{
+				LoadExistingAnchors();
+			}
+			catch(Exception ex)
+			{
+				ARDebug.LogException(ex);
+			}
 			StartHasRun = true;
 		}
 
@@ -336,6 +343,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 #endif
 
 #if WINDOWS_UWP
+			// AnchorStore is null when running on start...
 			var existingAnchors = AnchorStore.PersistedAnchorNames;
 			ARDebug.LogFormat("Found {0} existing anchor store anchors", existingAnchors.Count);
 
