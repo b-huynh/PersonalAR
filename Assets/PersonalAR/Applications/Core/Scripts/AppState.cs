@@ -28,6 +28,10 @@ public class AppState : ScriptableObject
     public bool IsInitialized { get; private set; }
     public bool IsRendering { get; private set; }
 
+    //data collection
+    private string startTime = System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss");
+    [SerializeField] private EventDataList _EventDataList = new EventDataList();
+
     public Dictionary<Guid, ActivityType> RunningActivities = new Dictionary<Guid, ActivityType>();
     public int NumActivities
     {
@@ -181,6 +185,7 @@ public class AppState : ScriptableObject
         }
     }
 
+    //data for app open 
     public Guid StartActivity(ActivityType activityType, ExecutionContext executionContext) 
     {
         // Update internal state
@@ -195,6 +200,14 @@ public class AppState : ScriptableObject
             ActivityType = activityType,
             StartContext = executionContext
         };
+
+        AppEvent current_data = new AppEvent();
+        current_data.UnixTime = Utils.UnixTimestampMilliseconds();
+        current_data.SystemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
+        current_data.ActivityID = eventData.ActivityID.ToString();
+        current_data.ActivityType = eventData.ActivityType;
+        _EventDataList.AppEvents.Add(current_data);
+        SaveIntoJson();
 
         // Invoke listeners / view updates
         foreach(var listener in listeners)
@@ -214,6 +227,7 @@ public class AppState : ScriptableObject
         return activityID;
     }
 
+    //data for app close
     public void StopActivity(Guid activityID, ExecutionContext executionContext)
     {
         if (RunningActivities.ContainsKey(activityID) == false) { return; }
@@ -227,6 +241,14 @@ public class AppState : ScriptableObject
             StopContext = executionContext,
         };
 
+        AppEvent current_data = new AppEvent();
+        current_data.UnixTime = Utils.UnixTimestampMilliseconds();
+        current_data.SystemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
+        current_data.ActivityID = eventData.ActivityID.ToString();
+        current_data.ActivityType = eventData.ActivityType;
+        _EventDataList.AppEvents.Add(current_data);
+        SaveIntoJson();
+
         // Update internal state
         RunningActivities.Remove(activityID);
 
@@ -236,7 +258,9 @@ public class AppState : ScriptableObject
             listener.OnActivityStop(eventData);
         }
 
+
         UpdateExecutionState();
+        
     }
 
     public void StopAllActivities(ExecutionContext executionContext)
@@ -295,4 +319,29 @@ public class AppState : ScriptableObject
             listener.OnMessage(methodName, value, options);
         }
     }
+
+    public void SaveIntoJson()
+    {
+        //check if folder is created folder 
+        //session_folder = DataCollector.session_folder;
+
+        string data = JsonUtility.ToJson(_EventDataList);
+        string filename = "/AppEvents_ "+ startTime + ".json";
+        System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+    }
+}
+
+[System.Serializable]
+public class EventDataList
+{
+    public List<AppEvent> AppEvents = new List<AppEvent>();
+}
+
+[System.Serializable]
+public class AppEvent
+{
+    public long UnixTime;
+    public string SystemTime;
+    public string ActivityID;
+    public ActivityType ActivityType;
 }

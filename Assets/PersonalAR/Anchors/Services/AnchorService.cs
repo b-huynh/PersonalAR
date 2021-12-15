@@ -14,9 +14,13 @@ using Newtonsoft.Json.Linq;
 
 namespace Microsoft.MixedReality.Toolkit.Extensions
 {
+
 	[MixedRealityExtensionService(SupportedPlatforms.WindowsUniversal|SupportedPlatforms.WindowsEditor)]
 	public class AnchorService : BaseExtensionService, IAnchorService, IMixedRealityExtensionService
 	{
+		//data collection
+		private string startTime = System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss");
+		[SerializeField] private ObjectPositionList _ObjectPositionList = new ObjectPositionList();
 		/*
 			Anchor Store Management
 		*/
@@ -203,10 +207,19 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		/*
 			Interface Implementation
+			data for anchor
 		*/
 		public bool RegisterAnchor(string name, Vector3 position)
 		{
 			// Create object model (for debug/visualization purposes)
+			ObjectPosition current_data = new ObjectPosition();
+			current_data.Position = position;
+			current_data.ObjectName = name;
+			current_data.UnixTime = Utils.UnixTimestampMilliseconds();
+			_ObjectPositionList.ObjectPositions.Add(current_data);
+			ARDebug.Log("ANCHOOOOOORRRRR");
+			SaveIntoJson();
+
 			GameObject newAnchoredObject = CreateAnchorActor(name);
 			newAnchoredObject.transform.position = position;
 
@@ -333,6 +346,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			}
 		}
 
+		//data anchor
 		private void LoadExistingAnchors()
 		{
 #if UNITY_EDITOR
@@ -350,7 +364,17 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			foreach (string anchorName in existingAnchors)
 			{
 				GameObject anchorMesh = CreateAnchorActor(anchorName);
+
 				AnchorableObject anchor = anchorMesh.GetComponent<AnchorableObject>();
+
+				ObjectPosition current_data = new ObjectPosition();
+				current_data.Position = anchorMesh.transform.position;
+				current_data.ObjectName = anchorMesh.name;
+				current_data.UnixTime = Utils.UnixTimestampMilliseconds();
+				_ObjectPositionList.ObjectPositions.Add(current_data);
+				ARDebug.Log("ANCHOOOOOORRRRR");
+				SaveIntoJson();
+				
 				anchor.OnAnchorLoaded.AddListener(
 					delegate 
 					{
@@ -444,5 +468,28 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		{
 			handlers[anchor].Remove(app);
 		}
+
+		public void SaveIntoJson()
+		{
+			//check if folder is created folder 
+			//session_folder = DataCollector.session_folder;
+			string data = JsonUtility.ToJson(_ObjectPositionList);
+			string filename = "/AnnotationPositions_" + startTime + ".json";
+			System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+		}
 	}
+}
+
+[System.Serializable]
+public class ObjectPositionList
+{
+    public List<ObjectPosition> ObjectPositions = new List<ObjectPosition>();
+}
+
+[System.Serializable]
+public class ObjectPosition
+{
+	public long UnixTime;
+	public Vector3 Position;
+	public string ObjectName;
 }
