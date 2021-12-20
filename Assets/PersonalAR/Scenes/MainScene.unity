@@ -72400,7 +72400,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1301960089}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: AnchorServiceController, Assembly-CSharp
         m_MethodName: Clear
         m_Mode: 1
         m_Arguments:

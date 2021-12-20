@@ -62,6 +62,6 @@ public class AnnotationVisuals : MonoBehaviour
         if (MixedRealityServiceRegistry.TryGetService<IAnchorService>(out anchorService))
         {
             anchorService.UnregisterAnchor(anchorName);
-        }
+        } 
     }
 }

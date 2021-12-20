@@ -22,6 +22,9 @@ public class PopulateChoices : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _anchorService.OnRegistered += HandleOnRegistered;
+        _anchorService.OnRemoved += HandleOnRemoved;
+
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
             ARDebug.LogError($"Failed to get AnchorService");
@@ -38,19 +41,7 @@ public class PopulateChoices : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(var kv in _buttons)
-        {
-            // Set button to no longer be interactable if it's been stored in anchor manager
-            // Should use anchor service events instead
-            if (_anchorService.ContainsAnchor(kv.Key))
-            {
-                kv.Value.interactable = false;
-            }
-            else
-            {
-                kv.Value.interactable = true;
-            }
-        }
+       
     }
 
     public void RepopulateButtons()
@@ -126,5 +117,15 @@ public class PopulateChoices : MonoBehaviour
                 }
             );
         }
+    }
+
+    private void HandleOnRegistered(AnchorableObject anchor)
+    {
+        _buttons[anchor.name].interactable = false;
+    }
+
+    private void HandleOnRemoved(string name)
+    {
+        _buttons[name].interactable = true;
     }
 }

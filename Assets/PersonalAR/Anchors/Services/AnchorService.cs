@@ -255,6 +255,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 #endif
 
 #if UNITY_EDITOR
+			GameObject.Destroy(AnchoredObjects[name].gameObject);
+			AnchoredObjects.Remove(name);
 			// Experimental write to save file for editor emulation purposes
 			File.WriteAllText(_editorAnchorSaveFile, SerializeAnchors());
 #endif
@@ -278,13 +280,11 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		public void Clear()
 		{
-			AnchorStore.Clear();
-			foreach(var kv in AnchoredObjects)
+			List<String> anchorNames = new List<String>(AnchoredObjects.Keys);
+			foreach(String name in anchorNames)
 			{
-				GameObject.Destroy(kv.Value.gameObject);
-				OnRemoved?.Invoke(kv.Key);
+				UnregisterAnchor(name);
 			}
-			AnchoredObjects.Clear();
 		}
 
 		/*
