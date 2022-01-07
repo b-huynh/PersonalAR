@@ -18,11 +18,9 @@ public class AppState : ScriptableObject
     public string appDesc;
     public Material appLogo;
 
-
     // Application save data
     public string appDataFile;
     public AppVariables Variables;
-
 
     // Application execution state
     public bool IsInitialized { get; private set; }
@@ -30,9 +28,12 @@ public class AppState : ScriptableObject
 
     //data collection
     private string startTime = System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss");
-    [SerializeField] private EventDataList _EventDataList = new EventDataList();
+    //[SerializeField] private EventDataList _EventDataList = new EventDataList();
+    public static List<AppEvent> events = new List<AppEvent>();
+    public static List<string> oApps = new List<string>();
 
     public Dictionary<Guid, ActivityType> RunningActivities = new Dictionary<Guid, ActivityType>();
+   
     public int NumActivities
     {
         get => RunningActivities.Count;
@@ -201,8 +202,17 @@ public class AppState : ScriptableObject
         current_data.SystemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
         current_data.ActivityID = eventData.ActivityID.ToString();
         current_data.ActivityType = eventData.ActivityType;
-        _EventDataList.AppEvents.Add(current_data);
-        SaveIntoJson();
+        current_data.Activity = "Start";
+        current_data.name = appName;
+
+        events.Add(current_data);
+        // SceneStudyManager.SaveAppEvent(current_data);
+        oApps.Add(appName);
+        
+        Debug.Log("START");
+        Debug.Log(appName);
+        Debug.Log(eventData.ActivityID.ToString());
+        Debug.Log(eventData.ActivityType.ToString());
 
         // Invoke listeners / view updates
         foreach(var listener in listeners)
@@ -241,8 +251,17 @@ public class AppState : ScriptableObject
         current_data.SystemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
         current_data.ActivityID = eventData.ActivityID.ToString();
         current_data.ActivityType = eventData.ActivityType;
-        _EventDataList.AppEvents.Add(current_data);
-        SaveIntoJson();
+        current_data.Activity = "Stop";
+        current_data.name = appName;
+
+        events.Add(current_data);
+        // SceneStudyManager.SaveAppEvent(current_data);
+        oApps.Remove(appName);
+
+        Debug.Log("STOP");
+        Debug.Log(appName);
+        Debug.Log(eventData.ActivityID.ToString());
+        Debug.Log(eventData.ActivityType.ToString());
 
         // Update internal state
         RunningActivities.Remove(activityID);
@@ -252,7 +271,6 @@ public class AppState : ScriptableObject
         {
             listener.OnActivityStop(eventData);
         }
-
 
         UpdateExecutionState();
         
@@ -315,21 +333,16 @@ public class AppState : ScriptableObject
         }
     }
 
-    public void SaveIntoJson()
-    {
-        //check if folder is created folder 
-        //session_folder = DataCollector.session_folder;
-
-        string data = JsonUtility.ToJson(_EventDataList);
-        string filename = "/AppEvents_ "+ startTime + ".json";
-        System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+    public static List<string> getOpenApps(){
+        return oApps;
     }
-}
 
-[System.Serializable]
-public class EventDataList
-{
-    public List<AppEvent> AppEvents = new List<AppEvent>();
+    public static List<AppEvent> getAppEvents(){
+        List<AppEvent> perviousEvents = events;
+        events = new List<AppEvent>();
+        return perviousEvents;
+    }
+
 }
 
 [System.Serializable]
@@ -339,4 +352,8 @@ public class AppEvent
     public string SystemTime;
     public string ActivityID;
     public ActivityType ActivityType;
+    public string Activity;
+    public string name;
+
 }
+
