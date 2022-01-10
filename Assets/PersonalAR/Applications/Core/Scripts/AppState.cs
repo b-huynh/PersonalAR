@@ -27,8 +27,6 @@ public class AppState : ScriptableObject
     public bool IsRendering { get; private set; }
 
     //data collection
-    private string startTime = System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss");
-    //[SerializeField] private EventDataList _EventDataList = new EventDataList();
     public static List<AppEvent> events = new List<AppEvent>();
     public static List<string> oApps = new List<string>();
 
@@ -197,22 +195,19 @@ public class AppState : ScriptableObject
             StartContext = executionContext
         };
 
+        //add start event for data collection
         AppEvent current_data = new AppEvent();
-        current_data.UnixTime = Utils.UnixTimestampMilliseconds();
-        current_data.SystemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
-        current_data.ActivityID = eventData.ActivityID.ToString();
-        current_data.ActivityType = eventData.ActivityType;
-        current_data.Activity = "Start";
+        current_data.unixTime = Utils.UnixTimestampMilliseconds();
+        current_data.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
+        current_data.activityID = eventData.ActivityID.ToString();
+        current_data.activityType = eventData.ActivityType;
+        current_data.activity = "Start";
         current_data.name = appName;
 
         events.Add(current_data);
-        // SceneStudyManager.SaveAppEvent(current_data);
         oApps.Add(appName);
         
-        Debug.Log("START");
-        Debug.Log(appName);
-        Debug.Log(eventData.ActivityID.ToString());
-        Debug.Log(eventData.ActivityType.ToString());
+        // Debug.Log("START " + appName);
 
         // Invoke listeners / view updates
         foreach(var listener in listeners)
@@ -246,22 +241,19 @@ public class AppState : ScriptableObject
             StopContext = executionContext,
         };
 
+        //add stop event for data collection
         AppEvent current_data = new AppEvent();
-        current_data.UnixTime = Utils.UnixTimestampMilliseconds();
-        current_data.SystemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
-        current_data.ActivityID = eventData.ActivityID.ToString();
-        current_data.ActivityType = eventData.ActivityType;
-        current_data.Activity = "Stop";
+        current_data.unixTime = Utils.UnixTimestampMilliseconds();
+        current_data.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
+        current_data.activityID = eventData.ActivityID.ToString();
+        current_data.activityType = eventData.ActivityType;
+        current_data.activity = "Stop";
         current_data.name = appName;
 
         events.Add(current_data);
-        // SceneStudyManager.SaveAppEvent(current_data);
         oApps.Remove(appName);
 
-        Debug.Log("STOP");
-        Debug.Log(appName);
-        Debug.Log(eventData.ActivityID.ToString());
-        Debug.Log(eventData.ActivityType.ToString());
+        // Debug.Log("STOP " + appName);
 
         // Update internal state
         RunningActivities.Remove(activityID);
@@ -339,6 +331,7 @@ public class AppState : ScriptableObject
 
     public static List<AppEvent> getAppEvents(){
         List<AppEvent> perviousEvents = events;
+
         events = new List<AppEvent>();
         return perviousEvents;
     }
@@ -348,12 +341,12 @@ public class AppState : ScriptableObject
 [System.Serializable]
 public class AppEvent
 {
-    public long UnixTime;
-    public string SystemTime;
-    public string ActivityID;
-    public ActivityType ActivityType;
-    public string Activity;
+    public long unixTime;
+    public string systemTime;
+    public long eventTime;
+    public string activityID;
+    public ActivityType activityType;
+    public string activity;
     public string name;
-
 }
 

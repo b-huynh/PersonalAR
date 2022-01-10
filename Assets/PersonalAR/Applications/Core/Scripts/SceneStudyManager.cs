@@ -17,41 +17,35 @@ using Microsoft.MixedReality.Toolkit.Utilities;
 
 using Microsoft;
 
-//when no hand in hand tracking, simplfy data
-//when appEvent is null, simplfy data
-//add anchors from AnchorService.cs
+//TODO:
+// test removing an anchor
+
+//Questions
+//annontations, Debug not in AppState?
 //positions of apps and anchors?
 
-//list of all current anchors?
-// or event when anchor placed, removed, moved?
 public static class Const
 {
-    public const int NUM_TOTAL = 10;
     public const int FRAME_RATE = 60;
-    public const float TICK_RATE = 10f;
+    public const float TICK_RATE = 6f;
 }
 
 [System.Serializable]
 public class RecordStudy
 {
-    public StudyLog log;
     public StudyObject obj;
-}
-
-//Log for web app
-[System.Serializable]
-public class StudyLog
-{
-    public Vector3 headPos;
-    public float angle;
-    public long time;
-    public bool gazeValid;
 }
 
 //Gaze and Head pos frame
 [System.Serializable]
 public struct StudyFrame
 {
+    public long timestamp;
+    public string systemTime;
+    public long unixTime;
+
+    public bool gazeValid;
+
     public Vector3 hPos;
     public Vector3 hDir;
     public Quaternion hRot;
@@ -59,21 +53,18 @@ public struct StudyFrame
 
     public Vector3 gazeOrigin;
     public Vector3 gazeDirection;
-    public bool gazeValid;
-
-    public long timestamp;
-    public string systemTime;
-    public long unixTime;
 
     public JointTracking hand;
     public List<string> openApps;
-    public List<AppEvent> AppEvents;
+    public List<AppEvent> appEvents;
+    public List<ObjectPosition> objects;
 
 }
 
 [System.Serializable]
 public struct JointTracking
 {
+
     public Vector3 rWrist;
     public Vector3 rThumb;
     public Vector3 rIndex;
@@ -113,60 +104,37 @@ public class SessionRecording
 public class StudyObject
 {
     public string _valid = "null";
-    public string userID;
+    public string userID = "userID";
     public float tickRate = Const.TICK_RATE;
     public SessionRecording sessionRecording = new SessionRecording(1);
 }
 
 public class SceneStudyManager : MonoBehaviour
 {
-    //General
-    string userID = "1234";
-    static System.Random random = new System.Random();
-    //objects to write to json
 
-    public StudyLog log;
+    //objects to write to json
     public StudyObject obj;
     public JointTracking hand;
     public List<string> openAppsList;
+    public List<ObjectPosition> objectsList;
 
     float logTimer = 0f;
-    int studyTimer = 0;
-    public int currentSession = 0;
-    public long frameNum = 0;
+    float studyTimer = 0f;
     public StudyFrame currentFrame;
     
-
     [SerializeField] private RecordStudy _RecordStudy = new RecordStudy();
 
     public long startTime;
-
     public string filename;
-
-    //Logging objects
-    public List<StudyFrame> newFrames;
 
     MixedRealityPose pose;
 
     #region Public methods
 
-    //Generate random string
-    public static string GenerateHexString(int digits)
-    {
-        return string.Concat(Enumerable.Range(0, digits).Select(_ => random.Next(16).ToString("X")));
-    }
-
-    //Initialize the user's data
-    public void InitializeUserAllData()
-    {
-        newFrames = new List<StudyFrame>();
-    }
-
     public void SaveIntoJson()
     {
         string data = JsonUtility.ToJson(_RecordStudy);
         System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
-        //Debug.Log(Application.persistentDataPath + filename);
     }
 
     //Record data (called every 10 ticks)
@@ -184,48 +152,43 @@ public class SceneStudyManager : MonoBehaviour
         currentFrame.gazeOrigin = CoreServices.InputSystem.EyeGazeProvider.GazeOrigin;
         currentFrame.gazeDirection = CoreServices.InputSystem.EyeGazeProvider.GazeDirection;
         currentFrame.gazeValid = CoreServices.InputSystem.EyeGazeProvider.IsEyeTrackingDataValid;
+        
         hand = new JointTracking();
         getJoints();
-
         currentFrame.hand = hand;
 
-        currentFrame.AppEvents = AppState.getAppEvents();
+        currentFrame.appEvents = AppState.getAppEvents();
+        currentFrame.appEvents.ForEach(delegate(AppEvent app){
+            app.eventTime = app.unixTime - startTime;
+        });
 
         List<string> apps = AppState.getOpenApps();
+        List<ObjectPosition> objs = AnchorService.getObjects();
         openAppsList = new List<string>();
+        objectsList = new List<ObjectPosition>();
 
+        //maybe use AddAll?
         for(int i = 0; i < apps.Count; i++){
             openAppsList.Add(apps[i]);
         }
 
+        for(int i = 0; i < objs.Count; i++)
+        {
+            objs[i].placedTime = objs[i].unixTime - startTime;
+            objectsList.Add(objs[i]);
+        }
+
         currentFrame.openApps = openAppsList;
+        currentFrame.objects = objectsList;
         
-        newFrames.Add(currentFrame);
+        obj.sessionRecording.frames.Add(currentFrame);
     }
 
     //Write other saved data too (every second)
     public void LogStudy()
     {
-        if (newFrames.Count > 0)
-        {
-            for (int i = 0; i < newFrames.Count - 1; i++)
-            {
-                obj.sessionRecording.frames.Add(newFrames[i]);
-            }
-
-            obj.sessionRecording.numFrames = obj.sessionRecording.frames.Count;
-            _RecordStudy.obj = obj;
-
-            newFrames = new List<StudyFrame>();
-        }
-
-        Vector3 angle = Camera.main.transform.rotation.eulerAngles;
-        log.time = System.DateTimeOffset.Now.ToUnixTimeMilliseconds() - startTime;
-        log.headPos = Camera.main.transform.position;
-        log.angle = angle.y;
-        log.gazeValid = currentFrame.gazeValid;
-        _RecordStudy.log = log;
-
+        obj.sessionRecording.numFrames = obj.sessionRecording.frames.Count;
+        _RecordStudy.obj = obj;
         SaveIntoJson();
     }
 
@@ -292,11 +255,6 @@ public class SceneStudyManager : MonoBehaviour
         }
     }
 
-    private async Task WaitOneSecondAsync()
-    {
-        await Task.Delay(TimeSpan.FromSeconds(1));
-    }
-
     #endregion
 
     #region Unity methods
@@ -308,11 +266,10 @@ public class SceneStudyManager : MonoBehaviour
         startTime = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
         filename = "/RecordStudy_Session_" +  System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss") + ".json";
         obj = new StudyObject();
-        log = new StudyLog();
 
         obj.tickRate = Const.TICK_RATE;
         currentFrame = new StudyFrame();
-        currentFrame.AppEvents = new List<AppEvent>();
+        currentFrame.appEvents = new List<AppEvent>();
     }
 
     // Update is called once per frame
@@ -323,10 +280,10 @@ public class SceneStudyManager : MonoBehaviour
         logTimer += Time.deltaTime;
 
         //Record data every 10 ticks
-        studyTimer += 1;
+        studyTimer += 1f;
         if (studyTimer == Const.TICK_RATE)
         {
-            studyTimer = 0;
+            studyTimer = 0f;
             SaveStudy();
         }
 

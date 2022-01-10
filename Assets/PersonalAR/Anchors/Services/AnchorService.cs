@@ -19,8 +19,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 	public class AnchorService : BaseExtensionService, IAnchorService, IMixedRealityExtensionService
 	{
 		//data collection
-		private string startTime = System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss");
-		[SerializeField] private ObjectPositionList _ObjectPositionList = new ObjectPositionList();
+		public static List<ObjectPosition> objectPositions = new List<ObjectPosition>();
 		/*
 			Anchor Store Management
 		*/
@@ -188,13 +187,6 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		public bool RegisterAnchor(string name, Vector3 position)
 		{
 			// Create object model (for debug/visualization purposes)
-			ObjectPosition current_data = new ObjectPosition();
-			current_data.Position = position;
-			current_data.ObjectName = name;
-			current_data.UnixTime = Utils.UnixTimestampMilliseconds();
-			_ObjectPositionList.ObjectPositions.Add(current_data);
-			ARDebug.Log("ANCHOOOOOORRRRR");
-			SaveIntoJson();
 
 			GameObject newAnchoredObject = CreateAnchorActor(name);
 			newAnchoredObject.transform.position = position;
@@ -204,6 +196,13 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 #if UNITY_EDITOR
 			// In editor we ignore the anchor store.
 			AnchoredObjects.Add(name, anchor);
+			//add anchor for data collection
+			ObjectPosition current_data = new ObjectPosition();
+			current_data.position = position;
+			current_data.objectName = name;
+			current_data.unixTime = Utils.UnixTimestampMilliseconds();
+			// Debug.Log("SAVE " + name);
+			objectPositions.Add(current_data);
 			returnValue = true;
 
 			// Experimental write to save file for editor emulation purposes
@@ -218,6 +217,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				AnchoredObjects.Add(name, anchor);
 				ARDebug.Log($"Saved anchor {name}");
 				returnValue = true;
+
+				//add anchor for data collection
+				ObjectPosition current_data = new ObjectPosition();
+				current_data.position = position;
+				current_data.objectName = name;
+				current_data.unixTime = Utils.UnixTimestampMilliseconds();
+				// Debug.Log("SAVE " + name);
+				objectPositions.Add(current_data);
 			}
 			else
 			{
@@ -240,6 +247,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			AnchorStore.UnpersistAnchor(name);
 			GameObject.Destroy(AnchoredObjects[name].gameObject);
 			AnchoredObjects.Remove(name);
+
+			objectPositions.ForEach(delegate(ObjectPosition ob){
+				if(ob.objectName == name)
+				{
+					objectPositions.Remove(ob);
+				}
+        	});
+
 #if UNITY_EDITOR
 			// Experimental write to save file for editor emulation purposes
 			File.WriteAllText(_editorAnchorSaveFile, SerializeAnchors());
@@ -271,6 +286,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				OnRemoved?.Invoke(kv.Key);
 			}
 			AnchoredObjects.Clear();
+			// Debug.Log("CLEAR objects");
+			objectPositions.Clear();
 		}
 
 		/*
@@ -335,16 +352,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			foreach (string anchorName in existingAnchors)
 			{
 				GameObject anchorMesh = CreateAnchorActor(anchorName);
-
 				AnchorableObject anchor = anchorMesh.GetComponent<AnchorableObject>();
-
-				ObjectPosition current_data = new ObjectPosition();
-				current_data.Position = anchorMesh.transform.position;
-				current_data.ObjectName = anchorMesh.name;
-				current_data.UnixTime = Utils.UnixTimestampMilliseconds();
-				_ObjectPositionList.ObjectPositions.Add(current_data);
-				ARDebug.Log("ANCHOOOOOORRRRR");
-				SaveIntoJson();
 				
 				anchor.OnAnchorLoaded.AddListener(
 					delegate 
@@ -352,6 +360,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 						ARDebug.LogFormat("Loaded anchor {0}", anchorName);
 						AnchoredObjects.Add(anchorName, anchor);
 						OnRegistered?.Invoke(anchor);
+
+						//may be a bug
+						ObjectPosition current_data = new ObjectPosition();
+						current_data.position = anchorMesh.transform.position;
+						current_data.objectName = anchorName;
+						current_data.unixTime = Utils.UnixTimestampMilliseconds();
+						// Debug.Log("Add " + current_data.objectName);
+						objectPositions.Add(current_data);
 					}
 				);
 				if (!anchor.LoadAnchor())
@@ -420,6 +436,14 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				var anchor = newAnchoredObject.GetComponent<AnchorableObject>();
 				AnchoredObjects.Add(anchorName, anchor);
 				OnRegistered?.Invoke(anchor);
+
+				ObjectPosition current_data = new ObjectPosition();
+				current_data.position = anchorPose.position;
+				current_data.objectName = anchorName;
+				current_data.unixTime = Utils.UnixTimestampMilliseconds();
+				// Debug.Log("Add " + current_data.objectName);
+				objectPositions.Add(current_data);
+
 #endif
 			}
 		}
@@ -439,27 +463,18 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			handlers[anchor].Remove(app);
 		}
 
-		public void SaveIntoJson()
-		{
-			//check if folder is created folder 
-			//session_folder = DataCollector.session_folder;
-			string data = JsonUtility.ToJson(_ObjectPositionList);
-			string filename = "/AnnotationPositions_" + startTime + ".json";
-			System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+		public static List<ObjectPosition> getObjects(){
+			return objectPositions;
 		}
-	}
-}
 
-[System.Serializable]
-public class ObjectPositionList
-{
-    public List<ObjectPosition> ObjectPositions = new List<ObjectPosition>();
+	}
 }
 
 [System.Serializable]
 public class ObjectPosition
 {
-	public long UnixTime;
-	public Vector3 Position;
-	public string ObjectName;
+	public long unixTime;
+	public long placedTime;
+	public string objectName;
+	public Vector3 position;
 }
