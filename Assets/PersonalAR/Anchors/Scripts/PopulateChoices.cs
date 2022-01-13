@@ -19,21 +19,27 @@ public class PopulateChoices : MonoBehaviour
     private Dictionary<string, Button> _buttons;
 
 
+    void Awake()
+    {
+        // Ensure intermediary variables are initialized
+        choices = new List<string>();
+        _buttons = new Dictionary<string, Button>();
+        if (_buttonTemplate == null)
+        {
+            ARDebug.LogError($"{gameObject.name}: _buttonTemplate variable not set");
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        _anchorService.OnRegistered += HandleOnRegistered;
-        _anchorService.OnRemoved += HandleOnRemoved;
-
         if (!MixedRealityServiceRegistry.TryGetService<IAnchorService>(out _anchorService))
         {
             ARDebug.LogError($"Failed to get AnchorService");
         }
 
-        if (_buttonTemplate == null)
-        {
-            ARDebug.LogError($"{gameObject.name}: _buttonTemplate variable not set");
-        }
+        _anchorService.OnRegistered += HandleOnRegistered;
+        _anchorService.OnRemoved += HandleOnRemoved;
 
         RepopulateButtons();
     }
