@@ -26,6 +26,8 @@ public class DataCollector : MonoBehaviour
     {
         string data = JsonUtility.ToJson(_DataCollection);
         string filename = "/DataCollection_Session_" + startTime.ToString("yyyy-MM-dd-tt--HH-mm-ss") + ".json";
+        ARDebug.Log(Application.persistentDataPath + filename);
+        Debug.Log(Application.persistentDataPath + filename);
         System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
     }
 
