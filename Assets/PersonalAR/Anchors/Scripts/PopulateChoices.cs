@@ -19,6 +19,17 @@ public class PopulateChoices : MonoBehaviour
     private Dictionary<string, Button> _buttons;
 
 
+    void Awake()
+    {
+        // Ensure intermediary variables are initialized
+        choices = new List<string>();
+        _buttons = new Dictionary<string, Button>();
+        if (_buttonTemplate == null)
+        {
+            ARDebug.LogError($"{gameObject.name}: _buttonTemplate variable not set");
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,10 +38,8 @@ public class PopulateChoices : MonoBehaviour
             ARDebug.LogError($"Failed to get AnchorService");
         }
 
-        if (_buttonTemplate == null)
-        {
-            ARDebug.LogError($"{gameObject.name}: _buttonTemplate variable not set");
-        }
+        _anchorService.OnRegistered += HandleOnRegistered;
+        _anchorService.OnRemoved += HandleOnRemoved;
 
         RepopulateButtons();
     }
@@ -38,19 +47,7 @@ public class PopulateChoices : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(var kv in _buttons)
-        {
-            // Set button to no longer be interactable if it's been stored in anchor manager
-            // Should use anchor service events instead
-            if (_anchorService.ContainsAnchor(kv.Key))
-            {
-                kv.Value.interactable = false;
-            }
-            else
-            {
-                kv.Value.interactable = true;
-            }
-        }
+       
     }
 
     public void RepopulateButtons()
@@ -126,5 +123,15 @@ public class PopulateChoices : MonoBehaviour
                 }
             );
         }
+    }
+
+    private void HandleOnRegistered(AnchorableObject anchor)
+    {
+        _buttons[anchor.name].interactable = false;
+    }
+
+    private void HandleOnRemoved(string name)
+    {
+        _buttons[name].interactable = true;
     }
 }
