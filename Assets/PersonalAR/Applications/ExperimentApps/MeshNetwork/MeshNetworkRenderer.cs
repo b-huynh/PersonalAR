@@ -8,8 +8,9 @@ using Microsoft.MixedReality.Toolkit.Utilities;
 
 public class MeshNetworkRenderer : MonoBehaviour
 {
-    public string networkName;
-    public List<AnchorableObject> anchors;
+    // public string networkName;
+    // public List<AnchorableObject> subnet;
+    public Subnet subnet;
     
     private List<GameObject> lineObjects;
     [SerializeField] private GameObject lineRendererPrefab;
@@ -25,24 +26,24 @@ public class MeshNetworkRenderer : MonoBehaviour
         lineObjects = new List<GameObject>();
         // DestroyLineObjects();
         DrawLines();
-        DrawInfo();
+        // DrawInfo();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        DrawInfo();
     }
 
     public void DrawLines()
     {
-        for(int i = 0; i < anchors.Count; ++i)
+        for(int i = 0; i < subnet.Count; ++i)
         {
-            for(int j = 0; j < anchors.Count; ++j)
+            for(int j = 0; j < subnet.Count; ++j)
             {
                 if (i != j)
                 {
-                    CreateLineObject(anchors[i].transform.position, anchors[j].transform.position);
+                    CreateLineObject(subnet[i].transform.position, subnet[j].transform.position);
                 }
             }
         }
@@ -51,14 +52,14 @@ public class MeshNetworkRenderer : MonoBehaviour
     public void DrawInfo()
     {
         Vector3 networkCenter = Vector3.zero;
-        foreach(AnchorableObject anchor in anchors)
+        foreach(AnchorableObject anchor in subnet)
         {
             networkCenter += anchor.transform.position;
         }
-        networkCenter = networkCenter / anchors.Count;
+        networkCenter = networkCenter / subnet.Count;
 
         networkInfoDisplay.transform.position = networkCenter;
-        infoText.text = networkName;
+        infoText.text = subnet.networkDescription;
     }
 
     public void SetSolidLineColor(Color color)
@@ -86,7 +87,7 @@ public class MeshNetworkRenderer : MonoBehaviour
 
     private void CreateLineObject(Vector3 start, Vector3 end)
     {
-        GameObject newLine = GameObject.Instantiate(lineRendererPrefab);
+        GameObject newLine = GameObject.Instantiate(lineRendererPrefab, transform);
 
         newLine.transform.position = start;
         Vector3 localEnd = newLine.transform.InverseTransformPoint(end);

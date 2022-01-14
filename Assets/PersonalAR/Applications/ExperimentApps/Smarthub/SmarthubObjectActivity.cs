@@ -5,19 +5,12 @@ using UnityEngine;
 
 public class SmarthubObjectActivity : AnchorActivity
 {
-    // Shared amongst all activities
-    public static List<int> unassignedLabelIndices;
-    public static Dictionary<AnchorableObject, string> assignedCodeSetLabels;
-    public static Dictionary<AnchorableObject, string> assignedCodePieces;
-
     [Header("Smarthub Object Activity")]
     [SerializeField] public RandomPinCodes codeSet;
     [ReadOnly] public AnchorableObject anchor;
     [ReadOnly] public CodePiece codePiece;
 
-    // [ReadOnly] public int labelIndex;
-    // [ReadOnly] public string codeSetLabel;
-    // [ReadOnly] public string codePiece;
+    private SmarthubVariables AppVariables;
 
     // Start is called before the first frame update
     public override void Start()
@@ -29,67 +22,93 @@ public class SmarthubObjectActivity : AnchorActivity
     {
         base.StartActivity(executionContext);
 
+        AppVariables = (SmarthubVariables)appState.Variables;
+
         // Get assigned anchor 
         anchor = executionContext.Anchor;
 
-        // Get and code piece
-        // var assignment = codeSet.Assignment;
+        codePiece = codeSet.GetAssignment(anchor, 0);
+        UpdateVisuals();
+        codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
 
-        var assignableObjects = new List<AnchorableObject>() { anchor };
-        Dictionary<AnchorableObject, CodePiece> assignment = codeSet.AssignCodePieces(assignableObjects, 0);
-        codePiece = assignment[anchor];
+        // if (GetExistingAssignment() == false)
+        // {
+        //     GetNewAssignment();
+        // }
+    }
 
+    public override void StopActivity(ExecutionContext ec)
+    {
+        base.StopActivity(ec);
+
+        if (codePiece != null)
+        {
+            codePiece.Code.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
+        }
+    }
+
+    // Update is called once per frame
+    public void Update()
+    {
+
+    }
+
+    // TODO: Make templated/generalize so assignments in other apps can use.
+    // private bool GetExistingAssignment()
+    // {
+    //     int anchorID = anchor.GetInstanceID();
+    //     var unfinishedCodeAssignments =
+    //         AppVariables.AssignmentPairs.Where(pair => pair.InstanceID == anchorID && pair.CodePiece.Code.Used == false);
+
+    //     if (unfinishedCodeAssignments.Count() > 0)
+    //     {
+    //         codePiece = unfinishedCodeAssignments.First().CodePiece;
+    //         return true;
+    //     }
+    //     else
+    //     {
+    //         return false;
+    //     }
+    // }
+
+    // private void GetNewAssignment()
+    // {
+    //     // Get code piece
+    //     var assignableObjects = new List<AnchorableObject>() { anchor };
+    //     Dictionary<AnchorableObject, CodePiece> assignment = codeSet.AssignCodePieces(assignableObjects, 0);
+    //     codePiece = assignment[anchor];
+
+    //     // Update app state variables
+    //     SmarthubVariables variables = (SmarthubVariables)appState.Variables;
+    //     // variables.AssignmentPairs.Add(new AssignmentPair(anchor, codePiece));
+    //     variables.AssignmentPairs.Add(new AssignmentPair(anchor.GetInstanceID(), codePiece));
+
+    //     // Subscribe to code completion events
+    //     codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+    // }
+
+    private void UpdateVisuals()
+    {
         // Update visual elements
         cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) {codePiece.Label}-{codePiece.Value}");
 
         // Add smart info entity anchor content
-        cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = executionContext.Anchor;
-        executionContext.Anchor.GetComponentInChildren<AnchorContentController>().AddEntity(
+        cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = anchor;
+        anchor.GetComponentInChildren<AnchorContentController>().AddEntity(
             cachedEntity.GetComponent<SmartInfoMenu>());
-
-
-        // ************* OLD ASSIGNMENT CODE. TO BE DELETED. ***********************
-        // // Create unassigned label indexes if it doesn't yet exist (e.g. this is first activity)
-        // if (unassignedLabelIndices == null)
-        // {
-        //     var indices = Enumerable.Range(0, codeSet.labeledCodePieces.Count).ToList();
-        //     unassignedLabelIndices = indices.OrderBy(a => System.Guid.NewGuid()).ToList();
-
-        //     // Assigned dictionaries keep track of already assigned code pieces to reuse.
-        //     assignedCodeSetLabels = new Dictionary<AnchorableObject, string>();
-        //     assignedCodePieces = new Dictionary<AnchorableObject, string>();
-        // }
-
-        // // First check if we already have this assigned.
-        // if (assignedCodePieces.ContainsKey(executionContext.Anchor))
-        // {
-        //     codeSetLabel = assignedCodeSetLabels[executionContext.Anchor];
-        //     codePiece = assignedCodePieces[executionContext.Anchor];
-        // }
-        // // Else, assign valid code piece (if available)
-        // else if (unassignedLabelIndices.Count > 0)
-        // {
-        //     // Grab first available index
-        //     labelIndex = unassignedLabelIndices[0];
-        //     unassignedLabelIndices.RemoveAt(0);
-
-        //     // Assign label and code piece
-        //     string[] codeLabels = new string[codeSet.labeledCodePieces.Count];
-        //     string[] codePieces = new string[codeSet.labeledCodePieces.Count];
-        //     codeSet.labeledCodePieces.Keys.CopyTo(codeLabels, 0);
-        //     codeSet.labeledCodePieces.Values.CopyTo(codePieces, 0);
-        //     codeSetLabel = codeLabels[labelIndex];
-        //     codePiece = codePieces[labelIndex];
-
-        //     assignedCodeSetLabels.Add(executionContext.Anchor, codeSetLabel);
-        //     assignedCodePieces.Add(executionContext.Anchor, codePiece);
-        // }
-        // *****************************************************************************
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCodeEntryComplete()
     {
-        
+        // Clear completion event handlers
+        codePiece.Code.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
+
+        // Get a new assignment
+        // GetNewAssignment();
+
+        Debug.Log("Code Entry Complete, attempting to get new assignment...");
+        codePiece = codeSet.GetAssignment(anchor, 0);
+        UpdateVisuals();
+        codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
     }
 }

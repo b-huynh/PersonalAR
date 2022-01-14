@@ -45,17 +45,26 @@ public class AnchorActivity : BaseAppActivity
             return; // AnchorActivity requires an anchor...
         }
 
-        cachedEntity = GameObject.Instantiate(entityToLaunch);
-        cachedEntity.GetComponent<IAnchorable>().Anchor = executionContext.Anchor;
+        if (initialized == false)
+        {
+            cachedEntity = GameObject.Instantiate(entityToLaunch);
+            cachedEntity.GetComponent<IAnchorable>().Anchor = executionContext.Anchor;
+            initialized = true;
+            Debug.Log("AnchorActivity initialized");
+        }
+
+        cachedEntity.SetActive(true);
     }
 
     public override void StopActivity(ExecutionContext executionContext)
     {
-        if (cachedEntity != null) 
-        {
-            Destroy(cachedEntity);
-            cachedEntity = null;
-        }
+        cachedEntity.SetActive(false);
+
+        // if (cachedEntity != null) 
+        // {
+        //     Destroy(cachedEntity);
+        //     cachedEntity = null;
+        // }
     }
  
 }

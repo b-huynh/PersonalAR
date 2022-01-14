@@ -16,3 +16,10 @@ MonoBehaviour:
   appDesc: 
   appLogo: {fileID: 2100000, guid: 313e5ade3ab87484ab86fa1782f4bdf0, type: 2}
   appDataFile: 
+  Variables: {fileID: 11400000, guid: 230ef42e865f30e4cb782ba5ecc5c460, type: 2}
+  _EventDataList:
+    AppEvents:
+    - UnixTime: 1639527163641
+      SystemTime: 16-12-43-64
+      ActivityID: a01cd5fb-7682-4702-ba54-8e6567ce4637
+      ActivityType: 2

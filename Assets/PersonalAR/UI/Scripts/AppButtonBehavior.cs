@@ -53,11 +53,18 @@ public class AppButtonBehavior : MonoBehaviour
             ec.Anchor = anchorable.Anchor;
         }
 
+        Debug.Log($"CachedActivityID: {cachedActivityID}");
+
         // Toggle activity
         if (cachedActivityID == System.Guid.Empty)
         {
             // Save activity ID to toggle off later.
             cachedActivityID = _app.StartActivity(activityType, ec);
+        }
+        else if (_app.TryResumeActivity(cachedActivityID, ec))
+        {
+            // May be suspended, try resuming
+             Debug.Log("Resume succesful");
         }
         else
         {
@@ -70,7 +77,7 @@ public class AppButtonBehavior : MonoBehaviour
             else
             {
                 _app.StopActivity(cachedActivityID, ec);
-                cachedActivityID = System.Guid.Empty;
+                // cachedActivityID = System.Guifd.Empty;
             }
         }
     }

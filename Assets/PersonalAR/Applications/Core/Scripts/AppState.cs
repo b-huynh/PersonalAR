@@ -31,7 +31,8 @@ public class AppState : ScriptableObject
     public static List<string> oApps = new List<string>();
 
     public Dictionary<Guid, ActivityType> RunningActivities = new Dictionary<Guid, ActivityType>();
-   
+    public Dictionary<Guid, ActivityType> SuspendedActivities = new Dictionary<Guid, ActivityType>();
+
     public int NumActivities
     {
         get => RunningActivities.Count;
@@ -184,9 +185,28 @@ public class AppState : ScriptableObject
         }
     }
 
-    //data for app open 
-    public Guid StartActivity(ActivityType activityType, ExecutionContext executionContext) 
+    public Guid LaunchActivity(ActivityType activityType, ExecutionContext executionContext)
     {
+        // Launch activity OR get existing one if available. Returns pointer to the activity root game object.
+        var existingActivities = RunningActivities.Where(kv => kv.Value == activityType);
+        if (existingActivities.Count() > 0)
+        {
+            return existingActivities.First().Key;
+        }
+        else
+        {
+            return StartActivity(activityType, executionContext);
+        }
+    }
+
+    //data for app open 
+    public Guid StartActivity(ActivityType activityType, ExecutionContext executionContext, bool closeOtherInstances = true)
+    {
+        if (closeOtherInstances)
+        {
+            StopAllActivities(executionContext);
+        }
+
         // Update internal state
         Guid activityID = System.Guid.NewGuid();
         RunningActivities.Add(activityID, activityType);
@@ -232,6 +252,48 @@ public class AppState : ScriptableObject
         return activityID;
     }
 
+    public bool TryResumeActivity(Guid activityID, ExecutionContext executionContext, bool closeOtherInstances = true)
+    {
+        if (RunningActivities.ContainsKey(activityID) == true)
+            return false;
+
+        if (SuspendedActivities.ContainsKey(activityID) == false)
+            return false;
+
+        if (closeOtherInstances)
+        {
+            StopAllActivities(executionContext);
+        }
+
+        // Create Event Data
+        ActivityEventData eventData = new ActivityEventData
+        {
+            EventTime = System.DateTime.Now,
+            ActivityID = activityID,
+            ActivityType = SuspendedActivities[activityID],
+            StartContext = executionContext
+        };
+
+        SuspendedActivities.Remove(activityID);
+        RunningActivities.Add(activityID, eventData.ActivityType);
+
+        foreach(var listener in listeners)
+        {
+            listener.OnActivityStart(eventData);
+        }
+
+        UpdateExecutionState();
+
+        lastAppStarted = this;
+        // If we are currently in immersive mode, we need to close other existing apps after starting this one.
+        if (ImmersiveModeController.IsImmersiveMode)
+        {
+            ImmersiveModeController.Instance.StopAllAppsExceptLastOpened();
+        }
+
+        return true;
+    }
+
     //data for app close
     public void StopActivity(Guid activityID, ExecutionContext executionContext)
     {
@@ -262,6 +324,7 @@ public class AppState : ScriptableObject
 
         // Update internal state
         RunningActivities.Remove(activityID);
+        SuspendedActivities.Add(activityID, eventData.ActivityType);
 
         // Invoke listeners / view updates
         foreach (var listener in listeners)
@@ -270,7 +333,6 @@ public class AppState : ScriptableObject
         }
 
         UpdateExecutionState();
-        
     }
 
     public void StopAllActivities(ExecutionContext executionContext)

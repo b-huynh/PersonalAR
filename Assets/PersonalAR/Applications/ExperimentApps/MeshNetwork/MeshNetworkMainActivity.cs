@@ -9,10 +9,23 @@ using Microsoft.MixedReality.Toolkit.Extensions;
 public class Subnet : List<AnchorableObject>
 {
     public string networkName;
+    public string networkDescription;
+
+    // For tracking code pieces assigned to this object
+    private RandomPinCodes codeSet;
+    private CodePiece codePiece;
 
     public Subnet(string networkName)
     {
         this.networkName = networkName;
+    }
+
+    ~Subnet()
+    {
+        if (codePiece != null)
+        {
+            codePiece.Code.OnCodeEntryComplete.RemoveListener(OnCodeEntryComplete);
+        }
     }
 
     public override string ToString()
@@ -23,6 +36,19 @@ public class Subnet : List<AnchorableObject>
             anchors += anchor.WorldAnchorName + " | ";
         }
         return $"{networkName}: ( {anchors} )";
+    }
+    public void InitWithCodes(RandomPinCodes codes)
+    {
+        codeSet = codes;
+        codePiece = codeSet.GetAssignment(this, 1);
+        networkDescription = networkName + $"\n\n (CODE) {codePiece.Label}-{codePiece.Value}";
+        codePiece.Code.OnCodeEntryComplete.AddListener(OnCodeEntryComplete);
+    }
+
+    public void OnCodeEntryComplete()
+    {
+        codePiece.Code.OnCodeEntryComplete.RemoveListener(OnCodeEntryComplete);
+        InitWithCodes(codeSet);
     }
 }
 
@@ -135,8 +161,9 @@ public class MeshNetworkMainActivity : BaseAppActivity
         newChild.transform.parent = this.transform;
         
         var networkRenderer = newChild.GetComponent<MeshNetworkRenderer>();
-        networkRenderer.networkName = subnet.networkName;
-        networkRenderer.anchors = subnet;
+        // networkRenderer.networkName = subnet.networkName;
+        // networkRenderer.networkName = subnet.networkDescription;
+        networkRenderer.subnet = subnet;
 
         Color nextColor = colorPool.Front();
         networkRenderer.SetSolidLineColor(nextColor);
@@ -151,29 +178,35 @@ public class MeshNetworkMainActivity : BaseAppActivity
         Debug.Log($"Start Activity {activityID}");
 
         // networks = new Dictionary<string, List<AnchorableObject>>();
-        networks = new List<Subnet>();
-        lineRenderers = new List<GameObject>();
 
-        DetermineNetworks();
-
-        // Get code piece assignment
-        var assignment = codeSet.AssignCodePieces(networks, 1);
-        foreach(Subnet subnet in networks)
+        if (initialized == false)
         {
-            subnet.networkName += $"\n\n (CODE) {assignment[subnet].Label}-{assignment[subnet].Value}";
+            networks = new List<Subnet>();
+            lineRenderers = new List<GameObject>();
+
+            DetermineNetworks();
+
+            // Get code piece assignment
+            // var assignment = codeSet.AssignCodePieces(networks, 1);
+            networks.ForEach(subnet => subnet.InitWithCodes(codeSet));
+
+            DrawNetworks();
+            initialized = true;
         }
 
-        DrawNetworks();
+        lineRenderers.ForEach(lr => lr.SetActive(true));
     }
 
     public override void StopActivity(ExecutionContext ec)
     {
-        Debug.Log($"Stop Activity {activityID}");
+        lineRenderers.ForEach(lr => lr.SetActive(false));
 
-        for(int i = 0; i < lineRenderers.Count; ++i)
-        {
-            Destroy(lineRenderers[i]);
-        }
-        lineRenderers.Clear();
+        // Debug.Log($"Stop Activity {activityID}");
+
+        // for(int i = 0; i < lineRenderers.Count; ++i)
+        // {
+        //     Destroy(lineRenderers[i]);
+        // }
+        // lineRenderers.Clear();
     }
 }

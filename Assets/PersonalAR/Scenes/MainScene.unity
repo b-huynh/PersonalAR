@@ -50811,6 +50811,18 @@ MonoBehaviour:
     type: 3}
   codeSet: {fileID: 11400000, guid: afb48ffb0a1c54c4184c1021634f8675, type: 2}
   anchor: {fileID: 0}
+  codePiece:
+    Code:
+      Value: 0
+      Label: 
+      Pieces: []
+      OnCodeEntryComplete:
+        m_PersistentCalls:
+          m_Calls: []
+    Label: 
+    Order: 0
+    Value: 
+    Assigned: 0
 --- !u!1 &886697264
 GameObject:
   m_ObjectHideFlags: 0
@@ -63790,7 +63802,8 @@ MonoBehaviour:
   _DataCollection:
     session_info:
       Date: 
-      Time: 
+      SystemTime: 
+      UnixTime: 0
       Participant_ID: 123
     EyeTracking: []
 --- !u!4 &1152418637

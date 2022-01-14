@@ -5,29 +5,37 @@ using System.Linq;
 using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Extensions;
 
+[Serializable]
 public class Code
 {
     public int Value;
     public string Label;
     public List<CodePiece> Pieces = new List<CodePiece>();
-    public bool Used; // Mark is code has already been used and completed
+
+    // Mark is code has already been used and completed
+    public bool Used { get; private set; }
+    public UnityEvent OnCodeEntryComplete;
 
     private int codeLength;
     private int numPieces;
 
     public Code(string label, int code, int codeLength, int numPieces)
     {
-        Value = code;
-        Label = label;
+        this.Value = code;
+        this.Label = label;
 
         this.codeLength = codeLength;
         this.numPieces = numPieces;
 
-        Pieces = SplitIntoPieces(code, codeLength, numPieces);
+        this.Pieces = SplitIntoPieces(code, codeLength, numPieces);
+
+        this.Used = false;
+        this.OnCodeEntryComplete = new UnityEvent();
     }
 
     public override string ToString()
@@ -35,12 +43,21 @@ public class Code
         return $"{Label}-{Value}";
     }
 
+    public void SetUsed(bool value)
+    {
+        if (Used == false && value == true)
+        {
+            Used = true;
+            OnCodeEntryComplete.Invoke();
+        }
+    }
+
     private List<CodePiece> SplitIntoPieces(int code, int codeLength, int numPieces)
     {
         List<CodePiece> codePieces = new List<CodePiece>();
 
         // Calculate intermediate values
-        // int codeMin = Int32.Parse("1" + new String('0', codeLength - 1));
+        // int codeMin = Int`2.Parse("1" + new String('0', codeLength - 1));
         // int codeMax = Int32.Parse(new String('9', codeLength));
         int pieceLength = codeLength / numPieces;
 
@@ -100,9 +117,13 @@ Label: A
 Order: 2
 Value: 34
 */
+[Serializable]
 public class CodePiece
 {
+    [System.NonSerialized]
     public Code Code;
+    public UnityEvent OnCodeEntryComplete => Code.OnCodeEntryComplete;
+
     public string Label;
     public int Order;
     public string Value;
@@ -125,6 +146,9 @@ public class RandomPinCodes : ScriptableObject
 
 
     [ReadOnly] public List<Code> Codes = new List<Code>();
+
+    List<KeyValuePair<System.Object, CodePiece>> AssignmentHistory = new List<KeyValuePair<object, CodePiece>>();
+ 
     public int CodesCompleted
     {
         get
@@ -185,90 +209,166 @@ public class RandomPinCodes : ScriptableObject
         }
     }
 
-    private Dictionary<AnchorableObject, CodePiece> _assignment = new Dictionary<AnchorableObject, CodePiece>();
-    public Dictionary<AnchorableObject, CodePiece> Assignment
-    {
-        get
-        {
-            // Get anchor service and return default if it doesnt yet exist.
-            AnchorService anchorService;
-            if (MixedRealityServiceRegistry.TryGetService<AnchorService>(out anchorService) == false)
-            {
-                Debug.Log("Cant get anchorservice");
-                return _assignment;
-            }
+    // private Dictionary<AnchorableObject, CodePiece> _assignment = new Dictionary<AnchorableObject, CodePiece>();
+    // public Dictionary<AnchorableObject, CodePiece> Assignment
+    // {
+    //     get
+    //     {
+    //         // Get anchor service and return default if it doesnt yet exist.
+    //         AnchorService anchorService;
+    //         if (MixedRealityServiceRegistry.TryGetService<AnchorService>(out anchorService) == false)
+    //         {
+    //             Debug.Log("Cant get anchorservice");
+    //             return _assignment;
+    //         }
             
-            // Create a new assignment based on current list of anchored objects.
-            // _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
-            _assignment = AssignCodePieces(anchorService.AnchoredObjects.Values.ToList(), 0);
+    //         // Create a new assignment based on current list of anchored objects.
+    //         // _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
+    //         _assignment = AssignCodePieces(anchorService.AnchoredObjects.Values.ToList(), 0);
 
-            // if (_assignment.Count != anchorService.AnchorCount)
-            // {
-            //     _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
-            // }
+    //         // if (_assignment.Count != anchorService.AnchorCount)
+    //         // {
+    //         //     _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
+    //         // }
 
-            return _assignment;
-        }
-    }
+    //         return _assignment;
+    //     }
+    // }
 
-    // Assign anchors to code pieces.
-    public Dictionary<AnchorableObject, CodePiece> Assign(List<AnchorableObject> anchors)
-    {
-        // Check that we have the same amount of anchors and pieces. Otherwise wierdness happens...
-        if (anchors.Count != numCodes * numPieces)
-        {
-            Debug.LogWarning($"Not enough anchors placed to assign code pieces. Need {numCodes * numPieces} pieces");
-            return new Dictionary<AnchorableObject, CodePiece>();
-        }
+    // // Assign anchors to code pieces.
+    // public Dictionary<AnchorableObject, CodePiece> Assign(List<AnchorableObject> anchors)
+    // {
+    //     // Check that we have the same amount of anchors and pieces. Otherwise wierdness happens...
+    //     if (anchors.Count != numCodes * numPieces)
+    //     {
+    //         Debug.LogWarning($"Not enough anchors placed to assign code pieces. Need {numCodes * numPieces} pieces");
+    //         return new Dictionary<AnchorableObject, CodePiece>();
+    //     }
         
-        // Gather all CodePieces
-        List<CodePiece> allCodePieces = new List<CodePiece>();
+    //     // Gather all CodePieces
+    //     List<CodePiece> allCodePieces = new List<CodePiece>();
+    //     foreach(Code code in Codes)
+    //     {
+    //         allCodePieces = allCodePieces.Concat(code.Pieces).ToList();
+    //     }
+
+    //     // Assign a code piece to each anchor
+    //     var assignments = new Dictionary<AnchorableObject, CodePiece>();
+    //     // Use the same random seed used to generate codes, for consistency.
+    //     var rand = new System.Random(randomSeed);
+    //     foreach(AnchorableObject anchor in anchors)
+    //     {
+    //         int pieceIndex = rand.Next(allCodePieces.Count);
+    //         CodePiece assignablePiece = allCodePieces[pieceIndex];
+    //         allCodePieces.RemoveAt(pieceIndex);
+
+    //         assignments.Add(anchor, assignablePiece);
+    //         ARDebug.Log($"Assigned: {anchor.WorldAnchorName} : {assignablePiece.Label}-{assignablePiece.Value}");
+    //     }
+
+    //     return assignments;
+    // }
+
+    // public Dictionary<T, CodePiece> AssignCodePieces<T>(List<T> assignableObjects, int pieceIndex)
+    // {
+    //     if (assignableObjects.Count > Codes.Count)
+    //     {
+    //         Debug.LogWarning($"Not enough codes ({Codes.Count}) for assignableObjects ({assignableObjects.Count}) of type {typeof(T)}.");
+    //     }
+
+    //     var assigned = new Dictionary<T, CodePiece>();
+
+    //     foreach(T toAssign in assignableObjects)
+    //     {
+    //         foreach(Code code in Codes)
+    //         {
+    //             CodePiece piece = code.Pieces[pieceIndex];
+    //             if (piece.Assigned == false)
+    //             {
+    //                 assigned.Add(toAssign, piece);
+    //                 piece.Assigned = true;
+    //                 AssignmentHistory.Add(new KeyValuePair<object, CodePiece>(toAssign, piece));
+    //                 break;
+    //             }
+    //         }
+    //     }
+
+    //     return assigned;
+    // }
+
+    private CodePiece AssignNewCodePiece<T> (T assignable, int pieceIndex)
+    {
+        CodePiece newCodePiece = null;
         foreach(Code code in Codes)
         {
-            allCodePieces = allCodePieces.Concat(code.Pieces).ToList();
-        }
-
-        // Assign a code piece to each anchor
-        var assignments = new Dictionary<AnchorableObject, CodePiece>();
-        // Use the same random seed used to generate codes, for consistency.
-        var rand = new System.Random(randomSeed);
-        foreach(AnchorableObject anchor in anchors)
-        {
-            int pieceIndex = rand.Next(allCodePieces.Count);
-            CodePiece assignablePiece = allCodePieces[pieceIndex];
-            allCodePieces.RemoveAt(pieceIndex);
-
-            assignments.Add(anchor, assignablePiece);
-            ARDebug.Log($"Assigned: {anchor.WorldAnchorName} : {assignablePiece.Label}-{assignablePiece.Value}");
-        }
-
-        return assignments;
-    }
-
-    public Dictionary<T, CodePiece> AssignCodePieces<T>(List<T> assignableObjects, int pieceIndex)
-    {
-        if (assignableObjects.Count > Codes.Count)
-        {
-            Debug.LogWarning($"Not enough codes ({Codes.Count}) for assignableObjects ({assignableObjects.Count}) of type {typeof(T)}.");
-        }
-
-        var assigned = new Dictionary<T, CodePiece>();
-
-        foreach(T toAssign in assignableObjects)
-        {
-            foreach(Code code in Codes)
+            CodePiece piece = code.Pieces[pieceIndex];
+            if (piece.Assigned == false)
             {
-                CodePiece piece = code.Pieces[pieceIndex];
-                if (piece.Assigned == false)
-                {
-                    assigned.Add(toAssign, piece);
-                    piece.Assigned = true;
-                    break;
-                }
+                piece.Assigned = true;
+                AssignmentHistory.Add(new KeyValuePair<object, CodePiece>(assignable, piece));
+                newCodePiece = piece;
+                break;
             }
         }
 
+        if (newCodePiece == null)
+        {
+            Debug.LogWarning("Ran out of code pieces to assign");
+        }
+
+        return newCodePiece;
+    }
+
+    private Dictionary<T, CodePiece> AssignNewCodePiece<T>(List<T> assignables, int pieceIndex)
+    {
+        if (assignables.Count > Codes.Count)
+        {
+            Debug.LogWarning($"Not enough codes ({Codes.Count}) for assignables ({assignables.Count}) of type {typeof(T)}.");
+        }
+
+        Dictionary<T, CodePiece> assigned = assignables.ToDictionary(x => x, x => AssignNewCodePiece(x, pieceIndex));
         return assigned;
+    }
+
+    private CodePiece GetExistingAssignment<T>(T queryObject)
+    {
+        if (HasExistingAssignment(queryObject))
+        {
+            return AssignmentHistory.Where(kv => kv.Key == (object)queryObject && kv.Value.Code.Used == false).First().Value;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private bool HasExistingAssignment<T>(T queryObject)
+    {
+        var currentAssignments = AssignmentHistory.Where(kv => kv.Key == (object)queryObject && kv.Value.Code.Used == false);
+        return currentAssignments.Count() > 0;
+    }
+
+    public CodePiece GetAssignment<T>(T assignable, int pieceIndex)
+    {
+        CodePiece assignment = GetExistingAssignment(assignable);
+        if (assignment != null)
+        {
+            return assignment;
+        }
+        else
+        {
+            return AssignNewCodePiece(assignable, pieceIndex);
+        }
+    }
+
+    public Dictionary<T, CodePiece> GetAssignment<T>(List<T> assignables, int pieceIndex)
+    {
+        if (assignables.Count > Codes.Count)
+        {
+            Debug.LogWarning($"Not enough codes ({Codes.Count}) for assignables ({assignables.Count}) of type {typeof(T)}.");
+        }
+
+        return assignables.ToDictionary(x => x, x => GetAssignment(x, pieceIndex));
     }
 
     public void MarkCodeEntryComplete(int codeEntry)
@@ -277,7 +377,7 @@ public class RandomPinCodes : ScriptableObject
         {
             if (code.Used == false && code.CompareEntry(codeEntry))
             {
-                code.Used = true;
+                code.SetUsed(true);
             }
         }
     }

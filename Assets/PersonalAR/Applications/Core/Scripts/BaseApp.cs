@@ -21,6 +21,8 @@ public class BaseApp : MonoBehaviour, IAppStateListener
     [Header("Activities")]
     public List<ActivityEntry> activities;
     private Dictionary<Guid, BaseAppActivity> runningActivities;
+    private Dictionary<Guid, BaseAppActivity> suspendedActivities;
+
 
     [Header("App Settings")]
     public AppState appState;
@@ -54,6 +56,7 @@ public class BaseApp : MonoBehaviour, IAppStateListener
     protected virtual void Awake()
     {
         runningActivities = new Dictionary<Guid, BaseAppActivity>();
+        suspendedActivities = new Dictionary<Guid, BaseAppActivity>();
 
         // Add new app to app registry.
         AppRegistry.AddApp(this);
@@ -94,13 +97,30 @@ public class BaseApp : MonoBehaviour, IAppStateListener
         {
             if (entry.activityType == eventData.ActivityType)
             {
-                // Initialize activity state
-                GameObject newClone = GameObject.Instantiate(entry.activity.gameObject, transform);
-                BaseAppActivity newActivity = newClone.GetComponent<BaseAppActivity>();
-                newActivity.appState = appState;
-                newActivity.activityID = eventData.ActivityID;
-                newActivity.StartActivity(eventData.StartContext);
-                runningActivities.Add(eventData.ActivityID, newActivity);
+                Debug.Log("OnActivityStart");
+                foreach(var kv in suspendedActivities)
+                {
+                    Debug.Log($"{kv.Key} : {kv.Value.GetInstanceID()}");
+                }
+                Debug.Log($"{eventData.ActivityID}");
+                // Resume existing activity
+                if (suspendedActivities.ContainsKey(eventData.ActivityID))
+                {
+                    BaseAppActivity existingActivity = suspendedActivities[eventData.ActivityID];
+                    existingActivity.StartActivity(eventData.StartContext);
+                    suspendedActivities.Remove(eventData.ActivityID);
+                    runningActivities.Add(eventData.ActivityID, existingActivity);
+                }
+                else
+                {
+                    // Initialize activity state
+                    GameObject newClone = GameObject.Instantiate(entry.activity.gameObject, transform);
+                    BaseAppActivity newActivity = newClone.GetComponent<BaseAppActivity>();
+                    newActivity.appState = appState;
+                    newActivity.activityID = eventData.ActivityID;
+                    newActivity.StartActivity(eventData.StartContext);
+                    runningActivities.Add(eventData.ActivityID, newActivity);
+                }
             }
         }
     }
@@ -118,10 +138,17 @@ public class BaseApp : MonoBehaviour, IAppStateListener
         // Stop activity.
         BaseAppActivity activity = runningActivities[activityID];
         activity.StopActivity(eventData.StopContext);
-        GameObject.Destroy(activity.gameObject);
+        // GameObject.Destroy(activity.gameObject);
 
         // Remove activity ID.
         runningActivities.Remove(activityID);
+        suspendedActivities.Add(activityID, activity);
+
+        Debug.Log("OnActivityStop");
+        foreach(var kv in suspendedActivities)
+        {
+            Debug.Log($"{kv.Key} : {kv.Value.GetInstanceID()}");
+        }
     }
 
     public void OnStateChanged(ExecutionState executionState) {}
