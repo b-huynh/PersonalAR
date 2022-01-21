@@ -37,6 +37,7 @@ public class SmarthubApp : BaseApp
         if (numAssigned < numSmartObjects)
         {
             anchorService.AddHandler(anchor, appState);
+            numAssigned += 1;
         }
     }
 

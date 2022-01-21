@@ -479,6 +479,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		// Manage anchor handlers.
 		public Dictionary<AnchorableObject, HashSet<AppState>> handlers = new Dictionary<AnchorableObject, HashSet<AppState>>();
+		public Dictionary<AppState, HashSet<AnchorableObject>> handlersByApp = new Dictionary<AppState, HashSet<AnchorableObject>>();
 		public void AddHandler(AnchorableObject anchor, AppState app)
 		{
 			if (handlers.ContainsKey(anchor) == false)
@@ -486,13 +487,21 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				handlers.Add(anchor, new HashSet<AppState>());
 			}
 			handlers[anchor].Add(app);
+
+			if (handlersByApp.ContainsKey(app) == false)
+			{
+				handlersByApp.Add(app, new HashSet<AnchorableObject>());
+			}
+			handlersByApp[app].Add(anchor);
 		}
 		public void RemoveHandler(AnchorableObject anchor, AppState app)
 		{
 			handlers[anchor].Remove(app);
+			handlersByApp[app].Remove(anchor);
 		}
 
-		public static List<ObjectPosition> getObjects(){
+		public static List<ObjectPosition> getObjects()
+		{
 			return objectPositions;
 		}
 

@@ -185,19 +185,19 @@ public class AppState : ScriptableObject
         }
     }
 
-    public Guid LaunchActivity(ActivityType activityType, ExecutionContext executionContext)
-    {
-        // Launch activity OR get existing one if available. Returns pointer to the activity root game object.
-        var existingActivities = RunningActivities.Where(kv => kv.Value == activityType);
-        if (existingActivities.Count() > 0)
-        {
-            return existingActivities.First().Key;
-        }
-        else
-        {
-            return StartActivity(activityType, executionContext);
-        }
-    }
+    // public Guid StartOrGetExistingActivity(ActivityType activityType, ExecutionContext executionContext, bool closeOtherInstances = true)
+    // {
+    //     // Launch activity OR get existing one if available.
+    //     var existingActivities = RunningActivities.Where(kv => kv.Value == activityType);
+    //     if (existingActivities.Count() > 0)
+    //     {
+    //         return existingActivities.First().Key;
+    //     }
+    //     else
+    //     {
+    //         return StartActivity(activityType, executionContext, closeOtherInstances);
+    //     }
+    // }
 
     //data for app open 
     public Guid StartActivity(ActivityType activityType, ExecutionContext executionContext, bool closeOtherInstances = true)

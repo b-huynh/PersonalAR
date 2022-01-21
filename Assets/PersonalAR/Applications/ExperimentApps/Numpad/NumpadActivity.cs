@@ -28,6 +28,15 @@ public class NumpadActivity : HUDActivity
         cachedEntity.GetComponent<ScaleTween>().TweenIn();
 
         // Initialize with random codes
-        cachedEntity.GetComponentInChildren<NumberDisplay>().pinCodes = pinCodes;
+        var numberDisplay = cachedEntity.GetComponentInChildren<NumberDisplay>();
+        if (numberDisplay.pinCodes == null)
+        {
+            numberDisplay.pinCodes = pinCodes;
+        }
+    }
+
+    public override void StopActivity(ExecutionContext executionContext)
+    {
+        base.StopActivity(executionContext);
     }
 }

@@ -53,7 +53,7 @@ public class AppButtonBehavior : MonoBehaviour
             ec.Anchor = anchorable.Anchor;
         }
 
-        Debug.Log($"CachedActivityID: {cachedActivityID}");
+        // Debug.Log($"CachedActivityID: {cachedActivityID}");
 
         // Toggle activity
         if (cachedActivityID == System.Guid.Empty)
@@ -64,7 +64,7 @@ public class AppButtonBehavior : MonoBehaviour
         else if (_app.TryResumeActivity(cachedActivityID, ec))
         {
             // May be suspended, try resuming
-             Debug.Log("Resume succesful");
+            //  Debug.Log("Resume succesful");
         }
         else
         {

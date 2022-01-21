@@ -97,12 +97,6 @@ public class BaseApp : MonoBehaviour, IAppStateListener
         {
             if (entry.activityType == eventData.ActivityType)
             {
-                Debug.Log("OnActivityStart");
-                foreach(var kv in suspendedActivities)
-                {
-                    Debug.Log($"{kv.Key} : {kv.Value.GetInstanceID()}");
-                }
-                Debug.Log($"{eventData.ActivityID}");
                 // Resume existing activity
                 if (suspendedActivities.ContainsKey(eventData.ActivityID))
                 {
@@ -143,12 +137,6 @@ public class BaseApp : MonoBehaviour, IAppStateListener
         // Remove activity ID.
         runningActivities.Remove(activityID);
         suspendedActivities.Add(activityID, activity);
-
-        Debug.Log("OnActivityStop");
-        foreach(var kv in suspendedActivities)
-        {
-            Debug.Log($"{kv.Key} : {kv.Value.GetInstanceID()}");
-        }
     }
 
     public void OnStateChanged(ExecutionState executionState) {}

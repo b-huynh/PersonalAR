@@ -124,7 +124,7 @@ public class MeshNetworkMainActivity : BaseAppActivity
             int groupSize = rnd.Next(avgGroupSize - 1, avgGroupSize + 1);
 
             // Draw randomly from initial set
-            Subnet subnet = new Subnet($"Group_{i}");
+            Subnet subnet = new Subnet($"Group {i}");
             for(int j = 0; j < groupSize; ++j)
             {
                 if (initialSet.Count > 0)

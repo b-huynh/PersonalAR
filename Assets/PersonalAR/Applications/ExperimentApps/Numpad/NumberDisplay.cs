@@ -21,7 +21,7 @@ public class NumberDisplay : MonoBehaviour
 
     void OnEnable()
     {
-        Clear();
+        // Clear();
     }
 
     // Start is called before the first frame update
@@ -30,6 +30,8 @@ public class NumberDisplay : MonoBehaviour
         textMesh.color = Color.white;
         activityID = GetComponentInParent<BaseAppActivity>().activityID;
         activityIDDebug = activityID.ToString();
+
+        Clear();
     }
 
     // Update is called once per frame
