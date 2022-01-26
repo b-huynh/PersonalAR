@@ -73,7 +73,7 @@ public class PlanetEarthMainActivity : BaseAppActivity
                 string name = city.getCityName();
                 float latitude = city.getLatitude();
                 float longitude = city.getLongitude();
-                marker.transform.Rotate(0, -1 * longitude, 0, Space.Self);
+                marker.transform.Rotate(0, -1 * longitude, -1 * latitude , Space.Self);
                 float latitudeRadians = Mathf.PI * latitude / 180;
                 float longitudeRadians = Mathf.PI * longitude / 180;
 
