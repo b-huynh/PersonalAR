@@ -67,14 +67,17 @@ public class SmarthubMainActivity : BaseAppActivity
         // Start all object activities for handled anchors
         foreach(AnchorableObject anchor in handledAnchors)
         {
-            ExecutionContext ec = new ExecutionContext(this.gameObject);
-            ec.Anchor = anchor;
-
-            Guid appId = appState.StartActivity(ActivityType.ObjectMenu, ec, false);
-
-            if (cachedObjectActivities.Contains(appId) == false)
+            if (anchor != null)
             {
-                cachedObjectActivities.Add(appId);
+                ExecutionContext ec = new ExecutionContext(this.gameObject);
+                ec.Anchor = anchor;
+
+                Guid appId = appState.StartActivity(ActivityType.ObjectMenu, ec, false);
+
+                if (cachedObjectActivities.Contains(appId) == false)
+                {
+                    cachedObjectActivities.Add(appId);
+                }
             }
         }
     }

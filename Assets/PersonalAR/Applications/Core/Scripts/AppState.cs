@@ -364,12 +364,14 @@ public class AppState : ScriptableObject
             potentialNewState = ExecutionState.RunningFull;
         }
 
-        var ObjectActivities =
+
+        /*var ObjectActivities =
             RunningActivities.Where(kv => kv.Value == ActivityType.ObjectMenu);
+
         if (ObjectActivities.Count() > 0)
         {
             potentialNewState = ExecutionState.RunningPartial;
-        }
+        }*/
 
         // Update state and invoke callbacks if needed
         if (potentialNewState != ExecutionState)
