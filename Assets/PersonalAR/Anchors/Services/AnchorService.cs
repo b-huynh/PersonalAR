@@ -268,6 +268,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		public void UnregisterAnchor(string name)
 		{
+			//Need to invoke event prior to removing anchor because the event depends on the existence of the anchor
+			OnRemoved?.Invoke(name);
 #if WINDOWS_UWP
 			AnchorStore.UnpersistAnchor(name);
 			GameObject.Destroy(AnchoredObjects[name].gameObject);
@@ -287,7 +289,6 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			// Experimental write to save file for editor emulation purposes
 			File.WriteAllText(_editorAnchorSaveFile, SerializeAnchors());
 #endif
-			OnRemoved?.Invoke(name);
 		}
 
 		public bool ContainsAnchor(string name)

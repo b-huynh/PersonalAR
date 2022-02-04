@@ -22,6 +22,7 @@ public class SmarthubApp : BaseApp
         if (MixedRealityServiceRegistry.TryGetService<IAnchorService>(out anchorService))
         {
             anchorService.OnRegistered += OnObjectRegistered;
+            anchorService.OnRemoved += OnObjectRemoved;
         }
     }
 
@@ -39,6 +40,11 @@ public class SmarthubApp : BaseApp
             anchorService.AddHandler(anchor, appState);
             numAssigned += 1;
         }
+    }
+
+    void OnObjectRemoved(String name) {
+        anchorService.RemoveHandler(anchorService.GetAnchor(name), appState);
+        numAssigned -= 1;
     }
 
     public void LaunchSmartInfoMenu(AnchorableObject anchor)
