@@ -39,7 +39,7 @@ MonoBehaviour:
   - text: You will need to annotate at least 12 objects in your environment before
       certain apps will work properly.
     audioClip: {fileID: 8300000, guid: 300a3a2afa4a3304ca6f5019a02367d9, type: 3}
-  - text: 'For now, let''s just annotate 2 objects.
+  - text: 'For now, let''s just annotate 1 object.
 
 
       First, select the type
@@ -54,8 +54,8 @@ MonoBehaviour:
   - text: "The annotation may take a few minutes to begin tracking. \n\nThe spinning
       circle will turn into a green checkmark when it is ready."
     audioClip: {fileID: 8300000, guid: 043b2a8c56b6cfb48a70e3fc928a0678, type: 3}
-  - text: "Great! If you are not satisfied with the placement, press the X button
-      to delete it. \n\nTo continue, make 1 more annotation."
+  - text: 'Great! If you are not satisfied with the placement, press the X button
+      to delete it. '
     audioClip: {fileID: 8300000, guid: 18d991b95a4ed634c89d32d0720a6707, type: 3}
   - text: Open the Hand Menu and click the annotations icon again to close the Annotations
       Menu.
