@@ -58,7 +58,8 @@ public struct StudyFrame
     public List<string> openApps;
     public List<AppEvent> appEvents;
     public List<ObjectPosition> objects;
-
+    
+    public ExperimentEventData experimentEventData;
 }
 
 [System.Serializable]
@@ -79,7 +80,6 @@ public struct JointTracking
     public Vector3 lIndex;
     public Vector3 lThumb;
 }
-
 
 //Session recording which is written to json
 [System.Serializable]
@@ -104,7 +104,7 @@ public class SessionRecording
 public class StudyObject
 {
     public string _valid = "null";
-    public string userID = "userID";
+    public string userID;
     public float tickRate = Const.TICK_RATE;
     public SessionRecording sessionRecording = new SessionRecording(1);
 }
@@ -126,6 +126,7 @@ public class SceneStudyManager : MonoBehaviour
 
     public long startTime;
     public string filename;
+    [ReadOnly] public string filepath;
 
     MixedRealityPose pose;
 
@@ -134,6 +135,7 @@ public class SceneStudyManager : MonoBehaviour
     public void SaveIntoJson()
     {
         string data = JsonUtility.ToJson(_RecordStudy);
+        filepath = Application.persistentDataPath + filename;
         System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
     }
 
@@ -181,8 +183,11 @@ public class SceneStudyManager : MonoBehaviour
         currentFrame.openApps = openAppsList;
         currentFrame.objects = objectsList;
         
+        // Collect experiment events
+        currentFrame.experimentEventData = ExperimentManager.GetExperimentEventData();
+
         obj.sessionRecording.frames.Add(currentFrame);
-    }
+    }   
 
     //Write other saved data too (every second)
     public void LogStudy()
@@ -265,9 +270,9 @@ public class SceneStudyManager : MonoBehaviour
         Application.targetFrameRate = Const.FRAME_RATE;
         startTime = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
         filename = "/RecordStudy_Session_" +  System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss") + ".json";
-        obj = new StudyObject();
+        // obj = new StudyObject();
 
-        obj.tickRate = Const.TICK_RATE;
+        // obj.tickRate = Const.TICK_RATE;
         currentFrame = new StudyFrame();
         currentFrame.appEvents = new List<AppEvent>();
     }

@@ -149,6 +149,8 @@ public class RandomPinCodes : ScriptableObject
 
     List<KeyValuePair<System.Object, CodePiece>> AssignmentHistory = new List<KeyValuePair<object, CodePiece>>();
  
+    public UnityEvent OnCodeEntryComplete;
+
     public int CodesCompleted
     {
         get
@@ -157,12 +159,14 @@ public class RandomPinCodes : ScriptableObject
         }
     }
 
-    void Reset()
+    public void Reset()
     {
         randomSeed = new System.Random().Next(1000, 9999);
-        numCodes = 10;
-        codeLength = 6;
-        numPieces = 2;
+        AssignmentHistory.Clear();
+        Codes.Clear();
+        // numCodes = 10;
+        // codeLength = 6;
+        // numPieces = 2;
     }
 
     void OnValidate()
@@ -205,6 +209,7 @@ public class RandomPinCodes : ScriptableObject
             string label = labels[i].ToString();
             int randCode = rand.Next(100000, 999999);
             Code code = new Code(label, randCode, codeLength, numPieces);
+
             Codes.Add(code);
         }
     }
@@ -378,6 +383,8 @@ public class RandomPinCodes : ScriptableObject
             if (code.Used == false && code.CompareEntry(codeEntry))
             {
                 code.SetUsed(true);
+
+                OnCodeEntryComplete.Invoke();
             }
         }
     }

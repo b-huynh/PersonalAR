@@ -495,6 +495,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			}
 			handlersByApp[app].Add(anchor);
 		}
+
 		public void RemoveHandler(AnchorableObject anchor, AppState app)
 		{
 			handlers[anchor].Remove(app);
