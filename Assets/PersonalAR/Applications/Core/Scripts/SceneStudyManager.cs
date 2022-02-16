@@ -34,6 +34,7 @@ public static class Const
 public class RecordStudy
 {
     public StudyObject obj;
+
 }
 
 //Gaze and Head pos frame
@@ -58,6 +59,11 @@ public struct StudyFrame
     public List<string> openApps;
     public List<AppEvent> appEvents;
     public List<ObjectPosition> objects;
+    public List<CodeEvent> codesEntered;
+
+    public List<int> experimentCodes;
+
+
 
 }
 
@@ -90,6 +96,8 @@ public class SessionRecording
     public long numFrames;
     public float tickRate = Const.TICK_RATE;
     public List<StudyFrame> frames;
+
+    public RandomPinCodes pinCodes;
 
     public SessionRecording(int id, float t = Const.TICK_RATE)
     {
@@ -156,6 +164,10 @@ public class SceneStudyManager : MonoBehaviour
         hand = new JointTracking();
         getJoints();
         currentFrame.hand = hand;
+        
+        CodeEvent newCode = NumberDisplay.GetCodeEvent();
+        newCode.eventTime = newCode.unixTime - startTime;
+        currentFrame.codesEntered.Add(newCode);
 
         currentFrame.appEvents = AppState.getAppEvents();
         currentFrame.appEvents.ForEach(delegate(AppEvent app){
@@ -270,6 +282,8 @@ public class SceneStudyManager : MonoBehaviour
         obj.tickRate = Const.TICK_RATE;
         currentFrame = new StudyFrame();
         currentFrame.appEvents = new List<AppEvent>();
+        obj.sessionRecording.pinCodes = NumberDisplay.pinCodes.get;
+
     }
 
     // Update is called once per frame
