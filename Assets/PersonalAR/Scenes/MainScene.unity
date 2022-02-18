@@ -8443,7 +8443,7 @@ MonoBehaviour:
   sceneStudyManager: {fileID: 1152418638}
   codeSet: {fileID: 11400000, guid: afb48ffb0a1c54c4184c1021634f8675, type: 2}
   immersiveModeState: {fileID: 11400000, guid: a28f2dac902901a4b8752fe7c936753e, type: 2}
-  SecondsAllotted: 0
+  SecondsAllotted: 600
   Score: 0
   TotalSecondsLeft: 0
   OnTaskStart:
