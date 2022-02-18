@@ -27,6 +27,8 @@ public class ExperimentManager : Singleton<ExperimentManager>
         }
     }
 
+    public int SecondsAllotted;
+
     [ReadOnly] public int Score;
 
     [ReadOnly] public float TotalSecondsLeft;
@@ -99,7 +101,7 @@ Time Left: {3:D2}:{4:D2}
     public void StartTask()
     {
         Score = 0;
-        TotalSecondsLeft = 100;
+        TotalSecondsLeft = SecondsAllotted;
 
         codeSet.OnCodeEntryComplete.RemoveAllListeners();
         codeSet.OnCodeEntryComplete.AddListener(this.UpdateScore);
