@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8096,7 +8096,6 @@ MonoBehaviour:
   sceneStudyManager: {fileID: 1152418638}
   codeSet: {fileID: 11400000, guid: afb48ffb0a1c54c4184c1021634f8675, type: 2}
   immersiveModeState: {fileID: 11400000, guid: a28f2dac902901a4b8752fe7c936753e, type: 2}
-  SessionNumber: 0
   Score: 0
   TotalSecondsLeft: 0
   OnTaskStart:
@@ -70556,6 +70555,7 @@ GameObject:
   - component: {fileID: 1152418637}
   - component: {fileID: 1152418636}
   - component: {fileID: 1152418638}
+  - component: {fileID: 1152418639}
   m_Layer: 0
   m_Name: DataCollection
   m_TagString: Untagged
@@ -70610,12 +70610,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obj:
     _valid: null
-    userID: 0001
     tickRate: 6
+    sessionID: 1
+    startTime: 0
+    userID: 0001
     sessionRecording:
-      sessionID: 1
-      startTime: 0
       numFrames: 0
+      recordNumber: 0
       tickRate: 6
       frames: []
   hand:
@@ -70634,6 +70635,7 @@ MonoBehaviour:
   openAppsList: []
   objectsList: []
   currentFrame:
+    frameNum: 0
     timestamp: 0
     systemTime: 
     unixTime: 0
@@ -70660,31 +70662,35 @@ MonoBehaviour:
     openApps: []
     appEvents: []
     objects: []
-    experimentEventData:
-      unixTime: 0
-      systemTime: 
-      userID: 
-      sessionType: 
-      eventName: 
-      pinRandomSeed: 0
-      pinNumCodes: 0
-      pinCodeLength: 0
-      pinNumPieces: 0
-      score: 0
+    codesEvents: []
+    gestureEvents: []
   _RecordStudy:
     obj:
       _valid: null
-      userID: userID
       tickRate: 6
+      sessionID: 1
+      startTime: 0
+      userID: userID
       sessionRecording:
-        sessionID: 1
-        startTime: 0
         numFrames: 0
+        recordNumber: 0
         tickRate: 6
         frames: []
   startTime: 0
   filename: 
-  filepath: 
+  recordNumber: 0
+--- !u!114 &1152418639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1152418635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef965150cd67fd4ba64bfd58a3f50ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1154691898
 GameObject:
   m_ObjectHideFlags: 0
