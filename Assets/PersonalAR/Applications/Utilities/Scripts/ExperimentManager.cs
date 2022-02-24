@@ -46,13 +46,13 @@ public class ExperimentManager : Singleton<ExperimentManager>
         get
         {
             return string.Format(@"
-Participant ID: {0}
-Task Session: {1}
+                Participant ID: {0}
+                Task Session: {1}
 
-Score: {2}
+                Score: {2}
 
-Time Left: {3:D2}:{4:D2} 
-", UserID, SessionType, Score, MinutesLeft, SecondsLeft);
+                Time Left: {3:D2}:{4:D2} 
+                ", UserID, SessionType, Score, MinutesLeft, SecondsLeft);
         }
     }
 

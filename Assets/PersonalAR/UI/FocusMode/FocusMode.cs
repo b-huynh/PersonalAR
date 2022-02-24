@@ -1,5 +1,8 @@
 ﻿using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Input;
+using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -32,6 +35,7 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
     {
         ARDebug.Log($"OnGestureStarted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
 
+        
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")
         // {
@@ -53,7 +57,7 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
     public void OnGestureUpdated(InputEventData eventData)
     {
         ARDebug.Log($"OnGestureUpdated [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
-
+        
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")
         // {
@@ -64,7 +68,6 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
     public void OnGestureUpdated(InputEventData<Vector3> eventData)
     {
         ARDebug.Log($"OnGestureUpdated [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
-
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Manipulate Action")
         // {
@@ -80,7 +83,6 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
     public void OnGestureCompleted(InputEventData eventData)
     {
         ARDebug.Log($"OnGestureCompleted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
-
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")
         // {
@@ -95,7 +97,6 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
     public void OnGestureCompleted(InputEventData<Vector3> eventData)
     {
         ARDebug.Log($"OnGestureCompleted [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
-
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Manipulate Action")
         // {
@@ -111,7 +112,6 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
     public void OnGestureCanceled(InputEventData eventData)
     {
         ARDebug.Log($"OnGestureCanceled [{Time.frameCount}]: {eventData.MixedRealityInputAction.Description}");
-
         // var action = eventData.MixedRealityInputAction.Description;
         // if (action == "Hold Action")
         // {
@@ -154,4 +154,3 @@ public class FocusMode : InputSystemGlobalHandlerListener, IMixedRealityGestureH
         }
     }
 }
-

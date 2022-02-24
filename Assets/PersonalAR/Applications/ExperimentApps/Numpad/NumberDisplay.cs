@@ -19,6 +19,8 @@ public class NumberDisplay : MonoBehaviour
     // Initialize in scripts on Instantiate()
     public RandomPinCodes pinCodes { get; set; }
 
+    public static List<CodeEvent> codes = new List<CodeEvent>();
+
     void OnEnable()
     {
         // Clear();
@@ -63,18 +65,28 @@ public class NumberDisplay : MonoBehaviour
 
     public void Validate()
     {
-        int entered = System.Int32.Parse(textMesh.text);
+        int entered = System.Int32.Parse(textMesh.text); 
+
+        CodeEvent code = new CodeEvent();
+        
+        code.unixTime = Utils.UnixTimestampMilliseconds();
+        code.systemTime = System.DateTime.Now.ToString("HH-mm-ss-ff");
+        code.codes = entered;
+
         if (pinCodes.Contains(entered))
         {
             textMesh.color = Color.green;
             textMesh.text = "SUCCESS";
-            pinCodes.MarkCodeEntryComplete(entered);
+            code.success = true;
         }
         else
         {
             textMesh.color = Color.red;
             textMesh.text = "INVALID";
+            code.success = false;
         }
+
+        codes.Add(code);
     }
 
     public void CloseActivity()
@@ -82,4 +94,19 @@ public class NumberDisplay : MonoBehaviour
         var ec = new ExecutionContext(this.gameObject);
         GetComponentInParent<BaseAppActivity>().appState.StopActivity(activityID, ec);   
     }
+    public static List<CodeEvent> getCodeEvents(){
+        List<CodeEvent> returnVal = codes;
+        codes = new List<CodeEvent>();
+        return returnVal;
+    }
+}
+
+[System.Serializable]
+public class CodeEvent
+{
+    public long unixTime;
+    public string systemTime;
+    public long eventTime;
+    public int codes;
+    public bool success;
 }

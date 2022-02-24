@@ -34,12 +34,14 @@ public static class Const
 public class RecordStudy
 {
     public StudyObject obj;
+
 }
 
 //Gaze and Head pos frame
 [System.Serializable]
 public struct StudyFrame
 {
+    public long frameNum;
     public long timestamp;
     public string systemTime;
     public long unixTime;
@@ -58,10 +60,15 @@ public struct StudyFrame
     public List<string> openApps;
     public List<AppEvent> appEvents;
     public List<ObjectPosition> objects;
-    
-    public ExperimentEventData experimentEventData;
-}
+    public List<CodeEvent> codesEvents;
 
+    public List<GestureEvent> gestureEvents;
+
+}
+/*
+    - gesture events
+    - hand ray 
+*/
 [System.Serializable]
 public struct JointTracking
 {
@@ -81,19 +88,19 @@ public struct JointTracking
     public Vector3 lThumb;
 }
 
+
 //Session recording which is written to json
 [System.Serializable]
 public class SessionRecording
 {
-    public int sessionID;
-    public long startTime;
     public long numFrames;
+
+    public long recordNumber;
     public float tickRate = Const.TICK_RATE;
     public List<StudyFrame> frames;
 
-    public SessionRecording(int id, float t = Const.TICK_RATE)
+    public SessionRecording(float t = Const.TICK_RATE)
     {
-        sessionID = id;
         tickRate = t;
         frames = new List<StudyFrame>();
     }
@@ -103,9 +110,12 @@ public class SessionRecording
 [System.Serializable]
 public class StudyObject
 {
+
     public string _valid = "null";
-    public string userID;
     public float tickRate = Const.TICK_RATE;
+    public int sessionID = 1;
+    public long startTime;
+    public string userID = "abc";
     public SessionRecording sessionRecording = new SessionRecording(1);
 }
 
@@ -126,7 +136,8 @@ public class SceneStudyManager : MonoBehaviour
 
     public long startTime;
     public string filename;
-    [ReadOnly] public string filepath;
+
+    public int recordNumber = 0;
 
     MixedRealityPose pose;
 
@@ -134,14 +145,20 @@ public class SceneStudyManager : MonoBehaviour
 
     public void SaveIntoJson()
     {
-        string data = JsonUtility.ToJson(_RecordStudy);
-        filepath = Application.persistentDataPath + filename;
-        System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+        filename = "/RecordStudy_Session_" + recordNumber + "_" + startTime + ".json";
+        if(recordNumber == 0){
+            string data = JsonUtility.ToJson(_RecordStudy);
+            System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+        }else{
+            string data = JsonUtility.ToJson(_RecordStudy.obj.sessionRecording);
+            System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+        }
     }
 
     //Record data (called every 10 ticks)
     public void SaveStudy()
     {
+        currentFrame.frameNum++;
         currentFrame.timestamp = System.DateTimeOffset.Now.ToUnixTimeMilliseconds() - startTime;
         currentFrame.systemTime = System.DateTime.Now.ToString("HH-mm-ss-ff");
         currentFrame.unixTime = Utils.UnixTimestampMilliseconds();
@@ -158,6 +175,16 @@ public class SceneStudyManager : MonoBehaviour
         hand = new JointTracking();
         getJoints();
         currentFrame.hand = hand;
+        
+        currentFrame.codesEvents = NumberDisplay.getCodeEvents();
+        currentFrame.codesEvents.ForEach(delegate(CodeEvent e){
+            e.eventTime = e.unixTime - startTime;
+        });
+
+        currentFrame.gestureEvents = GestureListener.getGestureEvents();
+        currentFrame.gestureEvents.ForEach(delegate(GestureEvent gesture){
+            gesture.eventTime = gesture.unixTime - startTime;
+        });
 
         currentFrame.appEvents = AppState.getAppEvents();
         currentFrame.appEvents.ForEach(delegate(AppEvent app){
@@ -183,18 +210,22 @@ public class SceneStudyManager : MonoBehaviour
         currentFrame.openApps = openAppsList;
         currentFrame.objects = objectsList;
         
-        // Collect experiment events
-        currentFrame.experimentEventData = ExperimentManager.GetExperimentEventData();
-
         obj.sessionRecording.frames.Add(currentFrame);
-    }   
+    }
 
     //Write other saved data too (every second)
     public void LogStudy()
     {
         obj.sessionRecording.numFrames = obj.sessionRecording.frames.Count;
+        obj.sessionRecording.recordNumber = recordNumber;
         _RecordStudy.obj = obj;
         SaveIntoJson();
+
+        if(obj.sessionRecording.frames.Count >= Const.TICK_RATE * 30){
+            recordNumber++;
+            obj.sessionRecording.frames.Clear();
+        }
+   
     }
 
     public void getJoints()
@@ -269,12 +300,17 @@ public class SceneStudyManager : MonoBehaviour
     {
         Application.targetFrameRate = Const.FRAME_RATE;
         startTime = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        filename = "/RecordStudy_Session_" +  System.DateTime.Now.ToString("yyyy-MM-dd-tt--HH-mm-ss") + ".json";
-        // obj = new StudyObject();
 
-        // obj.tickRate = Const.TICK_RATE;
+        obj = new StudyObject();
+
+        obj.tickRate = Const.TICK_RATE;
+        obj.startTime = startTime;
         currentFrame = new StudyFrame();
         currentFrame.appEvents = new List<AppEvent>();
+        currentFrame.gestureEvents = new List<GestureEvent>();
+        currentFrame.codesEvents = new List<CodeEvent>();
+        currentFrame.frameNum = 0;
+
     }
 
     // Update is called once per frame
