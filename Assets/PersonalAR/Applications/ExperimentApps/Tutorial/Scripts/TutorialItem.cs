@@ -17,6 +17,7 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
     [SerializeField] private GameObject okButton;
     [SerializeField] private GameObject handSymbol;
     public ContinueType continueType;
+    public UnityEvent closeEvent;
 
     [Header("Display Location")]
     [SerializeField] Transform displayParent;
@@ -112,6 +113,8 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
         ARDebug.logToUnityConsole = true;
         ARDebug.Log($"[Tutorial Item {ItemOrder}]");
 
+        closeEvent.Invoke();
+
         if (dialogue == null)
         {
             ARDebug.Log("Dialogue is NULL");
@@ -160,5 +163,6 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.Stop();
+        closeEvent.Invoke(); //set variable back to false
     }
 }
