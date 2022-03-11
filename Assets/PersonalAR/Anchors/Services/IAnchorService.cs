@@ -24,6 +24,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		event Action<AnchorableObject> OnRegistered;
 		event Action<string> OnRemoved;
+		event Action<string> ToRemove;
 
 		int AnchorCount { get; }
 		IList<string> AnchorNames { get; }
@@ -38,6 +39,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		void Clear();
 
 		void AddHandler(AnchorableObject anchor, AppState app);
-		void RemoveHandler(AnchorableObject anchor, AppState app);
+		void RemoveFromDict(AnchorableObject anchor, AppState app);
+		void RemoveHandler();
 	}
 }
