@@ -85,7 +85,8 @@ public class TutorialMainActivity : BaseAppActivity
     public void CloseConditionHandler(bool newValue)
     {
         if (newValue == true)
-        { 
+        {
+            currentItem.closeEvent?.Invoke();
             currentItem.CloseCondition.OnValueChanged -= CloseConditionHandler;
             NextItem();
         }
