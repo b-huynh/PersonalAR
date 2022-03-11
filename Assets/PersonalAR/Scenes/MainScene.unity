@@ -4680,6 +4680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _app: {fileID: 11400000, guid: 18b124a8f03c0f9459d013f0c9d1fa30, type: 2}
   activityType: 1
+  tutorialMenuButton: {fileID: 223392868}
 --- !u!1 &56798288
 GameObject:
   m_ObjectHideFlags: 0
@@ -15116,6 +15117,12 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &223392868 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2868915923907236537, guid: 79c754a54e7710d4aad6272524f5b4d1,
+    type: 3}
+  m_PrefabInstance: {fileID: 763329793}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &226321291
 GameObject:
   m_ObjectHideFlags: 0
