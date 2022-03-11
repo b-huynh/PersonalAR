@@ -126565,6 +126565,7 @@ MonoBehaviour:
   appState: {fileID: 11400000, guid: 18b124a8f03c0f9459d013f0c9d1fa30, type: 2}
   initialized: 0
   vars: {fileID: 11400000, guid: b887425fd04669c4eb03ca91175ed57d, type: 2}
+  _app: {fileID: 11400000, guid: 18b124a8f03c0f9459d013f0c9d1fa30, type: 2}
 --- !u!1 &1975778002
 GameObject:
   m_ObjectHideFlags: 0

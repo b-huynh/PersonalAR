@@ -144,9 +144,10 @@ public class BaseApp : MonoBehaviour, IAppStateListener
     public void OnMessage(string methodName, object value, SendMessageOptions options)
     {
         this.gameObject.SendMessage(methodName, value, options);
-        foreach(var kv in runningActivities)
+        List<Guid> runningActivityIDs = runningActivities.Keys.ToList();
+        foreach(Guid id in runningActivityIDs)
         {
-            kv.Value.SendMessage(methodName, value, options);
+            runningActivities[id].SendMessage(methodName, value, options);
         }
     }
 }
