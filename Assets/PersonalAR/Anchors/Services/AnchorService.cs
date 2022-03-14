@@ -108,7 +108,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		public event Action<AnchorableObject> OnRegistered;
 		public event Action<string> OnRemoved;
-		public event Action<string> ToRemove;
+/*		public event Action<string> ToRemove;*/
 
 		private string _editorAnchorSaveFile = Path.Combine(Application.persistentDataPath, "editor_anchors.json");
 
@@ -270,7 +270,8 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		public void UnregisterAnchor(string name)
 		{
 			//Need to invoke event prior to removing anchor because the event depends on the existence of the anchor
-			ToRemove?.Invoke(name);
+			AnchorableObject anchor = GetAnchor(name);
+			RemoveFromDict(anchor);
 
 #if WINDOWS_UWP
 			AnchorStore.UnpersistAnchor(name);
@@ -500,10 +501,28 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			handlersByApp[app].Add(anchor);
 		}
 
-		public void RemoveFromDict(AnchorableObject anchor, AppState app)
+		public void RemoveFromDict(AnchorableObject anchor)
 		{
-			handlers[anchor].Remove(app);
-			handlersByApp[app].Remove(anchor);
+
+			foreach (KeyValuePair<AnchorableObject, HashSet<AppState>> kvp in handlers)
+			{
+				Debug.Log("kvp: " + kvp.Key + " " + kvp.Value);
+				if (kvp.Key == anchor)
+				{
+					Debug.Log(" == ");
+					kvp.Value.Clear();
+				}
+			}
+
+			foreach (KeyValuePair<AppState, HashSet<AnchorableObject>> kvp in handlersByApp)
+            {
+				Debug.Log("kvp: " + kvp.Key + " " + kvp.Value);
+				if (kvp.Value.Contains(anchor))
+                {
+					Debug.Log(" Contains ");
+					kvp.Value.Remove(anchor);
+				}
+            }
 		}
 
 		public void RemoveHandler()
