@@ -33,7 +33,8 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
         get => m_itemOrder;
     }
     // *** End ITutorialItem ***
-    public BoolVariable CloseCondition;
+    public BoolVariable BoolCloseCondition;
+    public IntVariable IntCloseCondition;
 
     public static List<TutorialItem> GetTutorialItems()
     {
@@ -71,6 +72,12 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
 
         okButton?.SetActive(false);
         handSymbol?.SetActive(false);
+        if (BoolCloseCondition != null && IntCloseCondition != null)
+        {
+            Debug.Log("Invalid close condition, cannot have both bool and int close condition");
+            BoolCloseCondition = null;
+            IntCloseCondition = null;
+        }
         if (continueType == ContinueType.OkButton) { okButton?.SetActive(true); }
         else if (continueType == ContinueType.Hand) { handSymbol?.SetActive(true); }
     }

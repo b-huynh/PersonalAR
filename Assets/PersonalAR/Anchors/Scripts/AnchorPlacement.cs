@@ -19,6 +19,7 @@ public class AnchorPlacement : MonoBehaviour
     private IAnchorService _anchorService;
 
     public UnityEvent OnObjectPlaced;
+    public IntVariable AnnotationsCount;
 
     void Awake()
     {
@@ -43,7 +44,7 @@ public class AnchorPlacement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        AnnotationsCount?.SetValue(_anchorService.AnchorCount);
     }
 
     // OPTIMIZE: Probably don't need to SetActive constantly.

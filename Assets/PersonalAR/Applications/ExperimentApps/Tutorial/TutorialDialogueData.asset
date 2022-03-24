@@ -66,9 +66,14 @@ MonoBehaviour:
   - text: "The Numpad app allows you to type keycodes whenever you need, such as
       unlocking a keypad door lock. \n\nOpen Item Inspector next."
     audioClip: {fileID: 8300000, guid: efe003409a2ca2c4885eb2b5a0a7ed64, type: 3}
-  - text: "The Item Inspector app allows you to inspect annotated objects to learn
-      more about them, like manufacturer location or serial numbers. \n\nOpen Mesh
-      Network next. "
+  - text: 'Create 12 annotations.
+
+'
+    audioClip: {fileID: 8300000, guid: 6141d40b390588b4d89f8e7008b4fc81, type: 3}
+  - text: 'You can switch between Layerable or Immersive mode. In Immersive mode,
+      apps open one at a time and will automatically close the previous app.
+
+'
     audioClip: {fileID: 8300000, guid: d1f19c05962a6ba45b1f788f53670f52, type: 3}
   - text: "Mesh Network allows you to wirelessly connect objects to each other. This
       is useful for transferring data or turning a group of objects on and off. \n\nOpen
@@ -80,12 +85,7 @@ MonoBehaviour:
   - text: Currently, PersonalAR is in Layerable mode. This allows you to open and
       close as many apps as you want, though they may sometimes overlap.
     audioClip: {fileID: 8300000, guid: 51c1a8ae640eee14b904e9fef3284a4f, type: 3}
-  - text: 'You can switch between Layerable or Immersive mode. In Immersive mode,
-      apps open one at a time and will automatically close the previous app.
-
-'
-    audioClip: {fileID: 8300000, guid: 6141d40b390588b4d89f8e7008b4fc81, type: 3}
   - text: 
-    audioClip: {fileID: 0}
+    audioClip: {fileID: 8300000, guid: eee344f25ab86244d862871675b99d3b, type: 3}
   - text: 
     audioClip: {fileID: 0}

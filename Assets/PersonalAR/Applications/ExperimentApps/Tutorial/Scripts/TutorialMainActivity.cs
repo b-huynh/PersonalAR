@@ -74,9 +74,13 @@ public class TutorialMainActivity : BaseAppActivity
         if (tutorialItems.Count > 0)
         {
             currentItem = tutorialItems[0];
-            if (currentItem.CloseCondition != null)
+            if (currentItem.BoolCloseCondition != null)
             {
-                currentItem.CloseCondition.OnValueChanged += CloseConditionHandler;
+                currentItem.BoolCloseCondition.OnValueChanged += CloseConditionHandler;
+            }
+            if (currentItem.IntCloseCondition != null)
+            {
+                currentItem.IntCloseCondition.OnValueChanged += IntCloseConditionHandler;
             }
             currentItem.Open();
             currentItem.OnTutorialEnter();
@@ -90,8 +94,17 @@ public class TutorialMainActivity : BaseAppActivity
     {
         if (newValue == true)
         {
+            currentItem.BoolCloseCondition.OnValueChanged -= CloseConditionHandler;
+            NextItem();
+        }
+    }
+
+    public void IntCloseConditionHandler(int newValue)
+    {
+        if (newValue >= 12)
+        {
             currentItem.closeEvent?.Invoke();
-            currentItem.CloseCondition.OnValueChanged -= CloseConditionHandler;
+            currentItem.IntCloseCondition.OnValueChanged -= IntCloseConditionHandler;
             NextItem();
         }
     }
