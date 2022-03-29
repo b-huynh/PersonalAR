@@ -8113,7 +8113,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Electronics
+  m_text: Furniture
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -17619,7 +17619,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Kitchen
+  m_text: Electroncs
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -22660,7 +22660,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Furniture
+  m_text: Utilties
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -30494,7 +30494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3670f4c5a6ba204caf9f9880076d70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _annotationSet: {fileID: 11400000, guid: b084feb932f963349a782f789c00397e, type: 2}
+  _annotationSet: {fileID: 11400000, guid: ea98a70ab19b9da419ce5f8aca135b31, type: 2}
   _setNameTextMesh: {fileID: 259532702}
   _buttonTemplate: {fileID: 577729653}
 --- !u!114 &485359961
@@ -48831,7 +48831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3670f4c5a6ba204caf9f9880076d70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _annotationSet: {fileID: 11400000, guid: 2d46b14f848478d4eae93aa19a41d716, type: 2}
+  _annotationSet: {fileID: 11400000, guid: a16af1ba43f77734ab7f3473ecd6fe5c, type: 2}
   _setNameTextMesh: {fileID: 100531732}
   _buttonTemplate: {fileID: 1234785882}
 --- !u!114 &774238082
@@ -73595,7 +73595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3670f4c5a6ba204caf9f9880076d70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _annotationSet: {fileID: 11400000, guid: c1561f884ec8dd447bfe1d57917e96e3, type: 2}
+  _annotationSet: {fileID: 11400000, guid: 75ef96ff4fd0e4340a1325d49b6ebd1f, type: 2}
   _setNameTextMesh: {fileID: 1997488734}
   _buttonTemplate: {fileID: 917130841}
 --- !u!114 &1144314082
@@ -85742,7 +85742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3670f4c5a6ba204caf9f9880076d70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _annotationSet: {fileID: 11400000, guid: a16af1ba43f77734ab7f3473ecd6fe5c, type: 2}
+  _annotationSet: {fileID: 11400000, guid: 8fcc07fa497650241a1669967e44819c, type: 2}
   _setNameTextMesh: {fileID: 352231395}
   _buttonTemplate: {fileID: 1107366551}
 --- !u!114 &1319715143
@@ -127824,7 +127824,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Room Surfaces
+  m_text: Appliances
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
