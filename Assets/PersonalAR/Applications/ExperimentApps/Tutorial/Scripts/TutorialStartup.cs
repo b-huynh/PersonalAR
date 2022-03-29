@@ -6,6 +6,7 @@ public class TutorialStartup : MonoBehaviour
 {
     [SerializeField] private AppState _app;
     public ActivityType activityType;
+    public GameObject tutorialMenuButton;
 
     private System.Guid cachedActivityID = System.Guid.Empty;
 
@@ -24,7 +25,11 @@ public class TutorialStartup : MonoBehaviour
                 ec.Anchor = anchorable.Anchor;
             }
 
-            _app.StartActivity(activityType, ec);
+            cachedActivityID = _app.StartActivity(activityType, ec);
+            if (tutorialMenuButton != null)
+            {
+                tutorialMenuButton.GetComponent<AppButtonBehavior>()?.setCachedActivityID(cachedActivityID);
+            }
         }
     }
 

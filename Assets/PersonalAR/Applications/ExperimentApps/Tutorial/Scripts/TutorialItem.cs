@@ -113,8 +113,6 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
         ARDebug.logToUnityConsole = true;
         ARDebug.Log($"[Tutorial Item {ItemOrder}]");
 
-        closeEvent.Invoke();
-
         if (dialogue == null)
         {
             ARDebug.Log("Dialogue is NULL");
@@ -155,7 +153,6 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
         }
 
         ARDebug.logToUnityConsole = false;
-
         audio.Play();
     }
 
@@ -163,6 +160,5 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.Stop();
-        closeEvent.Invoke(); //set variable back to false
     }
 }
