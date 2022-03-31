@@ -16,7 +16,8 @@ MonoBehaviour:
   - text: Would you like to begin the tutorial? Press Yes with your finger to continue.
     audioClip: {fileID: 8300000, guid: 1cc958afd438b74469dfe54e6163f3e2, type: 3}
   - text: "Welcome to PersonalAR! \n\nThis tutorial will guide you through the various
-      features of PersonalAR.\n\nTo continue, press the OK button with your finger."
+      features of PersonalAR.\n\nTo continue, press the Continue button with your
+      finger."
     audioClip: {fileID: 8300000, guid: 659fa813b7e92f240969e542b8be61bc, type: 3}
   - text: Great!  Next, raise your left hand towards your face and look at your palm
       to bring up the Hand Menu.
@@ -57,35 +58,42 @@ MonoBehaviour:
   - text: 'Great! If you are not satisfied with the placement, press the X button
       to delete it. '
     audioClip: {fileID: 8300000, guid: 18d991b95a4ed634c89d32d0720a6707, type: 3}
+  - text: 'Repeat the last few steps to annotate 11 more objects, for a total of
+      12. You can see how many annotations you have completed in the top right corner
+      of the Annotations Menu.
+
+'
+    audioClip: {fileID: 8300000, guid: a1e3b999ca59a104eb5a2354d27f43c1, type: 3}
   - text: Open the Hand Menu and click the annotations icon again to close the Annotations
       Menu.
-    audioClip: {fileID: 8300000, guid: a1e3b999ca59a104eb5a2354d27f43c1, type: 3}
+    audioClip: {fileID: 8300000, guid: cc4385fc072a7984880642048b219132, type: 3}
   - text: "There are 4 applications installed on this PersonalAR system.  Let\u2019s
       take a look at each one. \n\nFirst open the Numpad app."
-    audioClip: {fileID: 8300000, guid: cc4385fc072a7984880642048b219132, type: 3}
+    audioClip: {fileID: 8300000, guid: efe003409a2ca2c4885eb2b5a0a7ed64, type: 3}
   - text: "The Numpad app allows you to type keycodes whenever you need, such as
       unlocking a keypad door lock. \n\nOpen Item Inspector next."
-    audioClip: {fileID: 8300000, guid: efe003409a2ca2c4885eb2b5a0a7ed64, type: 3}
-  - text: 'Create 12 annotations.
-
-'
-    audioClip: {fileID: 8300000, guid: 6141d40b390588b4d89f8e7008b4fc81, type: 3}
-  - text: 'You can switch between Layerable or Immersive mode. In Immersive mode,
-      apps open one at a time and will automatically close the previous app.
-
-'
     audioClip: {fileID: 8300000, guid: d1f19c05962a6ba45b1f788f53670f52, type: 3}
+  - text: 'The Item Inspector app allows you to inspect annotated objects to learn
+      more about them, like manufacturer location or serial numbers.
+
+
+      Open
+      Mesh Network next.
+
+'
+    audioClip: {fileID: 8300000, guid: 276fb17e975ca62448607c719a68d5e3, type: 3}
   - text: "Mesh Network allows you to wirelessly connect objects to each other. This
       is useful for transferring data or turning a group of objects on and off. \n\nOpen
       Atlas next."
-    audioClip: {fileID: 8300000, guid: 276fb17e975ca62448607c719a68d5e3, type: 3}
+    audioClip: {fileID: 8300000, guid: 65278cab45b1eae47b6e383f60f45ce7, type: 3}
   - text: "Atlas is a 3D map of Earth where you can learn about major cities and
       other landmarks. \n\nThese are the 4 main apps you will be using for this experiment.\r\n"
-    audioClip: {fileID: 8300000, guid: 65278cab45b1eae47b6e383f60f45ce7, type: 3}
+    audioClip: {fileID: 8300000, guid: 51c1a8ae640eee14b904e9fef3284a4f, type: 3}
   - text: Currently, PersonalAR is in Layerable mode. This allows you to open and
       close as many apps as you want, though they may sometimes overlap.
-    audioClip: {fileID: 8300000, guid: 51c1a8ae640eee14b904e9fef3284a4f, type: 3}
-  - text: 
+    audioClip: {fileID: 8300000, guid: 6141d40b390588b4d89f8e7008b4fc81, type: 3}
+  - text: You can switch between Layerable or Immersive mode. In Immersive mode,
+      apps open one at a time and will automatically close the previous app.
     audioClip: {fileID: 8300000, guid: eee344f25ab86244d862871675b99d3b, type: 3}
   - text: 
     audioClip: {fileID: 0}

@@ -66,7 +66,7 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
         if (stepTextMesh != null)
         {
             int totalItems = GetTutorialItems().Count;
-            string stepStr = $"{m_itemOrder.ToString()} / {totalItems.ToString()}";
+            string stepStr = $"{(m_itemOrder+1).ToString()} / {totalItems.ToString()}";
             stepTextMesh.text = stepStr;
         }
 

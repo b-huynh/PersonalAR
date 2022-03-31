@@ -65,6 +65,9 @@ public class TutorialMainActivity : BaseAppActivity
 
     public void NextItem()
     {
+        ARDebug.logToUnityConsole = true;
+        ARDebug.Log($"Next Item");
+        ARDebug.logToUnityConsole = false;
         // Close current step
         currentItem.Close();
         currentItem.OnTutorialExit();
@@ -80,7 +83,14 @@ public class TutorialMainActivity : BaseAppActivity
             }
             if (currentItem.IntCloseCondition != null)
             {
-                currentItem.IntCloseCondition.OnValueChanged += IntCloseConditionHandler;
+                if (currentItem.IntCloseCondition.GetValue() >= 12)
+                {
+                    NextItem();
+                }
+                else
+                {
+                    currentItem.IntCloseCondition.OnValueChanged += IntCloseConditionHandler;
+                }
             }
             currentItem.Open();
             currentItem.OnTutorialEnter();
@@ -94,6 +104,10 @@ public class TutorialMainActivity : BaseAppActivity
     {
         if (newValue == true)
         {
+            currentItem.closeEvent?.Invoke();
+            ARDebug.logToUnityConsole = true;
+            ARDebug.Log($"Close Event Invoked");
+            ARDebug.logToUnityConsole = false;
             currentItem.BoolCloseCondition.OnValueChanged -= CloseConditionHandler;
             NextItem();
         }
