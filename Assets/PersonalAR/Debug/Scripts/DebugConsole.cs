@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DebugConsole : MonoBehaviour
@@ -105,7 +106,7 @@ public class DebugConsole : MonoBehaviour
     private string GetConsoleOutput()
     {
         string output = "";
-        foreach(DictionaryEntry de in logStringCount)
+        foreach(DictionaryEntry de in logStringCount.Cast<DictionaryEntry>().Reverse())
         {
             string logString = (string)de.Key;
             int logCount = (int)de.Value;

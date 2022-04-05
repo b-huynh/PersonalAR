@@ -72,7 +72,7 @@ public class AppButtonBehavior : MonoBehaviour
             {
                 // _app.StopTutorial();
                 _app.StopAllActivities(ec);
-                cachedActivityID = System.Guid.Empty;
+                //cachedActivityID = System.Guid.Empty;
             }
             else
             {
@@ -80,5 +80,10 @@ public class AppButtonBehavior : MonoBehaviour
                 // cachedActivityID = System.Guifd.Empty;
             }
         }
+    }
+
+    public void setCachedActivityID(System.Guid id)
+    {
+        cachedActivityID = id;
     }
 }

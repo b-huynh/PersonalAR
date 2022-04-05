@@ -43,7 +43,6 @@ public class SmarthubApp : BaseApp
     }
 
     void OnObjectRemoved(String name) {
-        anchorService.RemoveHandler(anchorService.GetAnchor(name), appState);
         numAssigned -= 1;
     }
 

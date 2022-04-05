@@ -10,6 +10,7 @@ public class TutorialMainActivity : BaseAppActivity
     private TutorialItem currentItem;
 
     [SerializeField] private TutorialVariables vars;
+    [SerializeField] private AppState _app;
 
     // Start is called before the first frame update
     void Start()
@@ -79,13 +80,17 @@ public class TutorialMainActivity : BaseAppActivity
             }
             currentItem.Open();
             currentItem.OnTutorialEnter();
+        } else
+        {
+            _app.StopTutorial();
         }
     }
 
     public void CloseConditionHandler(bool newValue)
     {
         if (newValue == true)
-        { 
+        {
+            currentItem.closeEvent?.Invoke();
             currentItem.CloseCondition.OnValueChanged -= CloseConditionHandler;
             NextItem();
         }

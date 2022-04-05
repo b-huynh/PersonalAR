@@ -10,15 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0ef43047cf75964e8d5fbe449f8e5a0, type: 3}
-  m_Name: ElectronicsAnnotationSet
+  m_Name: Appliances_AnnotationSet
   m_EditorClassIdentifier: 
-  SetName: Electronics
+  SetName: Appliances
   AnnotationNames:
-  - TV
-  - Keyboard
-  - Mouse
-  - Game Console
-  - Laptop
-  - PC
-  - Speaker
-  - Light
+  - Fan
+  - Heater
+  - Kettle
+  - Coffee Grinder
+  - Coffee Maker
