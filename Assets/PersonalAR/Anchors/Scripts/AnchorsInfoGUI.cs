@@ -30,8 +30,8 @@ public class AnchorsInfoGUI : MonoBehaviour
         }
         else
         {
-            _anchorService.OnRegistered += OnRegisteredHandler;
-            _anchorService.OnRemoved += OnRemovedHandler;
+            _anchorService.OnAfterRegistered += OnRegisteredHandler;
+            _anchorService.OnAfterRemoved += OnRemovedHandler;
         }
     }
 

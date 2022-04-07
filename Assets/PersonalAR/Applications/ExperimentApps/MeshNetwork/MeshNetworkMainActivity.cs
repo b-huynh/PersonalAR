@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Extensions;
 
-public class Subnet : List<AnchorableObject>
+public class Subnet : ObservableCollection<AnchorableObject>
 {
     public string networkName;
     public string networkDescription;
@@ -66,32 +68,114 @@ public class MeshNetworkMainActivity : BaseAppActivity
 
 
     // Internal intermediate data
-    // private Dictionary<string, List<AnchorableObject>> networks;
     private List<Subnet> networks;
-    private List<GameObject> lineRenderers;
+    private List<MeshNetworkRenderer> meshNetworkRenderers;
     private AnchorService anchorService;
 
     private List<Color> colorList = new List<Color>()
     {
-        Color.blue,
         Color.red,
         Color.green,
-        Color.cyan,
-        Color.grey,
-        Color.magenta,
+        Color.blue,
         Color.yellow,
-        Color.white
+        Color.cyan,
+        Color.magenta,
+        new Color(255, 128, 0), // orange
+        new Color(127, 255, 0), // chartreuse
+        new Color(0, 255, 127), // spring green
+        new Color(0, 127, 255), // azure
+        new Color(127, 0, 255), // violet
+        new Color(255, 0, 128), // rose
+        Color.grey,
+        Color.white,
+        Color.black,
     };
+
+    private Dictionary<string, List<string>> groupMapping = new Dictionary<string, List<string>>()
+    {
+        // {
+        //     "Switchable", new List<string>()
+        //     {
+        //         "TV", "PC", "Laptop", "Fan", "Heater", "Vacuum", "Speakers", "Printer", "Coffee Grinder", "Kettle", "Router", "Telephone", "Lamp", "Light Switch", "Electrical Outlet", "Thermostat", "Coffee Maker", 
+        //     }
+        // },
+        // Coffee Maker, Vacuum
+
+        {
+            "Appliances", new List<string>()
+            {
+                "Fan", "Heater", "Kettle"
+            }
+        },
+        {
+            "Lights", new List<string>()
+            {
+                "Lamp", "Light Switch", "Electrical Outlet"
+            }
+        },
+        {
+            "Screens", new List<string>()
+            {
+                "TV", "PC", "Laptop"
+            }
+        },
+        {
+            "Temperature Control", new List<string>()
+            {
+                "Fan", "Heater", "Thermostat"
+            }
+        },
+        {
+            "Refillable", new List<string>()
+            {
+                "Coffee Grinder", "Kettle", "Printer"
+            }
+        },
+        {
+            "Coffee", new List<string>()
+            {
+                "Coffee Grinder", "Kettle", "Coffee Maker"
+            }
+        },
+        {
+            "Furniture", new List<string>()
+            {
+                "Sofa", "Desk", "Chair", "Bookshelf", "Filing Cabinet", "Rug"
+            }
+        },
+        {
+            "Communications", new List<string>()
+            {
+                "Router", "Telephone", "Speakers"
+            }
+        },
+        {
+            "Office", new List<string>()
+            {
+                "Desk", "Chair", "Filing Cabinet", "PC", "Printer"
+            }
+        },
+        {
+            "Entertainment", new List<string>()
+            {
+                "TV", "Speakers"
+            }
+        }
+    };
+
     private CircularBuffer<Color> colorPool;
 
     void Awake()
     {
+        // Initialize Containers
+        networks = new List<Subnet>();
+        meshNetworkRenderers = new List<MeshNetworkRenderer>();
+        colorPool = new CircularBuffer<Color>(colorList.Count, colorList.ToArray());
+
         if (MixedRealityServiceRegistry.TryGetService<AnchorService>(out anchorService) == false)
         {
             Debug.LogWarning("Can't get anchorservice");
         }
-
-        colorPool = new CircularBuffer<Color>(colorList.Count, colorList.ToArray());
     }
 
     // Start is called before the first frame update
@@ -109,10 +193,6 @@ public class MeshNetworkMainActivity : BaseAppActivity
     // Create random groups of objects as Subnets
     public void DetermineNetworks()
     {
-        // Parameters
-
-        // bool maintainCategories = false; // Not used currently
-
         // Create initial anchors. These should be pulled from first to guarantee assignment to all objects.
         List<AnchorableObject> initialSet = new List<AnchorableObject>(anchorService.AnchoredObjects.Values);
 
@@ -146,67 +226,106 @@ public class MeshNetworkMainActivity : BaseAppActivity
         }
     }
 
-    public void DrawNetworks()
+    public void CreateNetworkRenderers()
     {
-        foreach(Subnet subnet in networks)
+        // foreach(Subnet subnet in networks)
+        for(int i = 0; i < networks.Count; ++i)
         {
-            Debug.Log(subnet);
-            DrawNetwork(subnet);
+            Subnet subnet = networks[i];
+
+            int negativeFactor = (i % 2 == 0) ? -1 : 1;
+            float offsetFactor = Mathf.Floor((float)i / 2.0f + 0.5f) * negativeFactor;
+            float offsetAmount = offsetFactor * 0.015f;
+            Vector3 lineOffset = new Vector3(0, offsetAmount, 0);
+
+            CreateNetworkRenderer(subnet, lineOffset);
         }
     }
 
-    public void DrawNetwork(Subnet subnet)
+    public void CreateNetworkRenderer(Subnet subnet, Vector3 lineOffset = default(Vector3))
     {
         GameObject newChild = GameObject.Instantiate(rendererPrefab);
         newChild.transform.parent = this.transform;
         
         var networkRenderer = newChild.GetComponent<MeshNetworkRenderer>();
-        // networkRenderer.networkName = subnet.networkName;
-        // networkRenderer.networkName = subnet.networkDescription;
         networkRenderer.subnet = subnet;
+        networkRenderer.lineOffset = lineOffset;
 
         Color nextColor = colorPool.Front();
         networkRenderer.SetSolidLineColor(nextColor);
         colorPool.PushBack(nextColor);
-        // networkRenderer.DrawLines();
 
-        lineRenderers.Add(newChild);
+        meshNetworkRenderers.Add(networkRenderer);
     }
 
     public override void StartActivity(ExecutionContext ec)
     {
-        Debug.Log($"Start Activity {activityID}");
-
-        // networks = new Dictionary<string, List<AnchorableObject>>();
-
         if (initialized == false)
         {
-            networks = new List<Subnet>();
-            lineRenderers = new List<GameObject>();
+            // Subscribe to Anchor Service Events
+            if (anchorService != null)
+            {
+                anchorService.OnAfterRegistered += OnAfterRegisteredHandler;
+                anchorService.OnBeforeRemoved += OnBeforeRemovedHandler;
+            }
 
-            DetermineNetworks();
+            // Add existing anchors to groups
+            anchorService.AnchoredObjects.Values
+                .ToList()
+                .ForEach(anchor => AddAnchorToGroups(anchor));
+
+            // DetermineNetworks();
 
             // Get code piece assignment
-            // var assignment = codeSet.AssignCodePieces(networks, 1);
             networks.ForEach(subnet => subnet.InitWithCodes(codeSet));
 
-            DrawNetworks();
+            CreateNetworkRenderers();
             initialized = true;
         }
 
-        lineRenderers.ForEach(lr => lr.SetActive(true));
+        meshNetworkRenderers.ForEach(lr => lr.SetRenderersActive(true));
     }
 
     public override void StopActivity(ExecutionContext ec)
     {
-        lineRenderers.ForEach(lr => lr.SetActive(false));
+        meshNetworkRenderers.ForEach(lr => lr.SetRenderersActive(false));
+    }
 
-        // Debug.Log($"Stop Activity {activityID}");
+    private void AddAnchorToGroups(AnchorableObject anchor)
+    {
+        List<string> groupsContainingAnchor = 
+            groupMapping.Where(kv => kv.Value.Contains(anchor.WorldAnchorName, StringComparer.OrdinalIgnoreCase))
+                        .Select(kv => kv.Key)
+                        .ToList();
 
-        // for(int i = 0; i < lineRenderers.Count; ++i)
-        // {
-        //     Destroy(lineRenderers[i]);
-        // }
-        // lineRenderers.Clear();
+        foreach(string groupName in groupsContainingAnchor)
+        {
+            // Lazy initialize subnets
+            if (networks.Count(network => string.Equals(network.networkName, groupName, StringComparison.OrdinalIgnoreCase)) <= 0)
+            {
+                networks.Add(new Subnet(groupName));
+            }
+
+            networks.Where(network => string.Equals(network.networkName, groupName, StringComparison.OrdinalIgnoreCase))
+                    .ToList()
+                    .ForEach(network => network.Add(anchor));
+        }
+    }
+
+    private void RemoveAnchorFromGroups(AnchorableObject anchor)
+    {
+        networks.Where(network => network.Contains(anchor))
+                .ToList()
+                .ForEach(network => network.Remove(anchor));
+    }
+
+    public void OnAfterRegisteredHandler(AnchorableObject anchor)
+    {
+        AddAnchorToGroups(anchor);
+    }
+
+    public void OnBeforeRemovedHandler(AnchorableObject anchor)
+    {
+        RemoveAnchorFromGroups(anchor);
     }
 }

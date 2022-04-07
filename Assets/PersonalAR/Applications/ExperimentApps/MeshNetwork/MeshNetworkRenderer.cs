@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using UnityEngine;
 
 using TMPro;
@@ -11,6 +13,7 @@ public class MeshNetworkRenderer : MonoBehaviour
     // public string networkName;
     // public List<AnchorableObject> subnet;
     public Subnet subnet;
+    public Vector3 lineOffset; // Can be used to avoid overlapping lines
     
     private List<GameObject> lineObjects;
     [SerializeField] private GameObject lineRendererPrefab;
@@ -18,48 +21,192 @@ public class MeshNetworkRenderer : MonoBehaviour
 
     [SerializeField] private GameObject networkInfoDisplay;
     [SerializeField] private TextMeshPro infoText;
+    [SerializeField] private TextMeshPro lineText;
 
+    private bool RenderersActive;
+
+    void Awake()
+    {
+        lineObjects = new List<GameObject>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        lineObjects = new List<GameObject>();
-        // DestroyLineObjects();
-        DrawLines();
-        // DrawInfo();
+        UpdateVisuals();
+
+        if (subnet != null)
+        {
+            subnet.CollectionChanged += OnSubnetChanged;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        // foreach(GameObject lineObject in lineObjects)
+        // {
+        //     LineRenderer lineRenderer = lineObject.GetComponent<LineRenderer>();
+        //     lineRenderer.useWorldSpace = false;
+
+            
+        //     if (lineRenderer.positionCount > 0)
+        //     {
+        //         MeshCollider meshCollider = lineRenderer.gameObject.GetComponent<MeshCollider>();
+        //         Mesh mesh = new Mesh();
+        //         lineRenderer.BakeMesh(mesh, Camera.main, false);
+        //         meshCollider.sharedMesh = mesh;
+        //     }
+        // }
+    }
+
+    public void OnSubnetChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
+    {
+        UpdateVisuals();
+    }
+
+    public void UpdateVisuals()
+    {
+        DestroyLineObjects();
+        DrawLines();
         DrawInfo();
+    }
+
+
+
+    IEnumerator BakeMeshAfterLineRendererPositionsSet(LineRenderer lineRenderer)
+    {
+        yield return new WaitUntil(() => lineRenderer.positionCount > 0);
+
+        lineRenderer.useWorldSpace = false;
+
+        Mesh mesh = new Mesh();
+        MeshFilter meshFilter = lineRenderer.gameObject.AddComponent<MeshFilter>();
+        meshFilter.mesh = mesh;
+
+        MeshCollider meshCollider = lineRenderer.gameObject.AddComponent<MeshCollider>();
+        lineRenderer.BakeMesh(mesh, Camera.main, true);
+        meshCollider.sharedMesh = mesh;
+        meshCollider.convex = true;
+
+        Rigidbody rb = lineRenderer.gameObject.AddComponent<Rigidbody>();
+        rb.useGravity = false;
+        meshCollider.isTrigger = true;
     }
 
     public void DrawLines()
     {
         for(int i = 0; i < subnet.Count; ++i)
         {
-            for(int j = 0; j < subnet.Count; ++j)
+            for(int j = i + 1; j < subnet.Count; ++j)
             {
-                if (i != j)
-                {
-                    CreateLineObject(subnet[i].transform.position, subnet[j].transform.position);
-                }
+                Vector3 lineStart = subnet[i].transform.position + lineOffset;
+                Vector3 lineStop = subnet[j].transform.position + lineOffset;
+
+                GameObject lineObject = CreateLineObject(lineStart, lineStop);
+                GameObject lineText = CreateLineText(lineObject.GetComponent<MixedRealityLineRenderer>());
             }
         }
     }
 
     public void DrawInfo()
     {
-        Vector3 networkCenter = Vector3.zero;
-        foreach(AnchorableObject anchor in subnet)
+        if (subnet.Count <= 0)
         {
-            networkCenter += anchor.transform.position;
+            networkInfoDisplay.SetActive(false);
         }
-        networkCenter = networkCenter / subnet.Count;
+        else
+        {
+            networkInfoDisplay.SetActive(true);
 
-        networkInfoDisplay.transform.position = networkCenter;
-        infoText.text = subnet.networkDescription;
+            Vector3 networkCenter = Vector3.zero;
+            foreach(AnchorableObject anchor in subnet)
+            {
+                networkCenter += anchor.transform.position;
+            }
+            networkCenter = networkCenter / subnet.Count;
+
+            networkInfoDisplay.transform.position = networkCenter;
+            infoText.text = subnet.networkDescription;
+        }
+
+        networkInfoDisplay.SetActive(false);
+    }
+
+    private GameObject CreateLineObject(Vector3 start, Vector3 end)
+    {
+        // Instantiate new line renderer prefab
+        GameObject newLine = GameObject.Instantiate(lineRendererPrefab, transform);
+
+        // Set start and end points of line
+        newLine.transform.position = start;
+        Vector3 localEnd = newLine.transform.InverseTransformPoint(end);
+        newLine.GetComponent<SimpleLineDataProvider>().EndPoint = new MixedRealityPose(localEnd);
+
+        // Set line color
+        var mrtkLineRender = newLine.GetComponent<MixedRealityLineRenderer>();
+        mrtkLineRender.LineColor = lineRendererColor;
+
+        // Set active state
+        newLine.SetActive(true);
+
+        // var lineRenderer = newLine.GetComponent<LineRenderer>();
+        // StartCoroutine(BakeMeshAfterLineRendererPositionsSet(lineRenderer));
+
+        // MeshCollider meshCollider = newLine.AddComponent<MeshCollider>();
+
+        // Mesh mesh = new Mesh();
+        // lineRenderer.BakeMesh(mesh, true);
+        // meshCollider.sharedMesh = mesh;
+        // meshCollider.convex = true;
+
+        // Save for tracking purposes
+        lineObjects.Add(newLine);
+
+        return newLine;
+    }
+
+    public GameObject CreateLineText(MixedRealityLineRenderer mrtkLineRenderer)
+    {
+        // Calculate center point of line
+        Vector3 lineStart = mrtkLineRenderer.LineDataSource.FirstPoint;
+        Vector3 lineEnd = mrtkLineRenderer.LineDataSource.LastPoint;
+        Vector3 lineCenter = (lineEnd - lineStart) / 2.0f;
+        
+        // Calculate rotation of text mesh
+        Vector3 upDirection = Vector3.Cross((lineEnd - lineStart), -mrtkLineRenderer.transform.right);
+        Vector3 forwardDirection = Vector3.Cross((lineEnd - lineStart), mrtkLineRenderer.transform.up);
+        
+        // Vector3 cameraDirection = Camera.main.transform.position - lineCenter;
+        // if (Vector3.Angle(forwardDirection, cameraDirection) > 90)
+        // {
+        //     forwardDirection = -forwardDirection; // Calculated forward vector is facing away from camera so flip it.
+        // }
+
+        // Create new 3D text mesh pro object
+        GameObject textMeshObject = new GameObject($"LineText ({subnet.networkName}");
+        textMeshObject.transform.SetParent(mrtkLineRenderer.transform, true);
+        textMeshObject.transform.position = lineStart + lineCenter;
+        // textMeshObject.transform.rotation = Quaternion.LookRotation(forwardDirection, upDirection);
+
+        // // Set billboarding of along the angle of the line
+        LookAtUser lookAtUser = textMeshObject.AddComponent<LookAtUser>();
+        lookAtUser.forwardDirection = forwardDirection;
+        lookAtUser.upDirection = upDirection;
+
+        // Calculate width, height of text mesh
+        TextMeshPro textMesh = textMeshObject.AddComponent<TextMeshPro>();
+        float width = (lineEnd - lineStart).magnitude;
+        float height = 0.1f;
+        RectTransform textMeshTransform = textMesh.GetComponent<RectTransform>();
+        textMeshTransform.sizeDelta = new Vector2(width, height);
+        textMesh.fontSize = 0.5f;
+        textMesh.alignment = TextAlignmentOptions.Center;
+
+        // Set text
+        textMesh.text = $"Device Group: {subnet.networkName}";
+
+        return textMeshObject;
     }
 
     public void SetSolidLineColor(Color color)
@@ -85,39 +232,23 @@ public class MeshNetworkRenderer : MonoBehaviour
         lineRendererColor = gradient;
     }
 
-    private void CreateLineObject(Vector3 start, Vector3 end)
+    private string GradientToString(Gradient gradient)
     {
-        GameObject newLine = GameObject.Instantiate(lineRendererPrefab, transform);
+        string stringRep = $"(Gradient object {gradient.GetHashCode()}) ";
 
-        newLine.transform.position = start;
-        Vector3 localEnd = newLine.transform.InverseTransformPoint(end);
-        // Debug.Log($"Start: {start}, End: {end}");
-        // Debug.Log($"Start: {start}, Local: {localEnd}");
-        newLine.GetComponent<SimpleLineDataProvider>().EndPoint = new MixedRealityPose(localEnd);
+        stringRep += "ColorKey: ";
+        foreach(GradientColorKey colorKey in gradient.colorKeys)
+        {
+            stringRep += $"({colorKey.color}, {colorKey.time}) ";
+        }
 
-        var mrtkLineRender = newLine.GetComponent<MixedRealityLineRenderer>();
-        mrtkLineRender.LineColor = lineRendererColor;
+        stringRep += "AlphaKey: ";
+        foreach(GradientAlphaKey alphaKey in gradient.alphaKeys)
+        {
+            stringRep += $"({alphaKey.alpha}, {alphaKey.time}) ";
+        }
 
-        // newLine.GetComponent<SimpleLineDataProvider>().EndPoint = new MixedRealityPose(end, Quaternion.identity);
-
-        newLine.SetActive(true);
-
-        lineObjects.Add(newLine);
-
-        // // Add line renderer components
-        // GameObject newLine = new GameObject();
-        // newLine.AddComponent<LineRenderer>();
-        // var mrtkLineRender = newLine.AddComponent<MixedRealityLineRenderer>();
-        // var dataProvider = newLine.AddComponent<SimpleLineDataProvider>();
-
-        // // Create line data
-        // mrtkLineRender.LineDataSource = dataProvider;
-        // newLine.transform.position = start;
-        // dataProvider.EndPoint = new MixedRealityPose(end);
-        // mrtkLineRender.LineColor = new Gradient();
-        // mrtkLineRender.LineMaterial = new Material(Shader.Find("Line"));
-
-        // lineObjects.Add(newLine);
+        return stringRep;
     }
 
     private void DestroyLineObjects()
@@ -132,5 +263,27 @@ public class MeshNetworkRenderer : MonoBehaviour
     public void OnDestroy()
     {
         DestroyLineObjects();
+    }
+
+    public void SetRenderersActive(bool value)
+    {
+        int renderingLayer;
+        if (value == true)
+        {
+            renderingLayer = LayerMask.NameToLayer("Default");
+            // lineObjects.ForEach(lr => lr.SetActive(true));
+            // networkInfoDisplay.SetActive(true);
+        }
+        else
+        {
+            renderingLayer = LayerMask.NameToLayer("SuspendRendering");
+            // lineObjects.ForEach(lr => lr.SetActive(false));
+            // networkInfoDisplay.SetActive(false);
+        }
+
+        lineObjects.ForEach(lr => lr.SetLayerInChildren(renderingLayer));
+        networkInfoDisplay.SetLayerInChildren(renderingLayer);
+
+        RenderersActive = value;
     }
 }

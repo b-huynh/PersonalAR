@@ -38,8 +38,8 @@ public class PopulateChoices : MonoBehaviour
             ARDebug.LogError($"Failed to get AnchorService");
         }
 
-        _anchorService.OnRegistered += HandleOnRegistered;
-        _anchorService.OnRemoved += HandleOnRemoved;
+        _anchorService.OnAfterRegistered += HandleOnRegistered;
+        _anchorService.OnAfterRemoved += HandleOnRemoved;
 
         RepopulateButtons();
     }

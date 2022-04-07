@@ -22,8 +22,10 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		// Raised when AnchorStore and AnchorPointsSubsystem are set.
 		event PropertyChangedEventHandler PropertyChanged;
 
-		event Action<AnchorableObject> OnRegistered;
-		event Action<string> OnRemoved;
+		event Action<string> OnBeforeRegistered;
+		event Action<AnchorableObject> OnAfterRegistered;
+		event Action<AnchorableObject> OnBeforeRemoved;
+		event Action<string> OnAfterRemoved;
 
 		int AnchorCount { get; }
 		IList<string> AnchorNames { get; }

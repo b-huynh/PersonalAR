@@ -17,7 +17,7 @@ public class PervasiveHomeApp : BasePervasiveApp
         IAnchorService anchorService;
         if (MixedRealityServiceRegistry.TryGetService<IAnchorService>(out anchorService))
         {
-            anchorService.OnRegistered += OnObjectRegistered;
+            anchorService.OnAfterRegistered += OnObjectRegistered;
         }
     }
 

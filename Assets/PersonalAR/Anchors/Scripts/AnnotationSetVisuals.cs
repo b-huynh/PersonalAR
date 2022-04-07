@@ -35,8 +35,8 @@ public class AnnotationSetVisuals : MonoBehaviour
         {
             ARDebug.LogError($"Failed to get AnchorService");
         }
-        _anchorService.OnRegistered += OnRegisteredHandler;
-        _anchorService.OnRemoved += OnRemovedHandler;
+        _anchorService.OnAfterRegistered += OnRegisteredHandler;
+        _anchorService.OnAfterRemoved += OnRemovedHandler;
 
         if (_buttonTemplate == null)
         {

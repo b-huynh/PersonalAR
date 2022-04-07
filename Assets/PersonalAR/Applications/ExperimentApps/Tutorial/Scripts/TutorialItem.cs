@@ -35,6 +35,9 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
     // *** End ITutorialItem ***
     public BoolVariable CloseCondition;
 
+    public BoolVariable BoolCloseCondition;
+    public IntVariable IntCloseCondition;
+
     public static List<TutorialItem> GetTutorialItems()
     {
         return Resources.FindObjectsOfTypeAll<TutorialItem>()

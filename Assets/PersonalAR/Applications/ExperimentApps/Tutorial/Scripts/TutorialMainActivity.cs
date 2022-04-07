@@ -63,8 +63,12 @@ public class TutorialMainActivity : BaseAppActivity
         vars.Save();
     }
 
+
     public void NextItem()
     {
+        // ARDebug.logToUnityConsole = true;            
+        ARDebug.Log($"From {currentItem.ItemOrder} Next Item {GetInstanceID()} {System.DateTime.Now}");
+
         // Close current step
         currentItem.Close();
         currentItem.OnTutorialExit();
@@ -77,6 +81,17 @@ public class TutorialMainActivity : BaseAppActivity
             if (currentItem.CloseCondition != null)
             {
                 currentItem.CloseCondition.OnValueChanged += CloseConditionHandler;
+            }
+            if (currentItem.IntCloseCondition != null)
+            {
+                if (currentItem.IntCloseCondition.GetValue() >= 12)
+                {
+                    NextItem();
+                }
+                else
+                {
+                    currentItem.IntCloseCondition.OnValueChanged += IntCloseConditionHandler;
+                }
             }
             currentItem.Open();
             currentItem.OnTutorialEnter();
@@ -91,10 +106,60 @@ public class TutorialMainActivity : BaseAppActivity
         if (newValue == true)
         {
             currentItem.closeEvent?.Invoke();
+
+            ARDebug.Log($"Close Event Invoked");
+
             currentItem.CloseCondition.OnValueChanged -= CloseConditionHandler;
             NextItem();
         }
     }
+
+    public void IntCloseConditionHandler(int newValue)
+    {
+        if (newValue >= 12)
+        {
+            currentItem.closeEvent?.Invoke();
+            currentItem.IntCloseCondition.OnValueChanged -= IntCloseConditionHandler;
+            NextItem();
+        }
+    }
+
+    // public void NextItem()
+    // {
+    //     ARDebug.Log("NextItem");
+
+    //     // Close current step
+    //     currentItem.Close();
+    //     currentItem.OnTutorialExit();
+    //     tutorialItems.Remove(currentItem);
+
+    //     // Start next step
+    //     if (tutorialItems.Count > 0)
+    //     {
+    //         currentItem = tutorialItems[0];
+    //         if (currentItem.CloseCondition != null)
+    //         {
+    //             currentItem.CloseCondition.OnValueChanged += CloseConditionHandler;
+    //         }
+    //         currentItem.Open();
+    //         currentItem.OnTutorialEnter();
+    //     } else
+    //     {
+    //         _app.StopTutorial();
+    //     }
+    // }
+
+    // public void CloseConditionHandler(bool newValue)
+    // {
+    //     ARDebug.Log("CloseConditionHandler");
+
+    //     if (newValue == true)
+    //     {
+    //         currentItem.closeEvent?.Invoke();
+    //         currentItem.CloseCondition.OnValueChanged -= CloseConditionHandler;
+    //         NextItem();
+    //     }
+    // }
 
     // public void OnItemOpen()
     // {

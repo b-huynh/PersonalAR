@@ -68,7 +68,7 @@ public class PervasiveLearnApp : BasePervasiveApp
         IAnchorService anchorService;
         if (MixedRealityServiceRegistry.TryGetService<IAnchorService>(out anchorService))
         {
-            anchorService.OnRegistered += OnObjectRegistered;
+            anchorService.OnAfterRegistered += OnObjectRegistered;
         }
 
         // Load saved app data

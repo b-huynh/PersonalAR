@@ -106,8 +106,10 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			private set => _anchoredObjects = value;
 		}
 
-		public event Action<AnchorableObject> OnRegistered;
-		public event Action<string> OnRemoved;
+		public event Action<string> OnBeforeRegistered;
+		public event Action<AnchorableObject> OnAfterRegistered;
+		public event Action<AnchorableObject> OnBeforeRemoved;
+		public event Action<string> OnAfterRemoved;
 /*		public event Action<string> ToRemove;*/
 
 		private string _editorAnchorSaveFile = Path.Combine(Application.persistentDataPath, "editor_anchors.json");
@@ -211,8 +213,9 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		*/
 		public bool RegisterAnchor(string name, Vector3 position)
 		{
-			// Create object model (for debug/visualization purposes)
+			OnBeforeRegistered?.Invoke(name);
 
+			// Create object model (for debug/visualization purposes)
 			GameObject newAnchoredObject = CreateAnchorActor(name);
 			newAnchoredObject.transform.position = position;
 
@@ -262,15 +265,17 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			// If anchor was succesfully registered, invoke OnRegistered callbacks
 			if (returnValue)
 			{
-				OnRegistered?.Invoke(anchor);
+				OnAfterRegistered?.Invoke(anchor);
 			}
 			return returnValue;
 		}
 
 		public void UnregisterAnchor(string name)
 		{
-			//Need to invoke event prior to removing anchor because the event depends on the existence of the anchor
 			AnchorableObject anchor = GetAnchor(name);
+
+			OnBeforeRemoved?.Invoke(anchor);
+
 			RemoveFromDict(anchor);
 
 #if WINDOWS_UWP
@@ -293,8 +298,7 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			File.WriteAllText(_editorAnchorSaveFile, SerializeAnchors());
 #endif
 
-            OnRemoved?.Invoke(name);
-
+            OnAfterRemoved?.Invoke(name);
 		}
 
 		public bool ContainsAnchor(string name)
@@ -381,26 +385,48 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 #if WINDOWS_UWP
 			// AnchorStore is null when running on start...
 			var existingAnchors = AnchorStore.PersistedAnchorNames;
+
+			if (existingAnchors != null) 
+				ARDebug.Log($"Existing Anchors: {existingAnchors}");
+			else
+				ARDebug.Log("Existing Anchors NULL");
+
 			ARDebug.LogFormat("Found {0} existing anchor store anchors", existingAnchors.Count);
 
 			foreach (string anchorName in existingAnchors)
 			{
 				GameObject anchorMesh = CreateAnchorActor(anchorName);
+				if (anchorMesh != null)
+					ARDebug.Log($"AnchorMesh: {anchorMesh}");
+				else
+					ARDebug.Log("Anchor Mesh NULL");
+
 				AnchorableObject anchor = anchorMesh.GetComponent<AnchorableObject>();
-				
+				if (anchor != null)
+					ARDebug.Log($"Anchor: {anchor}");
+				else
+					ARDebug.Log("Anchor NULL");
+
 				anchor.OnAnchorLoaded.AddListener(
 					delegate 
 					{
 						ARDebug.LogFormat("Loaded anchor {0}", anchorName);
 						AnchoredObjects.Add(anchorName, anchor);
-						OnRegistered?.Invoke(anchor);
+						OnAfterRegistered?.Invoke(anchor);
 
 						//may be a bug
+						ARDebug.Log("May be a bug");
 						ObjectPosition current_data = new ObjectPosition();
 						current_data.position = anchorMesh.transform.position;
 						current_data.objectName = anchorName;
 						current_data.unixTime = Utils.UnixTimestampMilliseconds();
 						// Debug.Log("Add " + current_data.objectName);
+
+						if (objectPositions != null)
+							ARDebug.Log($"ObjectPositions {objectPositions}");
+						else
+							ARDebug.Log("ObjectPositions NULL");
+
 						objectPositions.Add(current_data);
 					}
 				);
@@ -470,8 +496,10 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 #if UNITY_EDITOR
 				var anchor = newAnchoredObject.GetComponent<AnchorableObject>();
 				AnchoredObjects.Add(anchorName, anchor);
-				OnRegistered?.Invoke(anchor);
+				OnAfterRegistered?.Invoke(anchor);
+#endif
 
+				// Log Object Position data
 				ObjectPosition current_data = new ObjectPosition();
 				current_data.position = anchorPose.position;
 				current_data.objectName = anchorName;
@@ -479,7 +507,6 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				// Debug.Log("Add " + current_data.objectName);
 				objectPositions.Add(current_data);
 
-#endif
 			}
 		}
 
@@ -503,23 +530,22 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 
 		public void RemoveFromDict(AnchorableObject anchor)
 		{
-
 			foreach (KeyValuePair<AnchorableObject, HashSet<AppState>> kvp in handlers)
 			{
-				Debug.Log("kvp: " + kvp.Key + " " + kvp.Value);
+				// Debug.Log("kvp: " + kvp.Key + " " + kvp.Value);
 				if (kvp.Key == anchor)
 				{
-					Debug.Log(" == ");
+					// Debug.Log(" == ");
 					kvp.Value.Clear();
 				}
 			}
 
 			foreach (KeyValuePair<AppState, HashSet<AnchorableObject>> kvp in handlersByApp)
             {
-				Debug.Log("kvp: " + kvp.Key + " " + kvp.Value);
+				// Debug.Log("kvp: " + kvp.Key + " " + kvp.Value);
 				if (kvp.Value.Contains(anchor))
                 {
-					Debug.Log(" Contains ");
+					// Debug.Log(" Contains ");
 					kvp.Value.Remove(anchor);
 				}
             }

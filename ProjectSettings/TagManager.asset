@@ -19,7 +19,7 @@ TagManager:
   - EyeTrackingVis
   - EyeTrackingCheck
   - EyeTrackingAccuracy
-  - 
+  - SuspendRendering
   - 
   - 
   - 

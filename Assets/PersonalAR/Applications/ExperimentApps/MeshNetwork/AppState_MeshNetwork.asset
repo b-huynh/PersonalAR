@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3da510abf006c642a165335460fd3db, type: 3}
   m_Name: AppState_MeshNetwork
   m_EditorClassIdentifier: 
-  appName: MeshNet
-  appDesc: Display objects that are connected to each other in a mesh network.
+  appName: Device Groups
+  appDesc: Group similar objects with each other to enable shared functionality such
+    as turning on and off devices at the same time.
   appLogo: {fileID: 2100000, guid: c717b5d960eb0594399a15026b0e2122, type: 2}
   appDataFile: 
+  Variables: {fileID: 0}

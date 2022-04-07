@@ -21,8 +21,8 @@ public class SmarthubApp : BaseApp
         // Register for new object events
         if (MixedRealityServiceRegistry.TryGetService<IAnchorService>(out anchorService))
         {
-            anchorService.OnRegistered += OnObjectRegistered;
-            anchorService.OnRemoved += OnObjectRemoved;
+            anchorService.OnAfterRegistered += OnObjectRegistered;
+            anchorService.OnAfterRemoved += OnObjectRemoved;
         }
     }
 
