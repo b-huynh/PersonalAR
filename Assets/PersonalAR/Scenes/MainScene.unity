@@ -74125,7 +74125,7 @@ MonoBehaviour:
     lIndex: {x: 0, y: 0, z: 0}
     lThumb: {x: 0, y: 0, z: 0}
   openAppsList: []
-  objectsList: []
+  placedObjectsList: []
   currentFrame:
     frameNum: 0
     timestamp: 0
@@ -74155,7 +74155,8 @@ MonoBehaviour:
     leftHandRay: {x: 0, y: 0, z: 0}
     openApps: []
     appEvents: []
-    objects: []
+    placedObjects: []
+    anchorEvents: []
     codesEvents: []
     gestureEvents: []
     IsLayerableMode: 0

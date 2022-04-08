@@ -229,7 +229,6 @@ public class AppState : ScriptableObject
         current_data.activity = "Start";
         current_data.name = appName;
 
-        ARDebug.Log("APP state - appevent name" + appName);
         events.Add(current_data);
 
         if (!oApps.Contains(appName))
@@ -238,7 +237,7 @@ public class AppState : ScriptableObject
         }
 
         
-        // Debug.Log("START " + appName);
+        Debug.Log("START " + appName);
 
         // Invoke listeners / view updates
         foreach(var listener in listeners)
@@ -279,6 +278,23 @@ public class AppState : ScriptableObject
             ActivityType = SuspendedActivities[activityID],
             StartContext = executionContext
         };
+                //add start event for data collection
+        AppEvent current_data = new AppEvent();
+        current_data.unixTime = Utils.UnixTimestampMilliseconds();
+        current_data.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
+        current_data.activityID = eventData.ActivityID.ToString();
+        current_data.activityType = eventData.ActivityType;
+        current_data.activity = "Start";
+        current_data.name = appName;
+
+        events.Add(current_data);
+
+        if (!oApps.Contains(appName))
+        {
+            oApps.Add(appName);
+        }
+
+        Debug.Log("Resume: " + appName);
 
         SuspendedActivities.Remove(activityID);
         RunningActivities.Add(activityID, eventData.ActivityType);
@@ -323,12 +339,10 @@ public class AppState : ScriptableObject
         current_data.activity = "Stop";
         current_data.name = appName;
 
-        ARDebug.Log("APP state - appevent name" + appName);
-
         events.Add(current_data);
         oApps.Remove(appName);
 
-        // Debug.Log("STOP " + appName);
+        Debug.Log("STOP " + appName);
 
         // Update internal state
         RunningActivities.Remove(activityID);

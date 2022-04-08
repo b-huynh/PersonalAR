@@ -18,13 +18,6 @@ using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft;
 
 
-//TODO:
-// test removing an anchor
-
-//Questions
-//annontations, Debug not in AppState?
-//positions of apps and anchors?
-
 public static class Const
 {
     public const int FRAME_RATE = 60;
@@ -62,7 +55,8 @@ public struct StudyFrame
     public Vector3 leftHandRay;
     public List<string> openApps;
     public List<AppEvent> appEvents;
-    public List<ObjectPosition> objects;
+    public List<string> placedObjects;
+    public List<AnchorEvent> anchorEvents;
     public List<CodeEvent> codesEvents;
 
     public List<GestureEvent> gestureEvents;
@@ -139,9 +133,8 @@ public class SceneStudyManager : MonoBehaviour
     public JointTracking hand;
 
     public List<string> openAppsList;
-    public List<ObjectPosition> objectsList;
+    public List<string> placedObjectsList;
 
-    //public List<GameObject> sphere;
 
     float logTimer = 0f;
     float studyTimer = 0f;
@@ -193,13 +186,6 @@ public class SceneStudyManager : MonoBehaviour
 
         currentFrame.rightHandRay = getRightHandRay();
         currentFrame.leftHandRay = getLeftHandRay();
-
-        /*
-        var c = sphere[0].GetComponent<Renderer>(); 
-        sphere[0].transform.localScale = Vector3.one * 0.01f;
-        c.material.color = Color.red;
-        sphere[0].transform.position = currentFrame.rightHandRay;
-        */
         
         currentFrame.codesEvents = NumberDisplay.getCodeEvents();
         currentFrame.codesEvents.ForEach(delegate(CodeEvent e){
@@ -208,40 +194,35 @@ public class SceneStudyManager : MonoBehaviour
 
         currentFrame.gestureEvents = GestureListener.getGestureEvents();
         currentFrame.gestureEvents.ForEach(delegate(GestureEvent gesture){
-            ARDebug.Log(gesture.eventType + " " + gesture.action + " pos:" + gesture.position);
+            //ARDebug.Log(gesture.eventType + " " + gesture.action + " pos:" + gesture.position);
             gesture.eventTime = gesture.unixTime - startTime;
         });
 
         currentFrame.appEvents = AppState.getAppEvents();
         currentFrame.appEvents.ForEach(delegate(AppEvent app){
             app.eventTime = app.unixTime - startTime;
-            ARDebug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
-            Debug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
+            //ARDebug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
+            //Debug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
+        });
+
+        currentFrame.anchorEvents = AnchorService.getAnchorEvent();
+        currentFrame.anchorEvents.ForEach(delegate(AnchorEvent anchor){
+            anchor.placedTime = anchor.unixTime - startTime;
+            //ARDebug.Log("Anchor Event: " + anchor.objectName + " " + anchor.activity + " at " + anchor.placedTime);
+            //Debug.Log("Anchor Event: " + anchor.objectName + " " + anchor.activity + " at " + anchor.placedTime);
         });
 
         List<string> apps = AppState.getOpenApps();
-        List<ObjectPosition> objs = AnchorService.getObjects();
-        openAppsList = new List<string>();
-        objectsList = new List<ObjectPosition>();
-
-        //maybe use AddAll?
-        for(int i = 0; i < apps.Count; i++){
-            openAppsList.Add(apps[i]);
-            ARDebug.Log("open app " + i.ToString() + ": " +apps[i] + " ");
-            Debug.Log("open app " + i.ToString() + ": " +apps[i] + " ");
-        }
-
-        for(int i = 0; i < objs.Count; i++)
-        {
-            objs[i].placedTime = objs[i].unixTime - startTime;
-            objectsList.Add(objs[i]);
-        }
+        List<string> objs = AnchorService.getPlacedObjects();
+        openAppsList = new List<string>(apps);
+        placedObjectsList = new List<string>(objs);
 
         ExperimentEventData EED = ExperimentManager.GetExperimentEventData();
         if (EED != null)
         {
             currentFrame.experimentEvents = new List<ExperimentEventData>();
             currentFrame.experimentEvents.Add(EED);
+
         }
         else
         {
@@ -249,7 +230,7 @@ public class SceneStudyManager : MonoBehaviour
         }
 
         currentFrame.openApps = openAppsList;
-        currentFrame.objects = objectsList;
+        currentFrame.placedObjects = placedObjectsList;
         currentFrame.IsLayerableMode = ImmersiveModeController.IsLayerableMode;
         
         obj.sessionRecording.frames.Add(currentFrame);
@@ -305,6 +286,7 @@ public class SceneStudyManager : MonoBehaviour
         {
             hand.lIndex = pose.Position;
         }
+
 
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.MiddleTip, Handedness.Left, out pose))
         {
@@ -404,31 +386,6 @@ public class SceneStudyManager : MonoBehaviour
             LogStudy();
         }
     }
-
-        public void DrawCircle()
-    {
-        float radius = 2f;
-        float lineWidth = 1f;
-
-        var segments = 360;
-        LineRenderer line = parent.AddComponent<LineRenderer>();
-        line.useWorldSpace = false;
-        line.startWidth = lineWidth;
-        line.endWidth = lineWidth;
-        line.positionCount = segments + 1;
-
-        var pointCount = segments + 1; // add extra point to make startpoint and endpoint the same to close the circle
-        var points = new Vector3[pointCount];
-
-        for (int i = 0; i < pointCount; i++)
-        {
-            var rad = Mathf.Deg2Rad * (i * 360f / segments);
-            points[i] = new Vector3(Mathf.Sin(rad) * radius, 0, Mathf.Cos(rad) * radius);
-        }
-
-        line.SetPositions(points);
-    }
-
 
     #endregion
 }

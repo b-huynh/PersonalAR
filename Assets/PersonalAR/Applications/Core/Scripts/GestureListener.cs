@@ -33,8 +33,6 @@ public class GestureListener : MonoBehaviour, IMixedRealityGestureHandler
         gesture.unixTime = Utils.UnixTimestampMilliseconds();
         gesture.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
         gesture.action = eventData.MixedRealityInputAction.Description;
-        ARDebug.Log("discrip: " + eventData.MixedRealityInputAction.Description +" id: " + eventData.MixedRealityInputAction.Id + " axis: "+ eventData.MixedRealityInputAction.AxisConstraint);
-        Debug.Log("discrip: " + eventData.MixedRealityInputAction.Description +" id: " + eventData.MixedRealityInputAction.Id + " axis: "+ eventData.MixedRealityInputAction.AxisConstraint);
         gesture.eventType = "Start";
 
         Vector3 rightEndPoint;
@@ -67,8 +65,6 @@ public class GestureListener : MonoBehaviour, IMixedRealityGestureHandler
         gesture.unixTime = Utils.UnixTimestampMilliseconds();
         gesture.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
         gesture.action = eventData.MixedRealityInputAction.Description;
-        ARDebug.Log("discrip: " + eventData.MixedRealityInputAction.Description +" id: " + eventData.MixedRealityInputAction.Id + " axis: "+ eventData.MixedRealityInputAction.AxisConstraint);
-        Debug.Log("discrip: " + eventData.MixedRealityInputAction.Description +" id: " + eventData.MixedRealityInputAction.Id + " axis: "+ eventData.MixedRealityInputAction.AxisConstraint);
         gesture.eventType = "Update";
         Vector3 rightEndPoint;
         if (PointerUtils.TryGetHandRayEndPoint(Handedness.Right, out rightEndPoint))
@@ -100,8 +96,6 @@ public class GestureListener : MonoBehaviour, IMixedRealityGestureHandler
         gesture.unixTime = Utils.UnixTimestampMilliseconds();
         gesture.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
         gesture.action = eventData.MixedRealityInputAction.Description;
-        ARDebug.Log("discrip: " + eventData.MixedRealityInputAction.Description +" id: " + eventData.MixedRealityInputAction.Id + " axis: "+ eventData.MixedRealityInputAction.AxisConstraint);
-        Debug.Log("discrip: " + eventData.MixedRealityInputAction.Description +" id: " + eventData.MixedRealityInputAction.Id + " axis: "+ eventData.MixedRealityInputAction.AxisConstraint);
         gesture.eventType = "Complete";
 
         Vector3 rightEndPoint;
@@ -132,7 +126,6 @@ public class GestureListener : MonoBehaviour, IMixedRealityGestureHandler
         gesture.unixTime = Utils.UnixTimestampMilliseconds();
         gesture.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
         gesture.action = eventData.MixedRealityInputAction.Description;
-        ARDebug.Log("discrip: " + eventData.MixedRealityInputAction.Description +" id: " + eventData.MixedRealityInputAction.Id + " axis: "+ eventData.MixedRealityInputAction.AxisConstraint);
         gesture.eventType = "Cancel";
         
         Vector3 rightEndPoint;
