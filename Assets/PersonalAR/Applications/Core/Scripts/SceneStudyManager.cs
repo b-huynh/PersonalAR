@@ -17,6 +17,7 @@ using Microsoft.MixedReality.Toolkit.Utilities;
 
 using Microsoft;
 
+
 //TODO:
 // test removing an anchor
 
@@ -57,6 +58,8 @@ public struct StudyFrame
     public Vector3 gazeDirection;
 
     public JointTracking hand;
+    public Vector3 rightHandRay;
+    public Vector3 leftHandRay;
     public List<string> openApps;
     public List<AppEvent> appEvents;
     public List<ObjectPosition> objects;
@@ -64,11 +67,12 @@ public struct StudyFrame
 
     public List<GestureEvent> gestureEvents;
 
+    public bool IsLayerableMode;
+
+    public List<ExperimentEventData> experimentEvents;
+
 }
-/*
-    - gesture events
-    - hand ray 
-*/
+
 [System.Serializable]
 public struct JointTracking
 {
@@ -86,8 +90,16 @@ public struct JointTracking
     public Vector3 lMiddle;
     public Vector3 lIndex;
     public Vector3 lThumb;
+
 }
 
+public struct HandRay
+{
+    public Vector3 startPoint;
+    public Vector3 endPoint;
+    public bool hitObject;
+    public string hitObjectName;
+}
 
 //Session recording which is written to json
 [System.Serializable]
@@ -125,8 +137,11 @@ public class SceneStudyManager : MonoBehaviour
     //objects to write to json
     public StudyObject obj;
     public JointTracking hand;
+
     public List<string> openAppsList;
     public List<ObjectPosition> objectsList;
+
+    //public List<GameObject> sphere;
 
     float logTimer = 0f;
     float studyTimer = 0f;
@@ -175,6 +190,16 @@ public class SceneStudyManager : MonoBehaviour
         hand = new JointTracking();
         getJoints();
         currentFrame.hand = hand;
+
+        currentFrame.rightHandRay = getRightHandRay();
+        currentFrame.leftHandRay = getLeftHandRay();
+
+        /*
+        var c = sphere[0].GetComponent<Renderer>(); 
+        sphere[0].transform.localScale = Vector3.one * 0.01f;
+        c.material.color = Color.red;
+        sphere[0].transform.position = currentFrame.rightHandRay;
+        */
         
         currentFrame.codesEvents = NumberDisplay.getCodeEvents();
         currentFrame.codesEvents.ForEach(delegate(CodeEvent e){
@@ -183,12 +208,15 @@ public class SceneStudyManager : MonoBehaviour
 
         currentFrame.gestureEvents = GestureListener.getGestureEvents();
         currentFrame.gestureEvents.ForEach(delegate(GestureEvent gesture){
+            ARDebug.Log(gesture.eventType + " " + gesture.action + " pos:" + gesture.position);
             gesture.eventTime = gesture.unixTime - startTime;
         });
 
         currentFrame.appEvents = AppState.getAppEvents();
         currentFrame.appEvents.ForEach(delegate(AppEvent app){
             app.eventTime = app.unixTime - startTime;
+            ARDebug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
+            Debug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
         });
 
         List<string> apps = AppState.getOpenApps();
@@ -199,6 +227,8 @@ public class SceneStudyManager : MonoBehaviour
         //maybe use AddAll?
         for(int i = 0; i < apps.Count; i++){
             openAppsList.Add(apps[i]);
+            ARDebug.Log("open app " + i.ToString() + ": " +apps[i] + " ");
+            Debug.Log("open app " + i.ToString() + ": " +apps[i] + " ");
         }
 
         for(int i = 0; i < objs.Count; i++)
@@ -207,8 +237,20 @@ public class SceneStudyManager : MonoBehaviour
             objectsList.Add(objs[i]);
         }
 
+        ExperimentEventData EED = ExperimentManager.GetExperimentEventData();
+        if (EED != null)
+        {
+            currentFrame.experimentEvents = new List<ExperimentEventData>();
+            currentFrame.experimentEvents.Add(EED);
+        }
+        else
+        {
+            currentFrame.experimentEvents = null;
+        }
+
         currentFrame.openApps = openAppsList;
         currentFrame.objects = objectsList;
+        currentFrame.IsLayerableMode = ImmersiveModeController.IsLayerableMode;
         
         obj.sessionRecording.frames.Add(currentFrame);
     }
@@ -228,8 +270,32 @@ public class SceneStudyManager : MonoBehaviour
    
     }
 
+    public Vector3 getRightHandRay()
+    {
+        Vector3 rightEndPoint;
+        if (PointerUtils.TryGetHandRayEndPoint(Handedness.Right, out rightEndPoint))
+        {
+            return rightEndPoint;
+        }
+
+        return new Vector3(0,0,0);
+    }
+
+      public Vector3 getLeftHandRay()
+    {
+        Vector3 leftEndPoint;
+        if (PointerUtils.TryGetHandRayEndPoint(Handedness.Left, out leftEndPoint))
+        {
+            return leftEndPoint;
+        }
+
+        return new Vector3(0,0,0);
+    }
+
     public void getJoints()
     {
+
+        int i = 0;
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.ThumbTip, Handedness.Left, out pose))
         {
             hand.lThumb = pose.Position;
@@ -295,9 +361,12 @@ public class SceneStudyManager : MonoBehaviour
 
     #region Unity methods
 
+    GameObject parent;
+
     // Start is called before the first frame update
     void Start()
     {
+        parent = gameObject;
         Application.targetFrameRate = Const.FRAME_RATE;
         startTime = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
@@ -335,6 +404,31 @@ public class SceneStudyManager : MonoBehaviour
             LogStudy();
         }
     }
+
+        public void DrawCircle()
+    {
+        float radius = 2f;
+        float lineWidth = 1f;
+
+        var segments = 360;
+        LineRenderer line = parent.AddComponent<LineRenderer>();
+        line.useWorldSpace = false;
+        line.startWidth = lineWidth;
+        line.endWidth = lineWidth;
+        line.positionCount = segments + 1;
+
+        var pointCount = segments + 1; // add extra point to make startpoint and endpoint the same to close the circle
+        var points = new Vector3[pointCount];
+
+        for (int i = 0; i < pointCount; i++)
+        {
+            var rad = Mathf.Deg2Rad * (i * 360f / segments);
+            points[i] = new Vector3(Mathf.Sin(rad) * radius, 0, Mathf.Cos(rad) * radius);
+        }
+
+        line.SetPositions(points);
+    }
+
 
     #endregion
 }

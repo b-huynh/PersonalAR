@@ -229,8 +229,14 @@ public class AppState : ScriptableObject
         current_data.activity = "Start";
         current_data.name = appName;
 
+        ARDebug.Log("APP state - appevent name" + appName);
         events.Add(current_data);
-        oApps.Add(appName);
+
+        if (!oApps.Contains(appName))
+        {
+            oApps.Add(appName);
+        }
+
         
         // Debug.Log("START " + appName);
 
@@ -316,6 +322,8 @@ public class AppState : ScriptableObject
         current_data.activityType = eventData.ActivityType;
         current_data.activity = "Stop";
         current_data.name = appName;
+
+        ARDebug.Log("APP state - appevent name" + appName);
 
         events.Add(current_data);
         oApps.Remove(appName);
@@ -405,6 +413,34 @@ public class AppState : ScriptableObject
         return perviousEvents;
     }
 
+    public static void addAppEvents(bool onOffstate, string appName)
+    {
+        AppEvent current_data = new AppEvent();
+        current_data.unixTime = Utils.UnixTimestampMilliseconds();
+        current_data.systemTime =  System.DateTime.Now.ToString("HH-mm-ss-ff");
+        current_data.activityID = "";
+        current_data.name = appName;
+        if (onOffstate)
+        {
+            current_data.activity = "Start";
+            Debug.Log("In True Part");
+            if (!oApps.Contains(appName))
+            {
+                oApps.Add(appName);
+                events.Add(current_data);
+            }
+        }
+        else
+        {
+            current_data.activity = "Stop";
+            if (oApps.Contains(appName))
+            {
+                oApps.Remove(appName);
+                events.Add(current_data);
+            }
+        }
+
+    }
 }
 
 [System.Serializable]
