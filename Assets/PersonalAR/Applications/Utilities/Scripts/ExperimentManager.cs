@@ -102,6 +102,7 @@ public class ExperimentManager : Singleton<ExperimentManager>
     {
         Score = 0;
         TotalSecondsLeft = SecondsAllotted;
+        //UserID = SceneStudyManager.getUserID();
 
         codeSet.OnCodeEntryComplete.RemoveAllListeners();
         codeSet.OnCodeEntryComplete.AddListener(this.UpdateScore);
@@ -120,6 +121,7 @@ public class ExperimentManager : Singleton<ExperimentManager>
             pinNumCodes = codeSet.numCodes,
             pinCodeLength = codeSet.codeLength,
             pinNumPieces = codeSet.numPieces,
+            pinCodes = codeSet.Codes,
             score = 0
         };
 
@@ -154,6 +156,7 @@ public class ExperimentEventData
     public int pinNumCodes;
     public int pinCodeLength;
     public int pinNumPieces;
+    public List<Code> pinCodes; 
 
     // Optional
     public int score;

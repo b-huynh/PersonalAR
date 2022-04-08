@@ -127,7 +127,6 @@ public class StudyObject
 
 public class SceneStudyManager : MonoBehaviour
 {
-
     //objects to write to json
     public StudyObject obj;
     public JointTracking hand;
@@ -150,6 +149,11 @@ public class SceneStudyManager : MonoBehaviour
     MixedRealityPose pose;
 
     #region Public methods
+
+    public string getUserID()
+    {
+        return obj.userID;
+    }
 
     public void SaveIntoJson()
     {
@@ -222,7 +226,6 @@ public class SceneStudyManager : MonoBehaviour
         {
             currentFrame.experimentEvents = new List<ExperimentEventData>();
             currentFrame.experimentEvents.Add(EED);
-
         }
         else
         {
@@ -356,6 +359,7 @@ public class SceneStudyManager : MonoBehaviour
 
         obj.tickRate = Const.TICK_RATE;
         obj.startTime = startTime;
+        obj.userID = startTime.ToString();
         currentFrame = new StudyFrame();
         currentFrame.appEvents = new List<AppEvent>();
         currentFrame.gestureEvents = new List<GestureEvent>();
