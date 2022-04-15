@@ -17,12 +17,6 @@ using Microsoft.MixedReality.Toolkit.Utilities;
 
 using Microsoft;
 
-//TODO:
-// test removing an anchor
-
-//Questions
-//annontations, Debug not in AppState?
-//positions of apps and anchors?
 
 public static class Const
 {
@@ -57,18 +51,22 @@ public struct StudyFrame
     public Vector3 gazeDirection;
 
     public JointTracking hand;
+    public Vector3 rightHandRay;
+    public Vector3 leftHandRay;
     public List<string> openApps;
     public List<AppEvent> appEvents;
-    public List<ObjectPosition> objects;
+    public List<string> placedObjects;
+    public List<AnchorEvent> anchorEvents;
     public List<CodeEvent> codesEvents;
 
     public List<GestureEvent> gestureEvents;
 
+    public bool IsLayerableMode;
+
+    public List<ExperimentEventData> experimentEvents;
+
 }
-/*
-    - gesture events
-    - hand ray 
-*/
+
 [System.Serializable]
 public struct JointTracking
 {
@@ -86,8 +84,16 @@ public struct JointTracking
     public Vector3 lMiddle;
     public Vector3 lIndex;
     public Vector3 lThumb;
+
 }
 
+public struct HandRay
+{
+    public Vector3 startPoint;
+    public Vector3 endPoint;
+    public bool hitObject;
+    public string hitObjectName;
+}
 
 //Session recording which is written to json
 [System.Serializable]
@@ -121,12 +127,13 @@ public class StudyObject
 
 public class SceneStudyManager : MonoBehaviour
 {
-
     //objects to write to json
     public StudyObject obj;
     public JointTracking hand;
+
     public List<string> openAppsList;
-    public List<ObjectPosition> objectsList;
+    public List<string> placedObjectsList;
+
 
     float logTimer = 0f;
     float studyTimer = 0f;
@@ -142,6 +149,11 @@ public class SceneStudyManager : MonoBehaviour
     MixedRealityPose pose;
 
     #region Public methods
+
+    public string getUserID()
+    {
+        return obj.userID;
+    }
 
     public void SaveIntoJson()
     {
@@ -175,6 +187,9 @@ public class SceneStudyManager : MonoBehaviour
         hand = new JointTracking();
         getJoints();
         currentFrame.hand = hand;
+
+        currentFrame.rightHandRay = getRightHandRay();
+        currentFrame.leftHandRay = getLeftHandRay();
         
         currentFrame.codesEvents = NumberDisplay.getCodeEvents();
         currentFrame.codesEvents.ForEach(delegate(CodeEvent e){
@@ -183,32 +198,43 @@ public class SceneStudyManager : MonoBehaviour
 
         currentFrame.gestureEvents = GestureListener.getGestureEvents();
         currentFrame.gestureEvents.ForEach(delegate(GestureEvent gesture){
+            //ARDebug.Log(gesture.eventType + " " + gesture.action + " pos:" + gesture.position);
             gesture.eventTime = gesture.unixTime - startTime;
         });
 
         currentFrame.appEvents = AppState.getAppEvents();
         currentFrame.appEvents.ForEach(delegate(AppEvent app){
             app.eventTime = app.unixTime - startTime;
+            //ARDebug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
+            //Debug.Log("DATACOLLECTION - activity: " + app.activity + " activityID: " + app.activityID + " name: " + app.name + " activity type: " + app.activityType + " "+ app.systemTime);
+        });
+
+        currentFrame.anchorEvents = AnchorService.getAnchorEvent();
+        currentFrame.anchorEvents.ForEach(delegate(AnchorEvent anchor){
+            anchor.placedTime = anchor.unixTime - startTime;
+            //ARDebug.Log("Anchor Event: " + anchor.objectName + " " + anchor.activity + " at " + anchor.placedTime);
+            //Debug.Log("Anchor Event: " + anchor.objectName + " " + anchor.activity + " at " + anchor.placedTime);
         });
 
         List<string> apps = AppState.getOpenApps();
-        List<ObjectPosition> objs = AnchorService.getObjects();
-        openAppsList = new List<string>();
-        objectsList = new List<ObjectPosition>();
+        List<string> objs = AnchorService.getPlacedObjects();
+        openAppsList = new List<string>(apps);
+        placedObjectsList = new List<string>(objs);
 
-        //maybe use AddAll?
-        for(int i = 0; i < apps.Count; i++){
-            openAppsList.Add(apps[i]);
-        }
-
-        for(int i = 0; i < objs.Count; i++)
+        ExperimentEventData EED = ExperimentManager.GetExperimentEventData();
+        if (EED != null)
         {
-            objs[i].placedTime = objs[i].unixTime - startTime;
-            objectsList.Add(objs[i]);
+            currentFrame.experimentEvents = new List<ExperimentEventData>();
+            currentFrame.experimentEvents.Add(EED);
+        }
+        else
+        {
+            currentFrame.experimentEvents = null;
         }
 
         currentFrame.openApps = openAppsList;
-        currentFrame.objects = objectsList;
+        currentFrame.placedObjects = placedObjectsList;
+        currentFrame.IsLayerableMode = ImmersiveModeController.IsLayerableMode;
         
         obj.sessionRecording.frames.Add(currentFrame);
     }
@@ -228,8 +254,32 @@ public class SceneStudyManager : MonoBehaviour
    
     }
 
+    public Vector3 getRightHandRay()
+    {
+        Vector3 rightEndPoint;
+        if (PointerUtils.TryGetHandRayEndPoint(Handedness.Right, out rightEndPoint))
+        {
+            return rightEndPoint;
+        }
+
+        return new Vector3(0,0,0);
+    }
+
+      public Vector3 getLeftHandRay()
+    {
+        Vector3 leftEndPoint;
+        if (PointerUtils.TryGetHandRayEndPoint(Handedness.Left, out leftEndPoint))
+        {
+            return leftEndPoint;
+        }
+
+        return new Vector3(0,0,0);
+    }
+
     public void getJoints()
     {
+
+        int i = 0;
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.ThumbTip, Handedness.Left, out pose))
         {
             hand.lThumb = pose.Position;
@@ -239,6 +289,7 @@ public class SceneStudyManager : MonoBehaviour
         {
             hand.lIndex = pose.Position;
         }
+
 
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.MiddleTip, Handedness.Left, out pose))
         {
@@ -295,9 +346,12 @@ public class SceneStudyManager : MonoBehaviour
 
     #region Unity methods
 
+    GameObject parent;
+
     // Start is called before the first frame update
     void Start()
     {
+        parent = gameObject;
         Application.targetFrameRate = Const.FRAME_RATE;
         startTime = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
@@ -305,6 +359,7 @@ public class SceneStudyManager : MonoBehaviour
 
         obj.tickRate = Const.TICK_RATE;
         obj.startTime = startTime;
+        obj.userID = startTime.ToString();
         currentFrame = new StudyFrame();
         currentFrame.appEvents = new List<AppEvent>();
         currentFrame.gestureEvents = new List<GestureEvent>();

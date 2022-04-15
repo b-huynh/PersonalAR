@@ -39,6 +39,7 @@ public class AnnotationVisuals : MonoBehaviour
     private void OnValueChanged(bool newValue)
     {
         label.SetActive(newValue);
+        AppState.addAppEvents(newValue, "AnnotationsMenu");
     }
 
     public void SetDisplayText(string text)

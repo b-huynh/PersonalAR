@@ -48891,8 +48891,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1371455920}
   m_HandleRect: {fileID: 1371455919}
   m_Direction: 2
-  m_Value: 1.0000024
-  m_Size: 0.6125287
+  m_Value: 1.0000025
+  m_Size: 0.61252874
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -74205,9 +74205,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1152418637}
-  - component: {fileID: 1152418636}
   - component: {fileID: 1152418638}
   - component: {fileID: 1152418639}
+  - component: {fileID: 1152418636}
   m_Layer: 0
   m_Name: DataCollection
   m_TagString: Untagged
@@ -74215,25 +74215,47 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1152418636
-MonoBehaviour:
+--- !u!23 &1152418636
+MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1152418635}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e33c0510b3b8304cbeeeb1e9b2573d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _DataCollection:
-    session_info:
-      Date: 
-      SystemTime: 
-      UnixTime: 0
-      Participant_ID: 123
-    EyeTracking: []
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!4 &1152418637
 Transform:
   m_ObjectHideFlags: 0
@@ -74285,7 +74307,7 @@ MonoBehaviour:
     lIndex: {x: 0, y: 0, z: 0}
     lThumb: {x: 0, y: 0, z: 0}
   openAppsList: []
-  objectsList: []
+  placedObjectsList: []
   currentFrame:
     frameNum: 0
     timestamp: 0
@@ -74311,11 +74333,16 @@ MonoBehaviour:
       lMiddle: {x: 0, y: 0, z: 0}
       lIndex: {x: 0, y: 0, z: 0}
       lThumb: {x: 0, y: 0, z: 0}
+    rightHandRay: {x: 0, y: 0, z: 0}
+    leftHandRay: {x: 0, y: 0, z: 0}
     openApps: []
     appEvents: []
-    objects: []
+    placedObjects: []
+    anchorEvents: []
     codesEvents: []
     gestureEvents: []
+    IsLayerableMode: 0
+    experimentEvents: []
   _RecordStudy:
     obj:
       _valid: null
