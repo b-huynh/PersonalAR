@@ -101,22 +101,16 @@ public class MeshNetworkMainActivity : BaseAppActivity
         // },
         // Coffee Maker, Vacuum
 
-        {
-            "Appliances", new List<string>()
-            {
-                "Fan", "Heater", "Kettle"
-            }
-        },
+        // {
+        //     "Appliances", new List<string>()
+        //     {
+        //         "Fan", "Heater", "Kettle"
+        //     }
+        // },
         {
             "Lights", new List<string>()
             {
                 "Lamp", "Light Switch", "Electrical Outlet"
-            }
-        },
-        {
-            "Screens", new List<string>()
-            {
-                "TV", "PC", "Laptop"
             }
         },
         {
@@ -125,12 +119,12 @@ public class MeshNetworkMainActivity : BaseAppActivity
                 "Fan", "Heater", "Thermostat"
             }
         },
-        {
-            "Refillable", new List<string>()
-            {
-                "Coffee Grinder", "Kettle", "Printer"
-            }
-        },
+        // {
+        //     "Refillable", new List<string>()
+        //     {
+        //         "Coffee Grinder", "Kettle", "Printer"
+        //     }
+        // },
         {
             "Coffee", new List<string>()
             {
@@ -138,9 +132,15 @@ public class MeshNetworkMainActivity : BaseAppActivity
             }
         },
         {
-            "Furniture", new List<string>()
+            "Office Furniture", new List<string>()
             {
-                "Sofa", "Desk", "Chair", "Bookshelf", "Filing Cabinet", "Rug"
+                "Desk", "Chair", "Rug"
+            }
+        },
+        {
+            "Office Equipment", new List<string>()
+            {
+                "Printer", "Desktop Computer", "Laptop"
             }
         },
         {
@@ -150,17 +150,23 @@ public class MeshNetworkMainActivity : BaseAppActivity
             }
         },
         {
-            "Office", new List<string>()
+            "Living Room Furniture", new List<string>()
             {
-                "Desk", "Chair", "Filing Cabinet", "PC", "Printer"
+                "Sofa", "Bookshelf", "Filing Cabinet"
             }
         },
-        {
-            "Entertainment", new List<string>()
-            {
-                "TV", "Speakers"
-            }
-        }
+        // {
+        //     "Office", new List<string>()
+        //     {
+        //         "Desk", "Chair", "Filing Cabinet", "PC", "Printer"
+        //     }
+        // },
+        // {
+        //     "Entertainment", new List<string>()
+        //     {
+        //         "TV", "Speakers"
+        //     }
+        // }
     };
 
     private CircularBuffer<Color> colorPool;

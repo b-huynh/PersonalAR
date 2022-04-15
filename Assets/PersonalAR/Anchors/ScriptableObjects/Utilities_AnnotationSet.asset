@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SetName: Utilties
   AnnotationNames:
-  - Router
+  - Thermostat
   - Telephone
   - Lamp
   - Light Switch
   - Electrical Outlet
-  - Thermostat

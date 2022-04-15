@@ -72,8 +72,6 @@ public class MeshNetworkRenderer : MonoBehaviour
         DrawInfo();
     }
 
-
-
     IEnumerator BakeMeshAfterLineRendererPositionsSet(LineRenderer lineRenderer)
     {
         yield return new WaitUntil(() => lineRenderer.positionCount > 0);
@@ -204,7 +202,7 @@ public class MeshNetworkRenderer : MonoBehaviour
         textMesh.alignment = TextAlignmentOptions.Center;
 
         // Set text
-        textMesh.text = $"Device Group: {subnet.networkName}";
+        textMesh.text = $"Device Group: {subnet.networkDescription}";
 
         return textMeshObject;
     }

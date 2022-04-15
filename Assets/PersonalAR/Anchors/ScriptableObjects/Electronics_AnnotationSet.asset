@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SetName: Electroncs
   AnnotationNames:
-  - TV
+  - Router
   - Desktop Computer
   - Laptop
   - Speakers
