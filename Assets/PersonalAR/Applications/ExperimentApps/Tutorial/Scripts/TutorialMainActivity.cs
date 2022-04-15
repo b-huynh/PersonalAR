@@ -129,23 +129,6 @@ public class TutorialMainActivity : BaseAppActivity
         {
             currentItem.IntCloseCondition.OnValueChanged -= IntCloseConditionHandler;
             currentItem.closeEvent?.Invoke();
-<<<<<<< HEAD
-
-            ARDebug.Log($"Close Event Invoked");
-
-            currentItem.CloseCondition.OnValueChanged -= CloseConditionHandler;
-=======
->>>>>>> origin/tutorial_bugs
-            NextItem();
-        }
-    }
-
-    public void IntCloseConditionHandler(int newValue)
-    {
-        if (newValue >= 12)
-        {
-            currentItem.closeEvent?.Invoke();
-            currentItem.IntCloseCondition.OnValueChanged -= IntCloseConditionHandler;
             NextItem();
         }
     }
