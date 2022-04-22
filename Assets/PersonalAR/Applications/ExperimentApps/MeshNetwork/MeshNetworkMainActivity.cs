@@ -93,20 +93,6 @@ public class MeshNetworkMainActivity : BaseAppActivity
 
     private Dictionary<string, List<string>> groupMapping = new Dictionary<string, List<string>>()
     {
-        // {
-        //     "Switchable", new List<string>()
-        //     {
-        //         "TV", "PC", "Laptop", "Fan", "Heater", "Vacuum", "Speakers", "Printer", "Coffee Grinder", "Kettle", "Router", "Telephone", "Lamp", "Light Switch", "Electrical Outlet", "Thermostat", "Coffee Maker", 
-        //     }
-        // },
-        // Coffee Maker, Vacuum
-
-        // {
-        //     "Appliances", new List<string>()
-        //     {
-        //         "Fan", "Heater", "Kettle"
-        //     }
-        // },
         {
             "Lights", new List<string>()
             {
@@ -119,12 +105,6 @@ public class MeshNetworkMainActivity : BaseAppActivity
                 "Fan", "Heater", "Thermostat"
             }
         },
-        // {
-        //     "Refillable", new List<string>()
-        //     {
-        //         "Coffee Grinder", "Kettle", "Printer"
-        //     }
-        // },
         {
             "Coffee", new List<string>()
             {
@@ -155,6 +135,24 @@ public class MeshNetworkMainActivity : BaseAppActivity
                 "Sofa", "Bookshelf", "Filing Cabinet"
             }
         },
+        // {
+        //     "Switchable", new List<string>()
+        //     {
+        //         "TV", "PC", "Laptop", "Fan", "Heater", "Vacuum", "Speakers", "Printer", "Coffee Grinder", "Kettle", "Router", "Telephone", "Lamp", "Light Switch", "Electrical Outlet", "Thermostat", "Coffee Maker", 
+        //     }
+        // },
+        // {
+        //     "Appliances", new List<string>()
+        //     {
+        //         "Fan", "Heater", "Kettle"
+        //     }
+        // },
+        // {
+        //     "Refillable", new List<string>()
+        //     {
+        //         "Coffee Grinder", "Kettle", "Printer"
+        //     }
+        // },
         // {
         //     "Office", new List<string>()
         //     {
@@ -275,17 +273,11 @@ public class MeshNetworkMainActivity : BaseAppActivity
                 anchorService.OnBeforeRemoved += OnBeforeRemovedHandler;
             }
 
-            // Add existing anchors to groups
+            // Add existing anchors to groups and initialize their renderers
             anchorService.AnchoredObjects.Values
                 .ToList()
                 .ForEach(anchor => AddAnchorToGroups(anchor));
 
-            // DetermineNetworks();
-
-            // Get code piece assignment
-            networks.ForEach(subnet => subnet.InitWithCodes(codeSet));
-
-            CreateNetworkRenderers();
             initialized = true;
         }
 
@@ -306,10 +298,13 @@ public class MeshNetworkMainActivity : BaseAppActivity
 
         foreach(string groupName in groupsContainingAnchor)
         {
-            // Lazy initialize subnets
+            // Lazy initialize groups/subnets and their renderers once added
             if (networks.Count(network => string.Equals(network.networkName, groupName, StringComparison.OrdinalIgnoreCase)) <= 0)
             {
-                networks.Add(new Subnet(groupName));
+                Subnet newSubnet = new Subnet(groupName);
+                newSubnet.InitWithCodes(codeSet);
+                networks.Add(newSubnet);
+                CreateNetworkRenderer(newSubnet);
             }
 
             networks.Where(network => string.Equals(network.networkName, groupName, StringComparison.OrdinalIgnoreCase))
@@ -323,6 +318,8 @@ public class MeshNetworkMainActivity : BaseAppActivity
         networks.Where(network => network.Contains(anchor))
                 .ToList()
                 .ForEach(network => network.Remove(anchor));
+
+        //TODO: Do we need to remove NetworkRenderers if you delete all anchors in a group?...
     }
 
     public void OnAfterRegisteredHandler(AnchorableObject anchor)
