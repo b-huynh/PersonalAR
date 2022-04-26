@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3da510abf006c642a165335460fd3db, type: 3}
   m_Name: AppState_Numpad
   m_EditorClassIdentifier: 
-  appName: Numpad
+  appName: Code Entry
   appDesc: 
   appLogo: {fileID: 2100000, guid: e3876a0ad619a9d4e9ed117f8b21d830, type: 2}
   appDataFile: 
+  Variables: {fileID: 0}

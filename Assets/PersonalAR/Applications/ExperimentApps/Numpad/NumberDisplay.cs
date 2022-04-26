@@ -8,6 +8,8 @@ public class NumberDisplay : MonoBehaviour
 {
     // Display properties
     public int maxLength;
+    private string clearString = "__-__-__";
+
 
     // Assign in editor
     [SerializeField] private TextMeshPro textMesh;
@@ -44,11 +46,29 @@ public class NumberDisplay : MonoBehaviour
 
     public void Enter(string str)
     {
-        if (textMesh.text.Length < maxLength)
+        // if (textMesh.text.Length < maxLength)
+        // {
+        //     textMesh.text += str;
+        // }
+        // textMesh.color = Color.white;
+        int blankIndex = textMesh.text.IndexOf('_');
+        if (blankIndex == -1)
         {
-            textMesh.text += str;
+            return;
         }
-        textMesh.color = Color.white;
+
+        textMesh.text = textMesh.text.Insert(blankIndex, str).Remove(blankIndex + 1, str.Length);
+
+        Debug.Log($"Remove hyphen {textMesh.text.Replace("-", "").Replace("_", "")}");
+
+        // for(int i = 0; i < textMesh.text.Length; ++i)
+        // {
+        //     if (textMesh.text[i] == '_')
+        //     {
+        //         textMesh.text[i] = str[0];
+        //         return;
+        //     }
+        // }
     }
 
     public void Delete()
@@ -60,12 +80,14 @@ public class NumberDisplay : MonoBehaviour
     public void Clear()
     {
         textMesh.text = string.Empty;
+        textMesh.text = clearString;
         textMesh.color = Color.white;
     }
 
     public void Validate()
     {
-        int entered = System.Int32.Parse(textMesh.text); 
+        string cleanedInput = textMesh.text.Replace("-", "").Replace("_", "");
+        int entered = System.Int32.Parse(cleanedInput);
 
         CodeEvent code = new CodeEvent();
         
