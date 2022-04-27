@@ -11,19 +11,27 @@ using Microsoft.MixedReality.Toolkit.Extensions;
 public class Subnet : ObservableCollection<AnchorableObject>
 {
     public string networkName;
-    public string networkDescription;
+    public string networkDescription { get; set; }
 
     // For tracking code pieces assigned to this object
     private RandomPinCodes codeSet;
     private CodePiece codePiece;
 
+    public event EventHandler SubnetChanged;
+
     public Subnet(string networkName)
     {
         this.networkName = networkName;
+
+        CollectionChanged += OnCollectionChanged;
+        PropertyChanged += OnPropertyChanged;
     }
 
     ~Subnet()
     {
+        CollectionChanged -= OnCollectionChanged;
+        PropertyChanged -= OnPropertyChanged;
+
         if (codePiece != null)
         {
             codePiece.Code.OnCodeEntryComplete.RemoveListener(OnCodeEntryComplete);
@@ -45,12 +53,23 @@ public class Subnet : ObservableCollection<AnchorableObject>
         codePiece = codeSet.GetAssignment(this, 1);
         networkDescription = networkName + $"\n\n (CODE) {codePiece.Label}-{codePiece.Value}";
         codePiece.Code.OnCodeEntryComplete.AddListener(OnCodeEntryComplete);
+
+        SubnetChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void OnCodeEntryComplete()
     {
         codePiece.Code.OnCodeEntryComplete.RemoveListener(OnCodeEntryComplete);
         InitWithCodes(codeSet);
+    }
+    protected void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs eventArgs)
+    {
+        SubnetChanged?.Invoke(sender, EventArgs.Empty);
+    }
+
+    protected void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs eventArgs)
+    {
+        SubnetChanged?.Invoke(sender, EventArgs.Empty);
     }
 }
 

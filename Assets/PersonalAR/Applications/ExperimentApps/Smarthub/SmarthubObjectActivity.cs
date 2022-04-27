@@ -104,9 +104,6 @@ public class SmarthubObjectActivity : AnchorActivity
         codePiece.Code.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
 
         // Get a new assignment
-        // GetNewAssignment();
-
-        Debug.Log("Code Entry Complete, attempting to get new assignment...");
         codePiece = codeSet.GetAssignment(anchor, 0);
         UpdateVisuals();
         codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);

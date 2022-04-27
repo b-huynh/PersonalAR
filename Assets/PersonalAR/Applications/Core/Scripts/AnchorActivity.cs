@@ -50,7 +50,6 @@ public class AnchorActivity : BaseAppActivity
             cachedEntity = GameObject.Instantiate(entityToLaunch);
             cachedEntity.GetComponent<IAnchorable>().Anchor = executionContext.Anchor;
             initialized = true;
-            Debug.Log("AnchorActivity initialized");
         }
 
         cachedEntity.SetActive(true);

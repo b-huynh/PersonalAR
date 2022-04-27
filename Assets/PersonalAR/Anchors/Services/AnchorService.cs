@@ -423,20 +423,29 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 				anchor.OnAnchorLoaded.AddListener(
 					delegate 
 					{
-						ARDebug.LogFormat("Loaded anchor {0}", anchorName);
-						AnchoredObjects.Add(anchorName, anchor);
-						OnAfterRegistered?.Invoke(anchor);
+						ARDebug.Log($"Found existing anchor {anchorName} at {anchorMesh.transform.position}");
 
-						// Log placed anchor event
-						AnchorEvent current_data = new AnchorEvent();
-						current_data.position = anchorMesh.transform.position;
-						current_data.objectName = anchorName;
-						current_data.unixTime = Utils.UnixTimestampMilliseconds();
-						current_data.activity = "placed";
-						current_data.systemTime =  System.DateTime.Now.ToString("HH-mm-ss-ff");
-						// Debug.Log("SAVE " + name);
-						anchorEvent.Add(current_data);
-						placedAnchors.Add(anchorName);
+						if (anchorMesh.transform.position != Vector3.zero)
+						{
+							// Register anchor to our own collections
+							AnchoredObjects.Add(anchorName, anchor);
+							OnAfterRegistered?.Invoke(anchor);
+
+							// Log placed anchor event
+							AnchorEvent current_data = new AnchorEvent();
+							current_data.position = anchorMesh.transform.position;
+							current_data.objectName = anchorName;
+							current_data.unixTime = Utils.UnixTimestampMilliseconds();
+							current_data.activity = "placed";
+							current_data.systemTime =  System.DateTime.Now.ToString("HH-mm-ss-ff");
+							// Debug.Log("SAVE " + name);
+							anchorEvent.Add(current_data);
+							placedAnchors.Add(anchorName);
+						}
+						else
+						{
+							ARDebug.Log($"Failed to track previously existing anchor {anchorName}");
+						}
 					}
 				);
 				if (!anchor.LoadAnchor())

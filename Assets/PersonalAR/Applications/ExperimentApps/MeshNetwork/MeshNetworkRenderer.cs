@@ -37,7 +37,8 @@ public class MeshNetworkRenderer : MonoBehaviour
 
         if (subnet != null)
         {
-            subnet.CollectionChanged += OnSubnetChanged;
+            subnet.SubnetChanged += OnSubnetChanged;
+            // subnet.CollectionChanged += OnSubnetChanged;
         }
     }
 
@@ -60,7 +61,12 @@ public class MeshNetworkRenderer : MonoBehaviour
         // }
     }
 
-    public void OnSubnetChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
+    public void OnSubnetChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs eventArgs)
+    {
+        UpdateVisuals();
+    }
+
+    public void OnSubnetChanged(object sender, System.EventArgs eventArgs)
     {
         UpdateVisuals();
     }

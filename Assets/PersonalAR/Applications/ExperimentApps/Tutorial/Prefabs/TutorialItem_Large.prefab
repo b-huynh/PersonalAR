@@ -613,7 +613,8 @@ MonoBehaviour:
   displayParent: {fileID: 0}
   tutorialData: {fileID: 0}
   m_itemOrder: 1
-  CloseCondition: {fileID: 0}
+  BoolCloseCondition: {fileID: 0}
+  IntCloseCondition: {fileID: 0}
 --- !u!82 &1328035285068285395
 AudioSource:
   m_ObjectHideFlags: 0

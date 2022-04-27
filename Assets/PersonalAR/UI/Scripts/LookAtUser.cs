@@ -40,12 +40,16 @@ public class LookAtUser : MonoBehaviour
 			Vector3 currentUpDir = upDirection;
 			Vector3 currentForwardDir = forwardDirection;
 
+			// Determine up direction based on if camera is above or below the line
 			if (Mathf.Abs(signedAngleCameraUpAroundForward) > 90)
 			{
 				currentUpDir = -upDirection;
 			}
 
-			transform.rotation = Quaternion.LookRotation(currentForwardDir, currentUpDir);
+			if (currentForwardDir != Vector3.zero && currentUpDir != Vector3.zero)
+			{
+				transform.rotation = Quaternion.LookRotation(currentForwardDir, currentUpDir);
+			}
 
 			if (Mathf.Abs(signedAngleAxisUp) < 90)
 			{

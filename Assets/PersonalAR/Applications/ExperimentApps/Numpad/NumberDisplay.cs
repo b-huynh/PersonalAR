@@ -46,11 +46,6 @@ public class NumberDisplay : MonoBehaviour
 
     public void Enter(string str)
     {
-        // if (textMesh.text.Length < maxLength)
-        // {
-        //     textMesh.text += str;
-        // }
-        // textMesh.color = Color.white;
         int blankIndex = textMesh.text.IndexOf('_');
         if (blankIndex == -1)
         {
@@ -59,8 +54,12 @@ public class NumberDisplay : MonoBehaviour
 
         textMesh.text = textMesh.text.Insert(blankIndex, str).Remove(blankIndex + 1, str.Length);
 
-        Debug.Log($"Remove hyphen {textMesh.text.Replace("-", "").Replace("_", "")}");
-
+        // if (textMesh.text.Length < maxLength)
+        // {
+        //     textMesh.text += str;
+        // }
+        // textMesh.color = Color.white;
+        // 
         // for(int i = 0; i < textMesh.text.Length; ++i)
         // {
         //     if (textMesh.text[i] == '_')
@@ -97,6 +96,8 @@ public class NumberDisplay : MonoBehaviour
 
         if (pinCodes.Contains(entered))
         {
+            pinCodes.MarkCodeEntryComplete(entered);
+
             textMesh.color = Color.green;
             textMesh.text = "SUCCESS";
             code.success = true;

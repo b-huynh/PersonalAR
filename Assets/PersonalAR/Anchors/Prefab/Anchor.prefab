@@ -33414,10 +33414,10 @@ MonoBehaviour:
   smoothing: 1
   lifetime: 0
   targetViewPercentV: 0.1
-  minDistance: 0.5
+  minDistance: 1
   maxDistance: 3.5
   minScale: 1
-  maxScale: 10
+  maxScale: 3.5
   scaleBuffer: 0.01
   manualObjectSize: 0
 --- !u!1 &3647562099540155274
