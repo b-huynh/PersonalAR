@@ -176,11 +176,13 @@ public class RandomPinCodes : ScriptableObject
 
     public void Awake()
     {
+        Reset();
         Generate();
     }
 
     public void OnEnable()
     {
+        Reset();
         Generate();
     }
 

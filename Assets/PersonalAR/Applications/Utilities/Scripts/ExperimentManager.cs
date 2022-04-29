@@ -93,6 +93,7 @@ public class ExperimentManager : Singleton<ExperimentManager>
                 };
 
                 // Invoke callbacks
+                codeSet.OnCodeEntryComplete.RemoveListener(this.UpdateScore);
                 OnTaskComplete.Invoke();
             }
         }
@@ -104,10 +105,10 @@ public class ExperimentManager : Singleton<ExperimentManager>
         TotalSecondsLeft = SecondsAllotted;
         //UserID = SceneStudyManager.getUserID();
 
-        codeSet.OnCodeEntryComplete.RemoveAllListeners();
+        // codeSet.OnCodeEntryComplete.RemoveAllListeners();
         codeSet.OnCodeEntryComplete.AddListener(this.UpdateScore);
-        codeSet.Reset();
-        codeSet.Generate();
+        // codeSet.Reset();
+        // codeSet.Generate();
     
         // Set event data
         currentEventData = new ExperimentEventData

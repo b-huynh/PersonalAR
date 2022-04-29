@@ -14,6 +14,11 @@ public class RandomPinCodesInspector : Editor
         DrawDefaultInspector();
 
         GUILayout.BeginVertical("box");
+        if (GUILayout.Button("Reset", GUILayout.Width(100)))
+        {
+            pinCodes.Reset();
+        }
+
         if (GUILayout.Button("Generate", GUILayout.Width(100)))
         {
             pinCodes.Generate();
