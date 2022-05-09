@@ -541,6 +541,19 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 			handlersByApp[app].Add(anchor);
 		}
 
+		public void RemoveHandler(AnchorableObject anchor, AppState app)
+		{
+			if (handlers.ContainsKey(anchor) == true)
+			{
+				handlers[anchor].Remove(app);
+			}
+
+			if (handlersByApp.ContainsKey(app) == true)
+			{
+				handlersByApp[app].Remove(anchor);
+			}
+		}
+
 		public void RemoveFromDict(AnchorableObject anchor)
 		{
 			foreach (KeyValuePair<AnchorableObject, HashSet<AppState>> kvp in handlers)
@@ -562,11 +575,6 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 					kvp.Value.Remove(anchor);
 				}
             }
-		}
-
-		public void RemoveHandler()
-		{
-			Debug.Log("AnchorService RemoveHandler");
 		}
 
 		public static List<string> getPlacedObjects()

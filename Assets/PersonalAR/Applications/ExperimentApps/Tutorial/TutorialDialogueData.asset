@@ -15,9 +15,15 @@ MonoBehaviour:
   Dialogues:
   - text: Would you like to begin the tutorial? Press Yes with your finger to continue.
     audioClip: {fileID: 8300000, guid: 1cc958afd438b74469dfe54e6163f3e2, type: 3}
-  - text: "Welcome to PersonalAR! \n\nThis tutorial will guide you through the various
-      features of PersonalAR.\n\nTo continue, press the Continue button with your
-      finger."
+  - text: 'Welcome to Layerable AR!
+
+
+      This tutorial will guide you through
+      the various features of the Layerable AR system.
+
+
+      To continue, press
+      the Continue button with your finger.'
     audioClip: {fileID: 8300000, guid: 659fa813b7e92f240969e542b8be61bc, type: 3}
   - text: Great!  Next, raise your left hand towards your face and look at your palm
       to bring up the Hand Menu.

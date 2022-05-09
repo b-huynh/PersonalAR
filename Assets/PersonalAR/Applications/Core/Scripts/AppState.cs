@@ -237,7 +237,7 @@ public class AppState : ScriptableObject
         }
 
         
-        Debug.Log("START " + appName);
+        // Debug.Log("START " + appName);
 
         // Invoke listeners / view updates
         foreach(var listener in listeners)
@@ -342,7 +342,7 @@ public class AppState : ScriptableObject
         events.Add(current_data);
         oApps.Remove(appName);
 
-        Debug.Log("STOP " + appName);
+        // Debug.Log("STOP " + appName);
 
         // Update internal state
         RunningActivities.Remove(activityID);
@@ -437,7 +437,7 @@ public class AppState : ScriptableObject
         if (onOffstate)
         {
             current_data.activity = "Start";
-            Debug.Log("In True Part");
+            // Debug.Log("In True Part");
             if (!oApps.Contains(appName))
             {
                 oApps.Add(appName);

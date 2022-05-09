@@ -9,12 +9,12 @@ using TMPro;
 [RequireComponent(typeof(AudioSource))]
 public class TutorialItem : AnimatedMenu, ITutorialItem
 {
-    public enum ContinueType { OkButton, Hand, None }
+    public enum ContinueType { Button, ButtonConditional, Hand, None }
 
     [Header("Visual Components")]
     [SerializeField] private TextMeshPro bodyTextMesh;
     [SerializeField] private TextMeshPro stepTextMesh;
-    [SerializeField] private GameObject okButton;
+    [SerializeField] private GameObject continueButton;
     [SerializeField] private GameObject handSymbol;
     public ContinueType continueType;
     public UnityEvent closeEvent;
@@ -70,7 +70,7 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
             stepTextMesh.text = stepStr;
         }
 
-        okButton?.SetActive(false);
+        continueButton?.SetActive(false);
         handSymbol?.SetActive(false);
         if (BoolCloseCondition != null && IntCloseCondition != null)
         {
@@ -78,7 +78,12 @@ public class TutorialItem : AnimatedMenu, ITutorialItem
             BoolCloseCondition = null;
             IntCloseCondition = null;
         }
-        if (continueType == ContinueType.OkButton) { okButton?.SetActive(true); }
+        if (continueType == ContinueType.Button) { continueButton?.SetActive(true); }
+        else if (continueType == ContinueType.ButtonConditional)
+        {
+            continueButton.SetActive(true);
+            continueButton.GetComponent<ButtonStatusController>().SetStatus(false);
+        }
         else if (continueType == ContinueType.Hand) { handSymbol?.SetActive(true); }
     }
 

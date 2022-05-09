@@ -47,14 +47,16 @@ public class ExperimentManager : Singleton<ExperimentManager>
     {
         get
         {
-            return string.Format(@"
-                Participant ID: {0}
-                Task Session: {1}
-
-                Score: {2}
-
-                Time Left: {3:D2}:{4:D2} 
-                ", UserID, SessionType, Score, MinutesLeft, SecondsLeft);
+            return string.Format(
+@"<b>Participant ID:</b>
+<color=#FFFFFF>{0}</color>
+<b>Task Session:</b>
+<color=#FFFFFF>{1}</color>
+<b>Score:</b>
+<color=#FFFFFF>{2}</color>
+<b>Time Left:</b>
+<color=#FFFFFF>{3:D2}:{4:D2}</color>",
+            UserID, SessionType, Score, MinutesLeft, SecondsLeft);
         }
     }
 

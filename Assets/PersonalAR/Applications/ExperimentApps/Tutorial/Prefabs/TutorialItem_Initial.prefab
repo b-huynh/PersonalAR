@@ -389,7 +389,7 @@ MonoBehaviour:
       m_Calls: []
   bodyTextMesh: {fileID: 690268018166064575}
   stepTextMesh: {fileID: 690268017062156080}
-  okButton: {fileID: 1657956599798898635}
+  continueButton: {fileID: 1657956599798898635}
   handSymbol: {fileID: 8468499985122006836}
   continueType: 0
   closeEvent:
@@ -398,7 +398,8 @@ MonoBehaviour:
   displayParent: {fileID: 0}
   tutorialData: {fileID: 0}
   m_itemOrder: 1
-  CloseCondition: {fileID: 0}
+  BoolCloseCondition: {fileID: 0}
+  IntCloseCondition: {fileID: 0}
 --- !u!82 &4008535256318969464
 AudioSource:
   m_ObjectHideFlags: 0

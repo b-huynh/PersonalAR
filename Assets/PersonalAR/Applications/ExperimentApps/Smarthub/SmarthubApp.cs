@@ -34,16 +34,17 @@ public class SmarthubApp : BaseApp
 
     void OnObjectRegistered(AnchorableObject anchor)
     {
-        // Register events from first numSmartObjects encountered.
-        if (numAssigned < numSmartObjects)
-        {
-            anchorService.AddHandler(anchor, appState);
-            numAssigned += 1;
-        }
+        // // Register events from first numSmartObjects encountered.
+        // if (numAssigned < numSmartObjects)
+        // {
+        //     anchorService.AddHandler(anchor, appState);
+        //     numAssigned += 1;
+        // }
     }
 
-    void OnObjectRemoved(String name) {
-        numAssigned -= 1;
+    void OnObjectRemoved(String name)
+    {
+        // numAssigned -= 1;
     }
 
     public void LaunchSmartInfoMenu(AnchorableObject anchor)

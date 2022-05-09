@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 using Microsoft.MixedReality.Toolkit;
@@ -8,6 +9,8 @@ using Microsoft.MixedReality.Toolkit.Extensions;
 
 public class SmarthubMainActivity : BaseAppActivity
 {
+    public int numCodePieceObjects;
+
     private List<Guid> cachedObjectActivities;
 
     public AnchorService anchorService;
@@ -25,7 +28,6 @@ public class SmarthubMainActivity : BaseAppActivity
 
     public override void StartActivity(ExecutionContext executionContext)
     {
-
         if (initialized == false)
         {
             // Register for new object events
@@ -41,9 +43,16 @@ public class SmarthubMainActivity : BaseAppActivity
 
             cachedObjectActivities = new List<Guid>();
 
+            // Randomly select n number of objects to be code piece handlers
+            System.Random rnd = new System.Random();
+            List<AnchorableObject> anchorsCopy = anchorService.AnchoredObjects.Values.OrderBy((item) => rnd.Next()).ToList();
+            for(int i = 0; i < numCodePieceObjects; ++i)
+            {
+                anchorService.AddHandler(anchorsCopy[i], appState);
+            }
+
             initialized = true;
         }
-
 
         // TODO: This is extremely non-performant.
         // You should really cast into ObjectActivities so you can determine which anchor activities have already been started/suspended first.

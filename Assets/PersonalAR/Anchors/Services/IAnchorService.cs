@@ -40,6 +40,6 @@ namespace Microsoft.MixedReality.Toolkit.Extensions
 		void Clear();
 
 		void AddHandler(AnchorableObject anchor, AppState app);
-		void RemoveHandler();
+		void RemoveHandler(AnchorableObject anchor, AppState app);
 	}
 }

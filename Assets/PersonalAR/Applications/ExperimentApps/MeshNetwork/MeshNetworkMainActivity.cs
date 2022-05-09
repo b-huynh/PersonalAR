@@ -113,9 +113,9 @@ public class MeshNetworkMainActivity : BaseAppActivity
     private Dictionary<string, List<string>> groupMapping = new Dictionary<string, List<string>>()
     {
         {
-            "Lights", new List<string>()
+            "Lighting", new List<string>()
             {
-                "Lamp", "Light Switch", "Electrical Outlet"
+                "Lamp", "Light Switch", "Window"
             }
         },
         {
@@ -131,12 +131,6 @@ public class MeshNetworkMainActivity : BaseAppActivity
             }
         },
         {
-            "Office Furniture", new List<string>()
-            {
-                "Desk", "Chair", "Rug"
-            }
-        },
-        {
             "Office Equipment", new List<string>()
             {
                 "Printer", "Desktop Computer", "Laptop"
@@ -148,12 +142,18 @@ public class MeshNetworkMainActivity : BaseAppActivity
                 "Router", "Telephone", "Speakers"
             }
         },
-        {
-            "Living Room Furniture", new List<string>()
-            {
-                "Sofa", "Bookshelf", "Filing Cabinet"
-            }
-        },
+        // {
+        //     "Office Furniture", new List<string>()
+        //     {
+        //         "Desk", "Chair", "Rug"
+        //     }
+        // },
+        // {
+        //     "Living Room Furniture", new List<string>()
+        //     {
+        //         "Sofa", "Bookshelf", "Filing Cabinet"
+        //     }
+        // },
         // {
         //     "Switchable", new List<string>()
         //     {
