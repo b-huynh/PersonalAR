@@ -115,7 +115,7 @@ public class MeshNetworkMainActivity : BaseAppActivity
         {
             "Lighting", new List<string>()
             {
-                "Lamp", "Light Switch", "Window"
+                "Lamp", "Light Switch", "Window Blinds"
             }
         },
         {

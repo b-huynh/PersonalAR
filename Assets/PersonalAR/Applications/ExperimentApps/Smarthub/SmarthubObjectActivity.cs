@@ -27,9 +27,9 @@ public class SmarthubObjectActivity : AnchorActivity
         // Get assigned anchor 
         anchor = executionContext.Anchor;
 
-        codePiece = codeSet.GetAssignment(anchor, 0);
-        UpdateVisuals();
-        codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+        CodePiece newCodePiece = codeSet.GetAssignment(anchor, 0);
+        UpdateCode(newCodePiece);
+        // codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
 
         // if (GetExistingAssignment() == false)
         // {
@@ -90,7 +90,14 @@ public class SmarthubObjectActivity : AnchorActivity
     private void UpdateVisuals()
     {
         // Update visual elements
-        cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) {codePiece.Label}-{codePiece.Value}");
+        if (codePiece != null)
+        {
+            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) {codePiece.Label}-{codePiece.Value}");
+        }
+        else
+        {
+            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"SERIAL NUMBER UNKNOWN");
+        }
 
         // Add smart info entity anchor content
         cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = anchor;
@@ -104,8 +111,24 @@ public class SmarthubObjectActivity : AnchorActivity
         codePiece.Code.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
 
         // Get a new assignment
-        codePiece = codeSet.GetAssignment(anchor, 0);
-        UpdateVisuals();
-        codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+        // CodePiece newCodePiece = codeSet.GetAssignment(anchor, 0);
+        // UpdateCode(newCodePiece);
+        // codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+    }
+
+    // Update code. Set newCodePiece to null to designate at an object without any codes.
+    public void UpdateCode(CodePiece newCodePiece)
+    {
+        if (newCodePiece != null)
+        {
+            codePiece = newCodePiece;
+            UpdateVisuals();
+            codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+        }
+        else
+        {
+            codePiece = null;
+            UpdateVisuals();
+        }
     }
 }
