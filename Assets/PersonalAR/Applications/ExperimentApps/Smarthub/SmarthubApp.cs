@@ -14,8 +14,8 @@ public class SmarthubApp : BaseApp
     public int maxObjectsWithCode;
 
     private AnchorService anchorService;
-    public ObservableCollection<AnchorableObject> anchorsWithCode;
-    public Dictionary<AnchorableObject, CodePiece> codeAssignments;
+    public ObservableCollection<AnchorableObject> anchorsWithCode = new ObservableCollection<AnchorableObject>();
+    public Dictionary<AnchorableObject, CodePiece> codeAssignments = new Dictionary<AnchorableObject, CodePiece>();
     private System.Random rnd = new System.Random();
 
 
@@ -46,12 +46,15 @@ public class SmarthubApp : BaseApp
                                                 .Take(maxObjectsWithCode)
                                                 .ToList();
 
+        // Debug.Log($"Shuffled anchors count: {shuffledAnchors.Count}");
+
         foreach(AnchorableObject randomAnchor in shuffledAnchors)
         {
             // Get assignment
             CodePiece assignedPiece = randomPinCodes.GetAssignment(randomAnchor, 0);
 
             // Add to collections and add service handler
+            // Debug.Log($"Adding anchor: {randomAnchor.WorldAnchorName}");
             codeAssignments.Add(randomAnchor, assignedPiece);
             anchorsWithCode.Add(randomAnchor);
             anchorService.AddHandler(randomAnchor, this.appState);
@@ -100,10 +103,5 @@ public class SmarthubApp : BaseApp
     void OnObjectRemoved(String name)
     {
         // numAssigned -= 1;
-    }
-
-    public void LaunchSmartInfoMenu(AnchorableObject anchor)
-    {
-        // anchor.GetComponentInChildren<AnchorContentController>();
     }
 }

@@ -11,7 +11,8 @@ public class SmarthubMainActivity : BaseAppActivity
 {
     public int numCodePieceObjects;
 
-    private List<Guid> cachedObjectActivities;
+    private List<Guid> cachedObjectActivityGuids = new List<Guid>();
+    private List<SmarthubObjectActivity> cachedObjectActivities = new List<SmarthubObjectActivity>();
 
     public AnchorService anchorService;
     // Start is called before the first frame update
@@ -41,17 +42,29 @@ public class SmarthubMainActivity : BaseAppActivity
                 ARDebug.LogError("Failed to get anchor service in SmarthubMainActivity");
             }
 
-            cachedObjectActivities = new List<Guid>();
-
-            // Randomly select n number of objects to be code piece handlers
-            System.Random rnd = new System.Random();
-            List<AnchorableObject> anchorsCopy = anchorService.AnchoredObjects.Values.OrderBy((item) => rnd.Next()).ToList();
-            for(int i = 0; i < numCodePieceObjects; ++i)
+            // Start all known anchors as object subactivities
+            foreach(AnchorableObject anchor in anchorService.AnchoredObjects.Values)
             {
-                anchorService.AddHandler(anchorsCopy[i], appState);
+                ExecutionContext ec = new ExecutionContext(this.gameObject);
+                ec.Anchor = anchor;
+
+                GameObject newActivity = GameObject.Instantiate(this.appRuntime.anchorActivityTemplate.gameObject, this.transform);
+                SmarthubObjectActivity newAnchorActivity = newActivity.GetComponent<SmarthubObjectActivity>();
+                newAnchorActivity.StartActivity(ec);
+                cachedObjectActivities.Add(newAnchorActivity);
             }
 
             initialized = true;
+        }
+        else
+        {
+            // Start all known anchors as object subactivities
+            foreach(SmarthubObjectActivity anchorActivity in cachedObjectActivities)
+            {
+                ExecutionContext ec = new ExecutionContext(this.gameObject);
+                ec.Anchor = anchorActivity.anchor;
+                anchorActivity.StartActivity(ec);
+            }
         }
 
         // TODO: This is extremely non-performant.
@@ -70,33 +83,45 @@ public class SmarthubMainActivity : BaseAppActivity
             }
         }
 
-        // Get all anchors that this app is known to handle
-        HashSet<AnchorableObject> handledAnchors = anchorService.handlersByApp[appState];
+        // Suspend all cached sub activities
+        // cachedObjectActivities.ForEach(appGuid => appState.StopActivity(appGuid, new ExecutionContext(this.gameObject)));
+
+
+
+        // // Get all anchors that this app is known to handle
+        // HashSet<AnchorableObject> handledAnchors = anchorService.handlersByApp[appState];
     
-        // Start all object activities for handled anchors
-        foreach(AnchorableObject anchor in handledAnchors)
-        {
-            if (anchor != null)
-            {
-                ExecutionContext ec = new ExecutionContext(this.gameObject);
-                ec.Anchor = anchor;
+        // // Start all object activities for handled anchors
+        // foreach(AnchorableObject anchor in handledAnchors)
+        // {
+        //     if (anchor != null)
+        //     {
+        //         ExecutionContext ec = new ExecutionContext(this.gameObject);
+        //         ec.Anchor = anchor;
 
-                Guid appId = appState.StartActivity(ActivityType.ObjectMenu, ec, false);
+        //         Guid appId = appState.StartActivity(ActivityType.ObjectMenu, ec, false);
 
-                if (cachedObjectActivities.Contains(appId) == false)
-                {
-                    cachedObjectActivities.Add(appId);
-                }
-            }
-        }
+        //         if (cachedObjectActivities.Contains(appId) == false)
+        //         {
+        //             cachedObjectActivities.Add(appId);
+        //         }
+        //     }
+        // }
     }
 
     public override void StopActivity(ExecutionContext executionContext)
     {
-        foreach(Guid cachedID in cachedObjectActivities)
+        // foreach(Guid cachedID in cachedObjectActivityGuids)
+        // {
+        //     ExecutionContext ec = new ExecutionContext(this.gameObject);
+        //     appState.StopActivity(cachedID, ec);
+        // }
+
+        // Debug.Log("SmarthubMainActivity StopActivity");
+        foreach(SmarthubObjectActivity anchorActivity in cachedObjectActivities)
         {
             ExecutionContext ec = new ExecutionContext(this.gameObject);
-            appState.StopActivity(cachedID, ec);
+            anchorActivity.StopActivity(ec);
         }
     }
 }

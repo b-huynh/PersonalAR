@@ -20,6 +20,15 @@ public class BaseApp : MonoBehaviour, IAppStateListener
 {
     [Header("Activities")]
     public List<ActivityEntry> activities;
+    public AnchorActivity anchorActivityTemplate
+    {
+        get
+        {
+            var entries = activities.Where(entry => entry.activityType == ActivityType.ObjectMenu);
+            return entries.Count() >= 1 ? (AnchorActivity)entries.First().activity : null;
+        }
+    }
+
     private Dictionary<Guid, BaseAppActivity> runningActivities;
     private Dictionary<Guid, BaseAppActivity> suspendedActivities;
 
@@ -111,8 +120,10 @@ public class BaseApp : MonoBehaviour, IAppStateListener
                 }
                 else
                 {
+                    // Debug.Log($"Running activities count: {runningActivities.Count()}");
                     if (runningActivities.Count() == 0)
                     {
+                        // Debug.Log("Calling BeforeFirstActivityStart");
                         BeforeFirstActivityStart();
                     }
 
@@ -124,6 +135,7 @@ public class BaseApp : MonoBehaviour, IAppStateListener
                     newActivity.StartActivity(eventData.StartContext);
                     runningActivities.Add(eventData.ActivityID, newActivity);
 
+                    // Debug.Log($"Running activities count: {runningActivities.Count()}");
                     if (runningActivities.Count() == 1)
                     {
                         AfterFirstActivityStart();
