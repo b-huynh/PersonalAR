@@ -20,6 +20,15 @@ public class BaseApp : MonoBehaviour, IAppStateListener
 {
     [Header("Activities")]
     public List<ActivityEntry> activities;
+    public AnchorActivity anchorActivityTemplate
+    {
+        get
+        {
+            var entries = activities.Where(entry => entry.activityType == ActivityType.ObjectMenu);
+            return entries.Count() >= 1 ? (AnchorActivity)entries.First().activity : null;
+        }
+    }
+
     private Dictionary<Guid, BaseAppActivity> runningActivities;
     private Dictionary<Guid, BaseAppActivity> suspendedActivities;
 
@@ -39,6 +48,7 @@ public class BaseApp : MonoBehaviour, IAppStateListener
             if (entry.activity != null)
             {
                 entry.activity.appState = appState;
+                entry.activity.appRuntime = this;
             }
         }
     }
@@ -90,6 +100,9 @@ public class BaseApp : MonoBehaviour, IAppStateListener
         appState.ToggleStartOrSuspend();
     }
 
+    public virtual void BeforeFirstActivityStart() {}
+    public virtual void AfterFirstActivityStart() {}
+
     public void OnActivityStart(ActivityEventData eventData)
     {
         // Launch activity
@@ -107,6 +120,13 @@ public class BaseApp : MonoBehaviour, IAppStateListener
                 }
                 else
                 {
+                    // Debug.Log($"Running activities count: {runningActivities.Count()}");
+                    if (runningActivities.Count() == 0)
+                    {
+                        // Debug.Log("Calling BeforeFirstActivityStart");
+                        BeforeFirstActivityStart();
+                    }
+
                     // Initialize activity state
                     GameObject newClone = GameObject.Instantiate(entry.activity.gameObject, transform);
                     BaseAppActivity newActivity = newClone.GetComponent<BaseAppActivity>();
@@ -114,6 +134,12 @@ public class BaseApp : MonoBehaviour, IAppStateListener
                     newActivity.activityID = eventData.ActivityID;
                     newActivity.StartActivity(eventData.StartContext);
                     runningActivities.Add(eventData.ActivityID, newActivity);
+
+                    // Debug.Log($"Running activities count: {runningActivities.Count()}");
+                    if (runningActivities.Count() == 1)
+                    {
+                        AfterFirstActivityStart();
+                    }
                 }
             }
         }

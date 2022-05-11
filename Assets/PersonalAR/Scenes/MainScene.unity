@@ -9899,6 +9899,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: d0e587c41d3d40e4e86296fd8c21d7c0, type: 2}
+  appRuntime: {fileID: 687982877}
   initialized: 0
   numCodePieceObjects: 5
 --- !u!1 &149680077
@@ -40649,7 +40650,8 @@ MonoBehaviour:
   - activityType: 1
     activity: {fileID: 146828826}
   appState: {fileID: 11400000, guid: d0e587c41d3d40e4e86296fd8c21d7c0, type: 2}
-  numSmartObjects: 5
+  randomPinCodes: {fileID: 11400000, guid: afb48ffb0a1c54c4184c1021634f8675, type: 2}
+  maxObjectsWithCode: 5
 --- !u!1 &688059155
 GameObject:
   m_ObjectHideFlags: 0
@@ -54957,6 +54959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: d0e587c41d3d40e4e86296fd8c21d7c0, type: 2}
+  appRuntime: {fileID: 687982877}
   initialized: 0
   entityToLaunch: {fileID: 3597347594236680048, guid: 444cb1f54f37d8b489fdd347ec80279a,
     type: 3}
@@ -60713,6 +60716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: 17cf5248cbac55242b7108ae93fd3db1, type: 2}
+  appRuntime: {fileID: 868018407}
   initialized: 0
   entityToLaunch: {fileID: 2698969084659546310, guid: 342b0f25662efc9438b5259ea89fd0a4,
     type: 3}
@@ -99498,6 +99502,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: 972efdcc663e96545a63ff703229fcaa, type: 2}
+  appRuntime: {fileID: 0}
   initialized: 0
   launchDistance: 1.01
   entityToLaunch: {fileID: 3043026599237192973, guid: ad22c41ea5d5ce44ea0e167ad8e4e7c1,
@@ -116038,6 +116043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: 8d90b1cf2a3fca144aa44c4c33a2525a, type: 2}
+  appRuntime: {fileID: 1812296846}
   initialized: 0
   codeSet: {fileID: 11400000, guid: afb48ffb0a1c54c4184c1021634f8675, type: 2}
   rendererPrefab: {fileID: 5086223569729325255, guid: 3073817f488a5d4418ea73c8d7ca695a,
@@ -119714,6 +119720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: 18b124a8f03c0f9459d013f0c9d1fa30, type: 2}
+  appRuntime: {fileID: 56510250}
   initialized: 0
   vars: {fileID: 11400000, guid: b887425fd04669c4eb03ca91175ed57d, type: 2}
   _app: {fileID: 11400000, guid: 18b124a8f03c0f9459d013f0c9d1fa30, type: 2}
@@ -122425,6 +122432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: d0e587c41d3d40e4e86296fd8c21d7c0, type: 2}
+  appRuntime: {fileID: 0}
   initialized: 0
   entityToLaunch: {fileID: 6752561240945050757, guid: 94bf6846243e0e9439d929c6395304f6,
     type: 3}
@@ -126171,6 +126179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appState: {fileID: 11400000, guid: 972efdcc663e96545a63ff703229fcaa, type: 2}
+  appRuntime: {fileID: 1377011093}
   initialized: 0
   launchDistance: 1.01
   entityToLaunch: {fileID: 3043026599237192973, guid: ad22c41ea5d5ce44ea0e167ad8e4e7c1,

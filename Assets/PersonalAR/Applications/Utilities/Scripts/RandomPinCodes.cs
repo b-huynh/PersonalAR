@@ -130,6 +130,11 @@ public class CodePiece
     public bool Assigned; // Bit to flag for assignment
 }
 
+public class CodeEntryCompleteEventArgs : EventArgs
+{
+    public Code CompletedCode { get; set; }
+}
+
 [CreateAssetMenu(menuName = "Experiment/Random Pin Codes")]
 public class RandomPinCodes : ScriptableObject
 {
@@ -149,7 +154,7 @@ public class RandomPinCodes : ScriptableObject
 
     List<KeyValuePair<System.Object, CodePiece>> AssignmentHistory = new List<KeyValuePair<object, CodePiece>>();
  
-    public UnityEvent OnCodeEntryComplete;
+    public UnityEvent<CodeEntryCompleteEventArgs> OnCodeEntryComplete;
 
     public int CodesCompleted
     {
@@ -386,7 +391,10 @@ public class RandomPinCodes : ScriptableObject
             {
                 code.SetUsed(true);
 
-                OnCodeEntryComplete.Invoke();
+                var eventArgs = new CodeEntryCompleteEventArgs();
+                eventArgs.CompletedCode = code;
+
+                OnCodeEntryComplete.Invoke(eventArgs);
             }
         }
     }

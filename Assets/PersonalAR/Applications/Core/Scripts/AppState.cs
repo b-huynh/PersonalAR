@@ -199,8 +199,15 @@ public class AppState : ScriptableObject
     //     }
     // }
 
+    // Sub activities, a hacky way for apps to launch other "app-like constructs" without treating them like real app activities.
+    public Guid StartSubActivity(ActivityType activityType, ExecutionContext executionContext) =>
+        StartActivity(activityType, executionContext, false, false);
+
+    public bool TryResumeSubActivity(Guid activityID, ExecutionContext executionContext) =>
+        TryResumeActivity(activityID, executionContext, false, false);
+
     //data for app open 
-    public Guid StartActivity(ActivityType activityType, ExecutionContext executionContext, bool closeOtherInstances = true)
+    public Guid StartActivity(ActivityType activityType, ExecutionContext executionContext, bool closeOtherInstances = true, bool logging = true)
     {
         if (closeOtherInstances)
         {
@@ -220,23 +227,25 @@ public class AppState : ScriptableObject
             StartContext = executionContext
         };
 
-        //add start event for data collection
-        AppEvent current_data = new AppEvent();
-        current_data.unixTime = Utils.UnixTimestampMilliseconds();
-        current_data.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
-        current_data.activityID = eventData.ActivityID.ToString();
-        current_data.activityType = eventData.ActivityType;
-        current_data.activity = "Start";
-        current_data.name = appName;
-
-        events.Add(current_data);
-
-        if (!oApps.Contains(appName))
+        if (logging)
         {
-            oApps.Add(appName);
+            //add start event for data collection
+            AppEvent current_data = new AppEvent();
+            current_data.unixTime = Utils.UnixTimestampMilliseconds();
+            current_data.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
+            current_data.activityID = eventData.ActivityID.ToString();
+            current_data.activityType = eventData.ActivityType;
+            current_data.activity = "Start";
+            current_data.name = appName;
+
+            events.Add(current_data);
+
+            if (!oApps.Contains(appName))
+            {
+                oApps.Add(appName);
+            }
         }
 
-        
         // Debug.Log("START " + appName);
 
         // Invoke listeners / view updates
@@ -257,7 +266,7 @@ public class AppState : ScriptableObject
         return activityID;
     }
 
-    public bool TryResumeActivity(Guid activityID, ExecutionContext executionContext, bool closeOtherInstances = true)
+    public bool TryResumeActivity(Guid activityID, ExecutionContext executionContext, bool closeOtherInstances = true, bool logging = true)
     {
         if (RunningActivities.ContainsKey(activityID) == true)
             return false;
@@ -278,23 +287,27 @@ public class AppState : ScriptableObject
             ActivityType = SuspendedActivities[activityID],
             StartContext = executionContext
         };
-                //add start event for data collection
-        AppEvent current_data = new AppEvent();
-        current_data.unixTime = Utils.UnixTimestampMilliseconds();
-        current_data.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
-        current_data.activityID = eventData.ActivityID.ToString();
-        current_data.activityType = eventData.ActivityType;
-        current_data.activity = "Start";
-        current_data.name = appName;
 
-        events.Add(current_data);
-
-        if (!oApps.Contains(appName))
+        if (logging)
         {
-            oApps.Add(appName);
+            //add start event for data collection
+            AppEvent current_data = new AppEvent();
+            current_data.unixTime = Utils.UnixTimestampMilliseconds();
+            current_data.systemTime = eventData.EventTime.ToString("HH-mm-ss-ff");
+            current_data.activityID = eventData.ActivityID.ToString();
+            current_data.activityType = eventData.ActivityType;
+            current_data.activity = "Start";
+            current_data.name = appName;
+
+            events.Add(current_data);
+
+            if (!oApps.Contains(appName))
+            {
+                oApps.Add(appName);
+            }
         }
 
-        Debug.Log("Resume: " + appName);
+        // Debug.Log("Resume: " + appName);
 
         SuspendedActivities.Remove(activityID);
         RunningActivities.Add(activityID, eventData.ActivityType);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using UnityEngine;
 
@@ -20,31 +21,48 @@ public class SmarthubObjectActivity : AnchorActivity
 
     public override void StartActivity(ExecutionContext executionContext)
     {
-        base.StartActivity(executionContext);
+        // Debug.Log("SmarthubObjectActivity StartActivity");
+        bool originalInitState = initialized;
 
-        AppVariables = (SmarthubVariables)appState.Variables;
+        base.StartActivity(executionContext); // This can change original initialization state
+        
+        if (originalInitState == false)
+        {
+            AppVariables = (SmarthubVariables)appState.Variables;
 
-        // Get assigned anchor 
-        anchor = executionContext.Anchor;
+            // Get assigned anchor 
+            anchor = executionContext.Anchor;
 
-        codePiece = codeSet.GetAssignment(anchor, 0);
-        UpdateVisuals();
-        codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+            // Check initial code assignments in parent app
+            SmarthubApp smarthubApp = (SmarthubApp)this.appRuntime;
+            codePiece = 
+                smarthubApp.anchorsWithCode.Contains(this.anchor) ?
+                smarthubApp.codeAssignments[this.anchor] :
+                null;
 
-        // if (GetExistingAssignment() == false)
-        // {
-        //     GetNewAssignment();
-        // }
+            // Update visuals to match
+            UpdateVisuals();
+
+            // Subscribe to future changes to assignments
+            smarthubApp.anchorsWithCode.CollectionChanged += OnCollectionChanged;
+
+            // Add smart info entity anchor content
+            cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = anchor;
+            anchor.GetComponentInChildren<AnchorContentController>().AddEntity(
+                cachedEntity.GetComponent<SmartInfoMenu>());
+
+            initialized = true;
+        }
+        
+        // Set rendering layer
+        cachedEntity.SetLayerInChildren(LayerMask.NameToLayer("Default"));
     }
 
     public override void StopActivity(ExecutionContext ec)
     {
+        // Debug.Log("SmarthubObjectActivity StopActivity");
         base.StopActivity(ec);
-
-        if (codePiece != null)
-        {
-            codePiece.Code.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
-        }
+        cachedEntity.SetLayerInChildren(LayerMask.NameToLayer("SuspendRendering"));
     }
 
     // Update is called once per frame
@@ -53,59 +71,33 @@ public class SmarthubObjectActivity : AnchorActivity
 
     }
 
-    // TODO: Make templated/generalize so assignments in other apps can use.
-    // private bool GetExistingAssignment()
-    // {
-    //     int anchorID = anchor.GetInstanceID();
-    //     var unfinishedCodeAssignments =
-    //         AppVariables.AssignmentPairs.Where(pair => pair.InstanceID == anchorID && pair.CodePiece.Code.Used == false);
-
-    //     if (unfinishedCodeAssignments.Count() > 0)
-    //     {
-    //         codePiece = unfinishedCodeAssignments.First().CodePiece;
-    //         return true;
-    //     }
-    //     else
-    //     {
-    //         return false;
-    //     }
-    // }
-
-    // private void GetNewAssignment()
-    // {
-    //     // Get code piece
-    //     var assignableObjects = new List<AnchorableObject>() { anchor };
-    //     Dictionary<AnchorableObject, CodePiece> assignment = codeSet.AssignCodePieces(assignableObjects, 0);
-    //     codePiece = assignment[anchor];
-
-    //     // Update app state variables
-    //     SmarthubVariables variables = (SmarthubVariables)appState.Variables;
-    //     // variables.AssignmentPairs.Add(new AssignmentPair(anchor, codePiece));
-    //     variables.AssignmentPairs.Add(new AssignmentPair(anchor.GetInstanceID(), codePiece));
-
-    //     // Subscribe to code completion events
-    //     codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
-    // }
-
     private void UpdateVisuals()
     {
         // Update visual elements
-        cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) {codePiece.Label}-{codePiece.Value}");
-
-        // Add smart info entity anchor content
-        cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = anchor;
-        anchor.GetComponentInChildren<AnchorContentController>().AddEntity(
-            cachedEntity.GetComponent<SmartInfoMenu>());
+        if (codePiece != null)
+        {
+            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) {codePiece.Label}-{codePiece.Value}");
+        }
+        else
+        {
+            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"SERIAL NUMBER UNKNOWN");
+        }
     }
 
-    private void OnCodeEntryComplete()
+    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
     {
-        // Clear completion event handlers
-        codePiece.Code.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
+        if (eventArgs.Action == NotifyCollectionChangedAction.Remove &&
+            eventArgs.OldItems.Contains(this.anchor))
+        {
+            codePiece = null;
+            UpdateVisuals();
+        }
 
-        // Get a new assignment
-        codePiece = codeSet.GetAssignment(anchor, 0);
-        UpdateVisuals();
-        codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+        if (eventArgs.Action == NotifyCollectionChangedAction.Add &&
+            eventArgs.NewItems.Contains(this.anchor))
+        {
+            codePiece = ((SmarthubApp)this.appRuntime).codeAssignments[this.anchor];
+            UpdateVisuals();
+        }
     }
 }

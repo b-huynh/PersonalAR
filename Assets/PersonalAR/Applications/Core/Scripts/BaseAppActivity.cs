@@ -4,6 +4,7 @@ public abstract class BaseAppActivity : MonoBehaviour
 {
     [Header("App Activity")]
     [ReadOnly] public AppState appState;
+    [ReadOnly] public BaseApp appRuntime;
     [ReadOnly] public System.Guid activityID;
     [ReadOnly] public bool initialized;
 

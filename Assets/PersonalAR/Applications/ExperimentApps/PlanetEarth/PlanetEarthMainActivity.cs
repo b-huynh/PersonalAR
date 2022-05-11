@@ -189,7 +189,7 @@ public class PlanetEarthMainActivity : BaseAppActivity
         private void OnCodeEntryComplete()
         {
             codePiece.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
-            Debug.Log("Planet Earth code entry complete");
+            // Debug.Log("Planet Earth code entry complete");
             InitWithCodes(codeSet);
         }
     }
