@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using UnityEngine;
 
@@ -27,8 +28,29 @@ public class SmarthubObjectActivity : AnchorActivity
         // Get assigned anchor 
         anchor = executionContext.Anchor;
 
-        CodePiece newCodePiece = codeSet.GetAssignment(anchor, 0);
-        UpdateCode(newCodePiece);
+        // CodePiece newCodePiece = codeSet.GetAssignment(anchor, 0);
+        // UpdateCode(newCodePiece);
+
+        // Check initial code assignments in parent app
+        SmarthubApp smarthubApp = (SmarthubApp)this.appRuntime;
+        codePiece = 
+            smarthubApp.anchorsWithCode.Contains(this.anchor) ?
+            smarthubApp.codeAssignments[this.anchor] :
+            null;
+
+        // Update visuals to match
+        UpdateVisuals();
+
+        // Subscribe to future changes to assignments
+        smarthubApp.anchorsWithCode.CollectionChanged += OnCollectionChanged;
+
+        // Add smart info entity anchor content
+        cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = anchor;
+        anchor.GetComponentInChildren<AnchorContentController>().AddEntity(
+            cachedEntity.GetComponent<SmartInfoMenu>());
+
+
+
         // codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
 
         // if (GetExistingAssignment() == false)
@@ -98,22 +120,35 @@ public class SmarthubObjectActivity : AnchorActivity
         {
             cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"SERIAL NUMBER UNKNOWN");
         }
-
-        // Add smart info entity anchor content
-        cachedEntity.GetComponentInChildren<IAnchorable>().Anchor = anchor;
-        anchor.GetComponentInChildren<AnchorContentController>().AddEntity(
-            cachedEntity.GetComponent<SmartInfoMenu>());
     }
 
     private void OnCodeEntryComplete()
     {
         // Clear completion event handlers
         codePiece.Code.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
+        UpdateCode(null);
 
         // Get a new assignment
         // CodePiece newCodePiece = codeSet.GetAssignment(anchor, 0);
         // UpdateCode(newCodePiece);
         // codePiece.Code.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+    }
+
+    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
+    {
+        if (eventArgs.Action == NotifyCollectionChangedAction.Remove &&
+            eventArgs.OldItems.Contains(this.anchor))
+        {
+            codePiece = null;
+            UpdateVisuals();
+        }
+
+        if (eventArgs.Action == NotifyCollectionChangedAction.Add &&
+            eventArgs.NewItems.Contains(this.anchor))
+        {
+            codePiece = ((SmarthubApp)this.appRuntime).codeAssignments[this.anchor];
+            UpdateVisuals();
+        }
     }
 
     // Update code. Set newCodePiece to null to designate at an object without any codes.

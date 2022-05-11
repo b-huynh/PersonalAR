@@ -39,6 +39,7 @@ public class BaseApp : MonoBehaviour, IAppStateListener
             if (entry.activity != null)
             {
                 entry.activity.appState = appState;
+                entry.activity.appRuntime = this;
             }
         }
     }
@@ -90,6 +91,9 @@ public class BaseApp : MonoBehaviour, IAppStateListener
         appState.ToggleStartOrSuspend();
     }
 
+    public virtual void BeforeFirstActivityStart() {}
+    public virtual void AfterFirstActivityStart() {}
+
     public void OnActivityStart(ActivityEventData eventData)
     {
         // Launch activity
@@ -107,6 +111,11 @@ public class BaseApp : MonoBehaviour, IAppStateListener
                 }
                 else
                 {
+                    if (runningActivities.Count() == 0)
+                    {
+                        BeforeFirstActivityStart();
+                    }
+
                     // Initialize activity state
                     GameObject newClone = GameObject.Instantiate(entry.activity.gameObject, transform);
                     BaseAppActivity newActivity = newClone.GetComponent<BaseAppActivity>();
@@ -114,6 +123,11 @@ public class BaseApp : MonoBehaviour, IAppStateListener
                     newActivity.activityID = eventData.ActivityID;
                     newActivity.StartActivity(eventData.StartContext);
                     runningActivities.Add(eventData.ActivityID, newActivity);
+
+                    if (runningActivities.Count() == 1)
+                    {
+                        AfterFirstActivityStart();
+                    }
                 }
             }
         }

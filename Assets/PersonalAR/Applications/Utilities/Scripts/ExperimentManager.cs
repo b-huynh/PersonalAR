@@ -132,7 +132,7 @@ public class ExperimentManager : Singleton<ExperimentManager>
         OnTaskStart.Invoke();
     }
 
-    public void UpdateScore()
+    public void UpdateScore(CodeEntryCompleteEventArgs eventArgs)
     {
         Score += 1;
     }
