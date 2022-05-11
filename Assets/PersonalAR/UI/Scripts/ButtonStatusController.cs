@@ -29,9 +29,6 @@ public class ButtonStatusController : MonoBehaviour
             buttonBehaviours = GetComponents<MonoBehaviour>().ToList();
 
             statusInitialized = true;
-
-            Debug.Log("Tutorial Enabled");
-            Debug.Log($"Bevhaiours count: {buttonBehaviours.Count()}");
         }
     }
 

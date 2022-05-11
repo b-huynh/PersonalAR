@@ -24,32 +24,38 @@ MonoBehaviour:
       To continue, press
       the Continue button with your finger.'
     audioClip: {fileID: 8300000, guid: 659fa813b7e92f240969e542b8be61bc, type: 3}
-  - text: "There are 4 applications installed on this LayerableAR system.  Let\u2019s
-      take a look at each one. \n\nFirst open the Code Entry app."
+  - text: "This system presents simulated examples of AR applications you might use
+      in a personal augmented reality future. Let\u2019s take a look at each one.
+      \n\nFirst open the Code Entry app."
     audioClip: {fileID: 8300000, guid: 89f50f624d15328428cc088fedee60f3, type: 3}
-  - text: "The Code Entry app allows you to type keycodes whenever you need, such
-      as unlocking a keypad door lock. \n\nOpen Item Inspector next."
+  - text: 'The Code Entry app allows you to type pin codes and passwords. In the
+      future you might use this to open digital door locks or quickly connect to
+      wireless networks.
+
+
+      Open Item Inspector next.'
     audioClip: {fileID: 8300000, guid: 1807c5fff6aecfb49afafd0bc01fc9da, type: 3}
-  - text: 'The  Item Inspector app allows you to inspect annotated objects to learn
-      more about them, like manufacturer location or serial numbers.
+  - text: 'The Item Inspector app allows you to inspect supported objects to learn
+      more about them, like manufacturing date or serial numbers.
 
 
-      Open
-      Device Groups next.'
+      Open Device
+      Groups next.'
     audioClip: {fileID: 8300000, guid: e0a1ead6ddd6ec747b3e9faeee121610, type: 3}
   - text: "Device Groups allows you to wirelessly connect objects to each other.
       This is useful for transferring data or turning a group of objects on and off.
       \n\nOpen Atlas next."
     audioClip: {fileID: 8300000, guid: 60bf2d888cb9a314a995ca8010f4ed55, type: 3}
   - text: "Atlas is a 3D map of Earth where you can learn about major cities and
-      other landmarks. \n\nThese are the 4 main apps you will be using for this experiment.\r"
+      other landmarks. \n\nThese are the 4 app simulations you will be using for
+      this experiment.\r"
     audioClip: {fileID: 8300000, guid: 300a3a2afa4a3304ca6f5019a02367d9, type: 3}
   - text: Currently, LayerableAR is in Layerable mode. This allows you to open and
       close as many apps as you want, though they may sometimes overlap.
     audioClip: {fileID: 8300000, guid: 8a2a38aadc1407347b5ade95f84ee2f1, type: 3}
   - text: You can switch between Layerable or Immersive mode in the hand menu. In
       Immersive mode, apps open one at a time and will automatically close the previous
-      app.
+      app. Your experimenter will instruct you on when to switch modes.
     audioClip: {fileID: 8300000, guid: 03410a3132b8beb41ba0a627edcc5c96, type: 3}
   - text: 'Your task throughout this experiment will be to enter as many 6-digit
       codes as possible in the Code Entry app. '
@@ -59,8 +65,8 @@ MonoBehaviour:
       the same sequence of letters throughout all three apps.
     audioClip: {fileID: 8300000, guid: 18d991b95a4ed634c89d32d0720a6707, type: 3}
   - text: Find and enter one code in the Code Entry app. You can enter the code fragments
-      you find in an app in any order. For example, if your fragments are SC-98,
-      SC-22, and SC-04, you may enter 98, 22, and 04 in the Code Entry in any order.
+      you find in any order. For example, if your fragments are SC-98, SC-22, and
+      SC-04, you may enter 98, 22, and 04 in the Code Entry in any order.
     audioClip: {fileID: 8300000, guid: a1e3b999ca59a104eb5a2354d27f43c1, type: 3}
   - text: You have finished the tutorial. Please let the experimenter know.
     audioClip: {fileID: 8300000, guid: cc4385fc072a7984880642048b219132, type: 3}
