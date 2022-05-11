@@ -8997,6 +8997,7 @@ MonoBehaviour:
   maxLength: 6
   textMesh: {fileID: 2698969084432094793}
   activityIDDebug: 
+  codeEntered: {fileID: 11400000, guid: 97f2ca2bd6c5a014696a2c9172cb2c76, type: 2}
 --- !u!1 &2698969085122921013
 GameObject:
   m_ObjectHideFlags: 0

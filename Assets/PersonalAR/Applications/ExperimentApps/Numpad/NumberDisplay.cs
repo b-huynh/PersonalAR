@@ -18,6 +18,8 @@ public class NumberDisplay : MonoBehaviour
     private System.Guid activityID;
     [ReadOnly] public string activityIDDebug;
 
+    public BoolVariable codeEntered;
+
     // Initialize in scripts on Instantiate()
     public RandomPinCodes pinCodes { get; set; }
 
@@ -101,6 +103,7 @@ public class NumberDisplay : MonoBehaviour
             textMesh.color = Color.green;
             textMesh.text = "SUCCESS";
             code.success = true;
+            codeEntered.SetValue(true);
         }
         else
         {

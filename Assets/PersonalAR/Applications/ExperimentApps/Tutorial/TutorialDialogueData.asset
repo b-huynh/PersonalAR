@@ -21,85 +21,66 @@ MonoBehaviour:
       This tutorial will guide you through
       the various features of the Layerable AR system.
 
-
       To continue, press
       the Continue button with your finger.'
     audioClip: {fileID: 8300000, guid: 659fa813b7e92f240969e542b8be61bc, type: 3}
-  - text: Great!  Next, raise your left hand towards your face and look at your palm
-      to bring up the Hand Menu.
+  - text: "There are 4 applications installed on this LayerableAR system.  Let\u2019s
+      take a look at each one. \n\nFirst open the Code Entry app."
     audioClip: {fileID: 8300000, guid: 89f50f624d15328428cc088fedee60f3, type: 3}
-  - text: "The Hand Menu lets you see currently running apps and launch new ones.
-      \n\nRunning apps are indicated with a green underline."
+  - text: "The Code Entry app allows you to type keycodes whenever you need, such
+      as unlocking a keypad door lock. \n\nOpen Item Inspector next."
     audioClip: {fileID: 8300000, guid: 1807c5fff6aecfb49afafd0bc01fc9da, type: 3}
-  - text: 'You can open and close apps or system menus by pressing their respective
-      icons.
-
-
-      Try opening the Annotations Menu.'
-    audioClip: {fileID: 8300000, guid: e0a1ead6ddd6ec747b3e9faeee121610, type: 3}
-  - text: 'Some apps need to know more about your environment before you can use
-      them.
-
-
-      The Annotation Menu lets you tag objects around you.'
-    audioClip: {fileID: 8300000, guid: 60bf2d888cb9a314a995ca8010f4ed55, type: 3}
-  - text: You will need to annotate at least 12 objects in your environment before
-      certain apps will work properly.
-    audioClip: {fileID: 8300000, guid: 300a3a2afa4a3304ca6f5019a02367d9, type: 3}
-  - text: 'For now, let''s just annotate 1 object.
-
-
-      First, select the type
-      of object you want to tag.'
-    audioClip: {fileID: 8300000, guid: 8a2a38aadc1407347b5ade95f84ee2f1, type: 3}
-  - text: 'Point to the location of that object in your environment.
-
-
-      Pinch
-      your thumb and index fingers together to place the tag. '
-    audioClip: {fileID: 8300000, guid: 03410a3132b8beb41ba0a627edcc5c96, type: 3}
-  - text: "The annotation may take a few minutes to begin tracking. \n\nThe spinning
-      circle will turn into a green checkmark when it is ready."
-    audioClip: {fileID: 8300000, guid: 043b2a8c56b6cfb48a70e3fc928a0678, type: 3}
-  - text: 'Great! If you are not satisfied with the placement, press the X button
-      to delete it. '
-    audioClip: {fileID: 8300000, guid: 18d991b95a4ed634c89d32d0720a6707, type: 3}
-  - text: 'Repeat the last few steps to annotate 11 more objects, for a total of
-      12. You can see how many annotations you have completed in the top right corner
-      of the Annotations Menu.
-
-'
-    audioClip: {fileID: 8300000, guid: a1e3b999ca59a104eb5a2354d27f43c1, type: 3}
-  - text: Open the Hand Menu and click the annotations icon again to close the Annotations
-      Menu.
-    audioClip: {fileID: 8300000, guid: cc4385fc072a7984880642048b219132, type: 3}
-  - text: "There are 4 applications installed on this PersonalAR system.  Let\u2019s
-      take a look at each one. \n\nFirst open the Numpad app."
-    audioClip: {fileID: 8300000, guid: efe003409a2ca2c4885eb2b5a0a7ed64, type: 3}
-  - text: "The Numpad app allows you to type keycodes whenever you need, such as
-      unlocking a keypad door lock. \n\nOpen Item Inspector next."
-    audioClip: {fileID: 8300000, guid: d1f19c05962a6ba45b1f788f53670f52, type: 3}
-  - text: 'The Item Inspector app allows you to inspect annotated objects to learn
+  - text: 'The  Item Inspector app allows you to inspect annotated objects to learn
       more about them, like manufacturer location or serial numbers.
 
 
       Open
-      Mesh Network next.
+      Device Groups next.'
+    audioClip: {fileID: 8300000, guid: e0a1ead6ddd6ec747b3e9faeee121610, type: 3}
+  - text: "Device Groups allows you to wirelessly connect objects to each other.
+      This is useful for transferring data or turning a group of objects on and off.
+      \n\nOpen Atlas next."
+    audioClip: {fileID: 8300000, guid: 60bf2d888cb9a314a995ca8010f4ed55, type: 3}
+  - text: "Atlas is a 3D map of Earth where you can learn about major cities and
+      other landmarks. \n\nThese are the 4 main apps you will be using for this experiment.\r"
+    audioClip: {fileID: 8300000, guid: 300a3a2afa4a3304ca6f5019a02367d9, type: 3}
+  - text: Currently, LayerableAR is in Layerable mode. This allows you to open and
+      close as many apps as you want, though they may sometimes overlap.
+    audioClip: {fileID: 8300000, guid: 8a2a38aadc1407347b5ade95f84ee2f1, type: 3}
+  - text: You can switch between Layerable or Immersive mode in the hand menu. In
+      Immersive mode, apps open one at a time and will automatically close the previous
+      app.
+    audioClip: {fileID: 8300000, guid: 03410a3132b8beb41ba0a627edcc5c96, type: 3}
+  - text: 'Your task throughout this experiment will be to enter as many 6-digit
+      codes as possible in the Code Entry app. '
+    audioClip: {fileID: 8300000, guid: 043b2a8c56b6cfb48a70e3fc928a0678, type: 3}
+  - text: The codes are broken up into 3 sets of 2 digits identified by 2 letters
+      and distributed between each app. To find one code, you will need to look for
+      the same sequence of letters throughout all three apps.
+    audioClip: {fileID: 8300000, guid: 18d991b95a4ed634c89d32d0720a6707, type: 3}
+  - text: Find and enter one code in the Code Entry app. You can enter the code fragments
+      you find in an app in any order. For example, if your fragments are SC-98,
+      SC-22, and SC-04, you may enter 98, 22, and 04 in the Code Entry in any order.
+    audioClip: {fileID: 8300000, guid: a1e3b999ca59a104eb5a2354d27f43c1, type: 3}
+  - text: You have finished the tutorial. Please let the experimenter know.
+    audioClip: {fileID: 8300000, guid: cc4385fc072a7984880642048b219132, type: 3}
+  - text: 
+    audioClip: {fileID: 8300000, guid: efe003409a2ca2c4885eb2b5a0a7ed64, type: 3}
+  - text: 
+    audioClip: {fileID: 8300000, guid: d1f19c05962a6ba45b1f788f53670f52, type: 3}
+  - text: '
 
 '
     audioClip: {fileID: 8300000, guid: 276fb17e975ca62448607c719a68d5e3, type: 3}
-  - text: "Mesh Network allows you to wirelessly connect objects to each other. This
-      is useful for transferring data or turning a group of objects on and off. \n\nOpen
-      Atlas next."
+  - text: 
     audioClip: {fileID: 8300000, guid: 65278cab45b1eae47b6e383f60f45ce7, type: 3}
-  - text: "Atlas is a 3D map of Earth where you can learn about major cities and
-      other landmarks. \n\nThese are the 4 main apps you will be using for this experiment.\r\n"
+  - text: '
+
+'
     audioClip: {fileID: 8300000, guid: 51c1a8ae640eee14b904e9fef3284a4f, type: 3}
-  - text: Currently, PersonalAR is in Layerable mode. This allows you to open and
-      close as many apps as you want, though they may sometimes overlap.
+  - text: 
     audioClip: {fileID: 8300000, guid: 6141d40b390588b4d89f8e7008b4fc81, type: 3}
-  - text: You can switch between Layerable or Immersive mode. In Immersive mode,
-      apps open one at a time and will automatically close the previous app.
+  - text: 
     audioClip: {fileID: 8300000, guid: eee344f25ab86244d862871675b99d3b, type: 3}
   - text: 
     audioClip: {fileID: 0}
