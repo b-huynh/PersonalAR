@@ -88,6 +88,7 @@ public class NumberDisplay : MonoBehaviour
     public void Validate()
     {
         string cleanedInput = textMesh.text.Replace("-", "").Replace("_", "");
+        Debug.Log($"Cleaned Input: {cleanedInput}");
         int entered = System.Int32.Parse(cleanedInput);
 
         CodeEvent code = new CodeEvent();
@@ -96,6 +97,7 @@ public class NumberDisplay : MonoBehaviour
         code.systemTime = System.DateTime.Now.ToString("HH-mm-ss-ff");
         code.codes = entered;
 
+        Debug.Log($"Parsed input: {entered}");
         if (pinCodes.Contains(entered))
         {
             pinCodes.MarkCodeEntryComplete(entered);

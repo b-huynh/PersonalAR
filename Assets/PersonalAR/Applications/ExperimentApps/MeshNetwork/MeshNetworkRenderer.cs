@@ -76,6 +76,7 @@ public class MeshNetworkRenderer : MonoBehaviour
         DestroyLineObjects();
         DrawLines();
         DrawInfo();
+        SetRenderersActive(RenderersActive);
     }
 
     IEnumerator BakeMeshAfterLineRendererPositionsSet(LineRenderer lineRenderer)

@@ -214,99 +214,29 @@ public class RandomPinCodes : ScriptableObject
         {
             // Generate random code
             string label = labels[i].ToString();
-            int randCode = rand.Next(100000, 999999);
+            int randCode = NextRandomCode(rand);
             Code code = new Code(label, randCode, codeLength, numPieces);
 
             Codes.Add(code);
         }
     }
 
-    // private Dictionary<AnchorableObject, CodePiece> _assignment = new Dictionary<AnchorableObject, CodePiece>();
-    // public Dictionary<AnchorableObject, CodePiece> Assignment
-    // {
-    //     get
-    //     {
-    //         // Get anchor service and return default if it doesnt yet exist.
-    //         AnchorService anchorService;
-    //         if (MixedRealityServiceRegistry.TryGetService<AnchorService>(out anchorService) == false)
-    //         {
-    //             Debug.Log("Cant get anchorservice");
-    //             return _assignment;
-    //         }
-            
-    //         // Create a new assignment based on current list of anchored objects.
-    //         // _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
-    //         _assignment = AssignCodePieces(anchorService.AnchoredObjects.Values.ToList(), 0);
+    public bool HasLeadingZeroPieces(int randCode)
+    {
+        string codeString = randCode.ToString();
+        return codeString[0] == '0' || codeString[2] == '0' || codeString[4] == '0';
+    }
 
-    //         // if (_assignment.Count != anchorService.AnchorCount)
-    //         // {
-    //         //     _assignment = Assign(anchorService.AnchoredObjects.Values.ToList());
-    //         // }
-
-    //         return _assignment;
-    //     }
-    // }
-
-    // // Assign anchors to code pieces.
-    // public Dictionary<AnchorableObject, CodePiece> Assign(List<AnchorableObject> anchors)
-    // {
-    //     // Check that we have the same amount of anchors and pieces. Otherwise wierdness happens...
-    //     if (anchors.Count != numCodes * numPieces)
-    //     {
-    //         Debug.LogWarning($"Not enough anchors placed to assign code pieces. Need {numCodes * numPieces} pieces");
-    //         return new Dictionary<AnchorableObject, CodePiece>();
-    //     }
-        
-    //     // Gather all CodePieces
-    //     List<CodePiece> allCodePieces = new List<CodePiece>();
-    //     foreach(Code code in Codes)
-    //     {
-    //         allCodePieces = allCodePieces.Concat(code.Pieces).ToList();
-    //     }
-
-    //     // Assign a code piece to each anchor
-    //     var assignments = new Dictionary<AnchorableObject, CodePiece>();
-    //     // Use the same random seed used to generate codes, for consistency.
-    //     var rand = new System.Random(randomSeed);
-    //     foreach(AnchorableObject anchor in anchors)
-    //     {
-    //         int pieceIndex = rand.Next(allCodePieces.Count);
-    //         CodePiece assignablePiece = allCodePieces[pieceIndex];
-    //         allCodePieces.RemoveAt(pieceIndex);
-
-    //         assignments.Add(anchor, assignablePiece);
-    //         ARDebug.Log($"Assigned: {anchor.WorldAnchorName} : {assignablePiece.Label}-{assignablePiece.Value}");
-    //     }
-
-    //     return assignments;
-    // }
-
-    // public Dictionary<T, CodePiece> AssignCodePieces<T>(List<T> assignableObjects, int pieceIndex)
-    // {
-    //     if (assignableObjects.Count > Codes.Count)
-    //     {
-    //         Debug.LogWarning($"Not enough codes ({Codes.Count}) for assignableObjects ({assignableObjects.Count}) of type {typeof(T)}.");
-    //     }
-
-    //     var assigned = new Dictionary<T, CodePiece>();
-
-    //     foreach(T toAssign in assignableObjects)
-    //     {
-    //         foreach(Code code in Codes)
-    //         {
-    //             CodePiece piece = code.Pieces[pieceIndex];
-    //             if (piece.Assigned == false)
-    //             {
-    //                 assigned.Add(toAssign, piece);
-    //                 piece.Assigned = true;
-    //                 AssignmentHistory.Add(new KeyValuePair<object, CodePiece>(toAssign, piece));
-    //                 break;
-    //             }
-    //         }
-    //     }
-
-    //     return assigned;
-    // }
+    public int NextRandomCode(System.Random rand)
+    {
+        int randCode;
+        do
+        {
+            randCode = rand.Next(100000, 999999);
+        }
+        while(HasLeadingZeroPieces(randCode));
+        return randCode;
+    }
 
     private CodePiece AssignNewCodePiece<T> (T assignable, int pieceIndex)
     {
@@ -402,22 +332,7 @@ public class RandomPinCodes : ScriptableObject
     // ONLY checks among codes that have all pieces Assigned"
     public bool Contains(int codeNum)
     {
-        // return Codes.Any(code => code.Value == codeNum);
-
         return Codes.Any(code => code.CompareEntry(codeNum));
-
-        // foreach (Code code in Codes)
-        // {
-        //     bool codeAssigned = code.Pieces.All(p => p.Assigned == true);
-        //     if (codeAssigned == true)
-        //     {
-        //         if (code.CompareEntry(codeNum))
-        //         {
-        //             return true;
-        //         }
-        //     }
-        // }
-        // return false;
     }
 
     public static void Shuffle<T>(IList<T> list, int seed)

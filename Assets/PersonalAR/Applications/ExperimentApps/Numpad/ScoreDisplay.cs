@@ -7,15 +7,17 @@ public class ScoreDisplay : MonoBehaviour
     public RandomPinCodes codeSet;
     [SerializeField] private TMPro.TextMeshPro scoreText;
 
+    private ExperimentManager experimentManagerRef;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        experimentManagerRef = ExperimentManager.Instance;   
     }
 
     // Update is called once per frame
     void Update()
     {
-        scoreText.text = $"Score: {codeSet.CodesCompleted}";
+        scoreText.text = $"Score: {experimentManagerRef.Score}";
     }
 }
