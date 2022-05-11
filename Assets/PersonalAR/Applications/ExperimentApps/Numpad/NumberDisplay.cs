@@ -9,6 +9,8 @@ public class NumberDisplay : MonoBehaviour
     // Display properties
     public int maxLength;
     private string clearString = "__-__-__";
+    private string successString = "SUCCESS";
+    private string failString = "INVALID";
 
 
     // Assign in editor
@@ -48,6 +50,11 @@ public class NumberDisplay : MonoBehaviour
 
     public void Enter(string str)
     {
+        if (textMesh.text == successString || textMesh.text == failString)
+        {
+            Clear();
+        }
+
         int blankIndex = textMesh.text.IndexOf('_');
         if (blankIndex == -1)
         {
@@ -55,21 +62,6 @@ public class NumberDisplay : MonoBehaviour
         }
 
         textMesh.text = textMesh.text.Insert(blankIndex, str).Remove(blankIndex + 1, str.Length);
-
-        // if (textMesh.text.Length < maxLength)
-        // {
-        //     textMesh.text += str;
-        // }
-        // textMesh.color = Color.white;
-        // 
-        // for(int i = 0; i < textMesh.text.Length; ++i)
-        // {
-        //     if (textMesh.text[i] == '_')
-        //     {
-        //         textMesh.text[i] = str[0];
-        //         return;
-        //     }
-        // }
     }
 
     public void Delete()
@@ -88,7 +80,7 @@ public class NumberDisplay : MonoBehaviour
     public void Validate()
     {
         string cleanedInput = textMesh.text.Replace("-", "").Replace("_", "");
-        Debug.Log($"Cleaned Input: {cleanedInput}");
+        // Debug.Log($"Cleaned Input: {cleanedInput}");
         int entered = System.Int32.Parse(cleanedInput);
 
         CodeEvent code = new CodeEvent();
@@ -97,20 +89,20 @@ public class NumberDisplay : MonoBehaviour
         code.systemTime = System.DateTime.Now.ToString("HH-mm-ss-ff");
         code.codes = entered;
 
-        Debug.Log($"Parsed input: {entered}");
+        // Debug.Log($"Parsed input: {entered}");
         if (pinCodes.Contains(entered))
         {
             pinCodes.MarkCodeEntryComplete(entered);
 
             textMesh.color = Color.green;
-            textMesh.text = "SUCCESS";
+            textMesh.text = successString;
             code.success = true;
             codeEntered.SetValue(true);
         }
         else
         {
             textMesh.color = Color.red;
-            textMesh.text = "INVALID";
+            textMesh.text = failString;
             code.success = false;
         }
 
