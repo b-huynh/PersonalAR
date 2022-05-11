@@ -21,7 +21,7 @@ public class SmarthubObjectActivity : AnchorActivity
 
     public override void StartActivity(ExecutionContext executionContext)
     {
-        Debug.Log("SmarthubObjectActivity StartActivity");
+        // Debug.Log("SmarthubObjectActivity StartActivity");
         bool originalInitState = initialized;
 
         base.StartActivity(executionContext); // This can change original initialization state

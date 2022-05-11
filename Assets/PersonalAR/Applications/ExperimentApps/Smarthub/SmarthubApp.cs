@@ -71,6 +71,12 @@ public class SmarthubApp : BaseApp
                            .Select(pair => pair.Key)
                            .ToList();
 
+        if (toRemove.Count() != 1)
+        {
+            Debug.Log($"Unexpected number of anchors matching completed code");
+            codeAssignments.ToList().ForEach(kvp => Debug.Log($"codeAssignments {kvp.Key.WorldAnchorName}, {kvp.Value.Code}"));
+        }
+
         // Remove as handler and from containers
         foreach(AnchorableObject anchorToRemove in toRemove)
         {
@@ -79,9 +85,12 @@ public class SmarthubApp : BaseApp
             anchorService.RemoveHandler(anchorToRemove, this.appState);
         }
         
-        // Choose new random anchor and get assignment
-        int nextAnchorIdx = rnd.Next(anchorService.AnchoredObjects.Count);
-        AnchorableObject randomAnchor = anchorService.AnchoredObjects.Values.ElementAt(nextAnchorIdx);
+        // Choose new random anchor NOT CURRENTLY IN anchorsWithCode and get assignment
+        HashSet<AnchorableObject> nextAnchorOptions = new HashSet<AnchorableObject>(anchorService.AnchoredObjects.Values);
+        nextAnchorOptions.ExceptWith(anchorsWithCode);
+
+        int nextAnchorIdx = rnd.Next(nextAnchorOptions.Count);
+        AnchorableObject randomAnchor = nextAnchorOptions.ElementAt(nextAnchorIdx);
         CodePiece assignedPiece = randomPinCodes.GetAssignment(randomAnchor, 0);
 
         // Add new random anchor to codeAssignments and anchorsWithCode and service handler
