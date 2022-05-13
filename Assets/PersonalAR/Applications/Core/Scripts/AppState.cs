@@ -246,7 +246,7 @@ public class AppState : ScriptableObject
             }
         }
 
-        // Debug.Log("START " + appName);
+        Debug.Log("START " + appName);
 
         // Invoke listeners / view updates
         foreach(var listener in listeners)
@@ -307,7 +307,7 @@ public class AppState : ScriptableObject
             }
         }
 
-        // Debug.Log("Resume: " + appName);
+        Debug.Log("Resume: " + appName);
 
         SuspendedActivities.Remove(activityID);
         RunningActivities.Add(activityID, eventData.ActivityType);
@@ -355,7 +355,7 @@ public class AppState : ScriptableObject
         events.Add(current_data);
         oApps.Remove(appName);
 
-        // Debug.Log("STOP " + appName);
+        Debug.Log("STOP " + appName);
 
         // Update internal state
         RunningActivities.Remove(activityID);
