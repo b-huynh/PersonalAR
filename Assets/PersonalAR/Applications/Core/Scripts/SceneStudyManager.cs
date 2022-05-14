@@ -134,6 +134,7 @@ public class SceneStudyManager : MonoBehaviour
     public List<string> openAppsList;
     public List<string> placedObjectsList;
 
+    string path_name;
 
     float logTimer = 0f;
     float studyTimer = 0f;
@@ -159,11 +160,12 @@ public class SceneStudyManager : MonoBehaviour
     {
         filename = "/RecordStudy_Session_" + recordNumber + "_" + startTime + ".json";
         if(recordNumber == 0){
+            // Debug.Log(path_name + filename);
             string data = JsonUtility.ToJson(_RecordStudy);
-            System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+            System.IO.File.WriteAllText(path_name + filename, data);
         }else{
             string data = JsonUtility.ToJson(_RecordStudy.obj.sessionRecording);
-            System.IO.File.WriteAllText(Application.persistentDataPath + filename, data);
+            System.IO.File.WriteAllText(path_name + filename, data);
         }
     }
 
@@ -354,6 +356,8 @@ public class SceneStudyManager : MonoBehaviour
         parent = gameObject;
         Application.targetFrameRate = Const.FRAME_RATE;
         startTime = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        path_name = Application.persistentDataPath +  "/" + startTime.ToString();
+        System.IO.Directory.CreateDirectory(path_name);
 
         obj = new StudyObject();
 

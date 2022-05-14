@@ -355,6 +355,8 @@ public class AppState : ScriptableObject
         events.Add(current_data);
         oApps.Remove(appName);
 
+        // Debug.Log("STOP " + appName);
+
         // Update internal state
         RunningActivities.Remove(activityID);
         SuspendedActivities.Add(activityID, eventData.ActivityType);
