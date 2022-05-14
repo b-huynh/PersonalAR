@@ -33416,8 +33416,8 @@ MonoBehaviour:
   targetViewPercentV: 0.1
   minDistance: 1
   maxDistance: 2
-  minScale: 1
-  maxScale: 2
+  minScale: 0.5
+  maxScale: 1
   scaleBuffer: 0.01
   manualObjectSize: 0
 --- !u!1 &3647562099540155274

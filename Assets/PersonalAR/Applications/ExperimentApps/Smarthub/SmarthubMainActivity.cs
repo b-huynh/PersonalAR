@@ -54,6 +54,10 @@ public class SmarthubMainActivity : BaseAppActivity
                 cachedObjectActivities.Add(newAnchorActivity);
             }
 
+            // Subscribe to anchor changes
+            anchorService.OnAfterRegistered += OnAfterAnchorRegistered;
+            anchorService.OnBeforeRemoved += OnBeforeAnchorRemoved;
+
             initialized = true;
         }
         else
@@ -123,5 +127,41 @@ public class SmarthubMainActivity : BaseAppActivity
             ExecutionContext ec = new ExecutionContext(this.gameObject);
             anchorActivity.StopActivity(ec);
         }
+    }
+
+    public void OnAfterAnchorRegistered(AnchorableObject newAnchor)
+    {
+        // Create new object activity 
+        GameObject newActivity = GameObject.Instantiate(this.appRuntime.anchorActivityTemplate.gameObject, this.transform);
+        SmarthubObjectActivity newAnchorActivity = newActivity.GetComponent<SmarthubObjectActivity>();
+        // newAnchorActivity.anchor = newAnchor;
+
+        // Match current execution state
+        cachedObjectActivities.Add(newAnchorActivity);
+        if (appState.ExecutionState == ExecutionState.RunningFull)
+        {
+            ExecutionContext ec = new ExecutionContext(this.gameObject);
+            ec.Anchor = newAnchor;
+            newAnchorActivity.StartActivity(ec);
+        }
+        else
+        {
+            ExecutionContext ec = new ExecutionContext(this.gameObject);
+            ec.Anchor = newAnchor;
+            newAnchorActivity.StartActivity(ec);
+            newAnchorActivity.StopActivity(ec);
+        }
+    }
+
+    public void OnBeforeAnchorRemoved(AnchorableObject toRemoveAnchor)
+    {
+        SmarthubObjectActivity toRemoveActivity = 
+            cachedObjectActivities.Find(activity => activity.anchor == toRemoveAnchor);
+        
+        ExecutionContext ec = new ExecutionContext(this.gameObject);
+        toRemoveActivity.StopActivity(ec);
+
+        cachedObjectActivities.Remove(toRemoveActivity);
+        Destroy(toRemoveActivity.gameObject);
     }
 }
