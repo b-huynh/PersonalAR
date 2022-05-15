@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ public class PlanetEarthMainActivity : BaseAppActivity
 {
     [Range(0.1f, 3.0f)]
     public float launchDistance;
+
+    public int numCitiesWithCodes;
 
     [SerializeField] private GameObject entityToLaunch;
     [SerializeField] private GameObject locationMarker;
@@ -22,6 +25,8 @@ public class PlanetEarthMainActivity : BaseAppActivity
 
     [Header("Experiment Parameters")]
     [SerializeField] private RandomPinCodes pinCodes;
+
+    private System.Random rand = new System.Random();
 
     void Reset()
     {
@@ -91,21 +96,36 @@ public class PlanetEarthMainActivity : BaseAppActivity
                 marker.transform.localPosition = markerPosition;
                 //marker.transform.SetPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
                 TextMeshPro cityText = marker.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
-                cityText.text = city.getDescription();
+                city.SetCityText(cityText);
+
+                // cityText.text = city.getDescription();
                 // cityText.text = name + "\n" + latitude + ", " + longitude;
 
                 // Add code piece
                 if (pinCodes != null)
                 {
+                    city.SetCodeSet(pinCodes);
+
                     // var assignableObjects = new List<CityCoords>() {cities[i]};
                     // var assignment = pinCodes.AssignCodePieces(assignableObjects, 2);
                     // var assignment = pinCodes.GetAssignment(assignableObjects, 2);
-                    city.InitWithCodes(pinCodes);
-                    cityText.text = city.getDescription();
+                    
+                    // city.InitWithCodes(pinCodes);
+                    // cityText.text = city.getDescription();
+
                     // var codePiece = assignment[cities[i]];
                     // cityText.text += $"\n (CODE) {codePiece.Label}-{codePiece.Value}";
                 }
             }
+
+            // Randomly select numCitiesWithCodes to add assignments to
+            cities.OrderBy((item) => rand.Next())
+                      .Take(numCitiesWithCodes)
+                      .ToList()
+                      .ForEach(randomCity => randomCity.AddCodeAssignment());
+
+            // Subscribe to code entry complete events
+            pinCodes.OnCodeEntryComplete.AddListener(OnCodeEntryComplete);
 
             initialized = true;
         }
@@ -113,6 +133,7 @@ public class PlanetEarthMainActivity : BaseAppActivity
         markerList.ForEach(marker => marker.SetActive(true));
         cachedEntity.SetActive(true);
     }
+
     public override void StopActivity(ExecutionContext executionContext)
     {
         markerList.ForEach(marker => marker.SetActive(false));
@@ -129,6 +150,19 @@ public class PlanetEarthMainActivity : BaseAppActivity
         // }
     }
 
+    public void OnCodeEntryComplete(CodeEntryCompleteEventArgs eventArgs)
+    {
+        // Remove assignment from matching city with complete code
+        CityCoords matchingCity = cities.Find(city => city.GetCodePiece() != null && 
+                                              city.GetCodePiece().Code == eventArgs.CompletedCode);
+        matchingCity.RemoveCodeAssignment();
+
+        CityCoords newCity = 
+        cities.OrderBy((item) => rand.Next())
+              .First(city => city != matchingCity && city.GetCodePiece() == null);
+        newCity.AddCodeAssignment();
+    }
+
     [Serializable]
     class CityCoords
     {
@@ -140,6 +174,7 @@ public class PlanetEarthMainActivity : BaseAppActivity
         // For tracking code pieces assigned to this object
         private RandomPinCodes codeSet;
         private CodePiece codePiece;
+        private TextMeshPro cityText;
 
         public CityCoords(string cityName, float latitude, float longitude)
         {
@@ -151,10 +186,10 @@ public class PlanetEarthMainActivity : BaseAppActivity
 
         ~CityCoords()
         {
-            if (codePiece != null)
-            {
-                codePiece.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
-            }
+            // if (codePiece != null)
+            // {
+            //     codePiece.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
+            // }
         }
 
         public string getCityName()
@@ -177,22 +212,54 @@ public class PlanetEarthMainActivity : BaseAppActivity
             return this.longitude;
         }
 
-        public void InitWithCodes(RandomPinCodes codes)
+        public void SetCodeSet(RandomPinCodes codeSet)
         {
-            codeSet = codes;
-            codePiece = codeSet.GetAssignment(this, 2);
+            this.codeSet = codeSet;
+        }
+
+        public void SetCityText(TextMeshPro textMesh)
+        {
+            this.cityText = textMesh;
             this.description = cityName + "\n" + latitude + ", " + longitude;
-            this.description += $"\n (CODE) {codePiece.Label}-{codePiece.Value}";
-
-            codePiece.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+            this.cityText.text = this.description;
         }
 
-        private void OnCodeEntryComplete()
+        public CodePiece GetCodePiece()
         {
-            codePiece.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
-            // Debug.Log("Planet Earth code entry complete");
-            InitWithCodes(codeSet);
+            return this.codePiece;
         }
+
+        public void AddCodeAssignment()
+        {
+            this.codePiece = codeSet.GetAssignment(this, 2);
+            this.description = cityName + "\n" + latitude + ", " + longitude;
+            this.description += $"\n (CODE) <color=#FF7F7F>{codePiece.Label}-{codePiece.Value}</color>";
+            this.cityText.text = this.description;
+        }
+
+        public void RemoveCodeAssignment()
+        {
+            this.codePiece = null;
+            this.description = cityName + "\n" + latitude + ", " + longitude;
+            this.cityText.text = this.description;
+        }
+
+        // public void InitWithCodes(RandomPinCodes codes)
+        // {
+        //     codeSet = codes;
+        //     codePiece = codeSet.GetAssignment(this, 2);
+        //     this.description = cityName + "\n" + latitude + ", " + longitude;
+        //     this.description += $"\n (CODE) {codePiece.Label}-{codePiece.Value}";
+
+        //     codePiece.OnCodeEntryComplete.AddListener(this.OnCodeEntryComplete);
+        // }
+
+        // private void OnCodeEntryComplete()
+        // {
+        //     codePiece.OnCodeEntryComplete.RemoveListener(this.OnCodeEntryComplete);
+        //     // Debug.Log("Planet Earth code entry complete");
+        //     InitWithCodes(codeSet);
+        // }
     }
 
  }

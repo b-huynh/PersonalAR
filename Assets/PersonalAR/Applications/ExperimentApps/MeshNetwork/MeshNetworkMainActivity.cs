@@ -51,7 +51,7 @@ public class Subnet : ObservableCollection<AnchorableObject>
     {
         codeSet = codes;
         codePiece = codeSet.GetAssignment(this, 1);
-        networkDescription = networkName + $"\n\n (CODE) {codePiece.Label}-{codePiece.Value}";
+        networkDescription = networkName + $"\n\n (CODE) <color=#FF7F7F>{codePiece.Label}-{codePiece.Value}</color>";
         codePiece.Code.OnCodeEntryComplete.AddListener(OnCodeEntryComplete);
 
         SubnetChanged?.Invoke(this, EventArgs.Empty);
