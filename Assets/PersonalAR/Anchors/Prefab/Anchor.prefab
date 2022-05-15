@@ -5253,20 +5253,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeList:
-  - Name: BaseAppCard (1)
+  - Name: BaseAppCard
     Offset: {x: 0, y: 0}
     Radius: 0
-    Transform: {fileID: 0}
-    Colliders: []
-  - Name: BaseAppCard (2)
-    Offset: {x: 0, y: 0}
-    Radius: 0
-    Transform: {fileID: 0}
-    Colliders: []
-  - Name: BaseAppCard (3)
-    Offset: {x: 0, y: 0}
-    Radius: 0
-    Transform: {fileID: 0}
+    Transform: {fileID: 5477898296933439993}
     Colliders: []
   ignoreInactiveTransforms: 1
   sortType: 0
@@ -5281,7 +5271,7 @@ MonoBehaviour:
   radialRange: 180
   distance: 0
   rows: 1
-  columns: 3
+  columns: 1
   cellWidth: 0.15
   cellHeight: 0.5
   assetVersion: 1

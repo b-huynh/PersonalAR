@@ -15,14 +15,14 @@ MonoBehaviour:
   Dialogues:
   - text: Would you like to begin the tutorial? Press Yes with your finger to continue.
     audioClip: {fileID: 8300000, guid: 1cc958afd438b74469dfe54e6163f3e2, type: 3}
-  - text: 'Welcome to Layerable AR!
+  - text: 'Welcome to Personal AR!
 
 
-      This tutorial will guide you through
-      the various features of the Layerable AR system.
+      This tutorial will guide you through the
+      various features of the Personal AR system.
 
-      To continue, press
-      the Continue button with your finger.'
+      To continue, press the Continue
+      button with your finger.'
     audioClip: {fileID: 8300000, guid: 659fa813b7e92f240969e542b8be61bc, type: 3}
   - text: "This system presents simulated examples of AR applications you might use
       in a personal augmented reality future. Let\u2019s take a look at each one.
@@ -50,23 +50,25 @@ MonoBehaviour:
       other landmarks. \n\nThese are the 4 app simulations you will be using for
       this experiment.\r"
     audioClip: {fileID: 8300000, guid: 300a3a2afa4a3304ca6f5019a02367d9, type: 3}
-  - text: Currently, LayerableAR is in Layerable mode. This allows you to open and
-      close as many apps as you want, though they may sometimes overlap.
+  - text: 'Personal AR has 2 modes of operation. During the experiment, the experimenter
+      will prompt you on when to change modes. Until prompted, DO NOT press the green
+      "Switch Modes" button in the Hand Menu. '
     audioClip: {fileID: 8300000, guid: 8a2a38aadc1407347b5ade95f84ee2f1, type: 3}
-  - text: You can switch between Layerable or Immersive mode in the hand menu. In
-      Immersive mode, apps open one at a time and will automatically close the previous
-      app. Your experimenter will instruct you on when to switch modes.
+  - text: "In Mode A, you can open and close as many apps as you want, though they
+      may sometimes overlap. \n\nIn Mode B, apps will open one at a time and will
+      not overlap."
     audioClip: {fileID: 8300000, guid: 03410a3132b8beb41ba0a627edcc5c96, type: 3}
-  - text: 'Your task throughout this experiment will be to enter as many 6-digit
-      codes as possible in the Code Entry app. '
+  - text: Your task in this experiment is to find and enter valid 6-digit codes within
+      a fixed amount of time. Codes are broken into fragments found in the Item Inspector,
+      Device Groups, and Atlas app.
     audioClip: {fileID: 8300000, guid: 043b2a8c56b6cfb48a70e3fc928a0678, type: 3}
-  - text: The codes are broken up into 3 sets of 2 digits identified by 2 letters
-      and distributed between each app. To find one code, you will need to look for
-      the same sequence of letters throughout all three apps.
+  - text: For instance, you may discover the fragment SC-98 in Atlas, SC-22 in Device
+      Groups, and SC-14 in Item Inspector. The letters SC indicate they are part
+      of the same code. You can enter 98, 22, and 14 in the Code Entry app in any
+      order.
     audioClip: {fileID: 8300000, guid: 18d991b95a4ed634c89d32d0720a6707, type: 3}
-  - text: Find and enter one code in the Code Entry app. You can enter the code fragments
-      you find in any order. For example, if your fragments are SC-98, SC-22, and
-      SC-04, you may enter 98, 22, and 04 in the Code Entry in any order.
+  - text: To complete the tutorial, please find and enter 1 valid code in the Code
+      Entry app.
     audioClip: {fileID: 8300000, guid: a1e3b999ca59a104eb5a2354d27f43c1, type: 3}
   - text: You have finished the tutorial. Please let the experimenter know.
     audioClip: {fileID: 8300000, guid: cc4385fc072a7984880642048b219132, type: 3}

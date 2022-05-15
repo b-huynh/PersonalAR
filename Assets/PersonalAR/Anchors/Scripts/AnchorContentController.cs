@@ -57,6 +57,10 @@ public class AnchorContentController : MonoBehaviour
             anchorable.transform.rotation = Quaternion.identity;
 
             GetComponent<GridObjectCollection>().UpdateCollection();
+
+            // Add small bias towards camera
+            Vector3 toCamDir = (Camera.main.transform.position - anchorable.transform.position).normalized;
+            anchorable.transform.position += toCamDir * 0.2f;
         }
     }
 }
