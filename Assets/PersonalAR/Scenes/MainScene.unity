@@ -13262,7 +13262,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Immersive
+          m_StringArgument: Mode B
           m_BoolArgument: 1
         m_CallState: 2
   OnFalse:
@@ -13277,7 +13277,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Layerable
+          m_StringArgument: Mode A
           m_BoolArgument: 0
         m_CallState: 2
   OnToggle:

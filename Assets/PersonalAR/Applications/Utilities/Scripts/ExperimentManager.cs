@@ -23,7 +23,9 @@ public class ExperimentManager : Singleton<ExperimentManager>
     {
         get
         {
-            return immersiveModeState.GetValue() == true ? "immersive" : "layerable";
+            // return immersiveModeState.GetValue() == true ? "immersive" : "layerable";
+            return immersiveModeState.GetValue() == true ? "Mode B" : "Mode A";
+
         }
     }
 
