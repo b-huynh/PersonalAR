@@ -56,7 +56,8 @@ public class PlanetEarthMainActivity : BaseAppActivity
             // Calculate a launch point set distance away from users current forward position.
             Vector3 forwardDelta = Camera.main.transform.forward * launchDistance;
             Vector3 launchPoint = Camera.main.transform.position + forwardDelta;
-            launchPoint.y = Mathf.Max(0.35f, launchPoint.y);
+            // launchPoint.y = Mathf.Max(0.35f, launchPoint.y);
+            launchPoint.y = 0.3f;
 
             cachedEntity = GameObject.Instantiate(entityToLaunch, this.transform);
             //marker = GameObject.Instantiate(locationMarker, this.transform);
