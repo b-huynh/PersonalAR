@@ -94,6 +94,7 @@ public class TutorialMainActivity : BaseAppActivity
         } else
         {
             _app.StopTutorial();
+            ImmersiveModeController.Instance.StopAllApps();
         }
     }
 
