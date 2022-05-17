@@ -40,6 +40,15 @@ public class ImmersiveModeController : Singleton<ImmersiveModeController>
         Debug.Log(AppState.lastAppStarted?.name);
     }
 
+    public void StopAllApps()
+    {
+        foreach(AppState app in appList.appList)
+        {
+            ExecutionContext executionContext = new ExecutionContext(gameObject);
+            app.StopAllActivities(executionContext);
+        }
+    }
+
     public void StopAllAppsExceptLastOpened()
     {
         foreach(AppState app in appList.appList)

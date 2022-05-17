@@ -76,11 +76,12 @@ public class SmarthubObjectActivity : AnchorActivity
         // Update visual elements
         if (codePiece != null)
         {
-            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) {codePiece.Label}-{codePiece.Value}");
+            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"(CODE) <color=#FF7F7F>{codePiece.Label}-{codePiece.Value}</color>");
         }
         else
         {
-            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"SERIAL NUMBER UNKNOWN");
+            // cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"SERIAL NUMBER UNKNOWN");
+            cachedEntity.GetComponent<SmartInfoMenu>().SetSerialNumber($"");
         }
     }
 
