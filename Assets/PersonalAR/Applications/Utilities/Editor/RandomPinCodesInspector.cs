@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
@@ -28,6 +29,12 @@ public class RandomPinCodesInspector : Editor
         if (GUILayout.Button("Test Code: ", GUILayout.Width(100)))
         {
             Debug.Log(pinCodes.Contains(testCode));
+            var matches = pinCodes.Codes.Where(code => code.CompareEntry(testCode));
+            Debug.Log($"Matches: {matches.Count()}");
+            foreach(var match in matches)
+            {
+                Debug.Log(match);
+            }
         }
         testCode = EditorGUILayout.IntField(testCode,GUILayout.Width(75));
         GUILayout.EndHorizontal();

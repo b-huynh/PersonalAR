@@ -94,11 +94,16 @@ public class Code
 
         List<CodePiece> entryPieces = SplitIntoPieces(entry, codeLength, numPieces);
         
+        // Remove each match from remaining pieces
+        List<string> remainingPieceValues = new List<string>();
+        Pieces.ForEach(piece => remainingPieceValues.Add(piece.Value));
+
         bool isEquivalent = (Pieces.Count == entryPieces.Count);
         foreach(CodePiece entryPiece in entryPieces)
         {
-            if (Pieces.Any(p => p.Value == entryPiece.Value))
+            if (remainingPieceValues.Contains(entryPiece.Value))
             {
+                remainingPieceValues.Remove(entryPiece.Value);
                 isEquivalent = (isEquivalent && true);
             }
             else
@@ -212,11 +217,16 @@ public class RandomPinCodes : ScriptableObject
 
         for(int i = 0; i < numCodes; ++i)
         {
-            // Generate random code
+            int randCode;
             string label = labels[i].ToString();
-            int randCode = NextRandomCode(rand);
-            Code code = new Code(label, randCode, codeLength, numPieces);
+            do
+            {
+                // Generate random code
+                randCode = NextRandomCode(rand);
+            }
+            while(Codes.Any(code => code.CompareEntry(randCode) == true));
 
+            Code code = new Code(label, randCode, codeLength, numPieces);
             Codes.Add(code);
         }
     }
@@ -325,6 +335,7 @@ public class RandomPinCodes : ScriptableObject
                 eventArgs.CompletedCode = code;
 
                 OnCodeEntryComplete.Invoke(eventArgs);
+                return;
             }
         }
     }
