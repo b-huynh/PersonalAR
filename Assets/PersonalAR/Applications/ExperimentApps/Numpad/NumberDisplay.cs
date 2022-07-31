@@ -81,29 +81,44 @@ public class NumberDisplay : MonoBehaviour
     {
         string cleanedInput = textMesh.text.Replace("-", "").Replace("_", "");
         // Debug.Log($"Cleaned Input: {cleanedInput}");
-        int entered = System.Int32.Parse(cleanedInput);
 
         CodeEvent code = new CodeEvent();
-        
         code.unixTime = Utils.UnixTimestampMilliseconds();
         code.systemTime = System.DateTime.Now.ToString("HH-mm-ss-ff");
-        code.codes = entered;
 
-        // Debug.Log($"Parsed input: {entered}");
-        if (pinCodes.Contains(entered))
+        // Catch format exception?
+        int entered = -1;
+        try
         {
-            pinCodes.MarkCodeEntryComplete(entered);
-
-            textMesh.color = Color.green;
-            textMesh.text = successString;
-            code.success = true;
-            codeEntered.SetValue(true);
+            entered = System.Int32.Parse(cleanedInput);
         }
-        else
+        catch
         {
             textMesh.color = Color.red;
             textMesh.text = failString;
             code.success = false;
+        }
+
+        code.codes = entered;
+
+        if (entered != -1)
+        {
+            // Debug.Log($"Parsed input: {entered}");
+            if (pinCodes.Contains(entered))
+            {
+                pinCodes.MarkCodeEntryComplete(entered);
+
+                textMesh.color = Color.green;
+                textMesh.text = successString;
+                code.success = true;
+                codeEntered.SetValue(true);
+            }
+            else
+            {
+                textMesh.color = Color.red;
+                textMesh.text = failString;
+                code.success = false;
+            }
         }
 
         codes.Add(code);
